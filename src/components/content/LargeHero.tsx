@@ -5,7 +5,7 @@ import { ArrowDown } from "lucide-react";
 
 const LargeHero = () => {
   return (
-    <section className="w-full relative h-[90vh]">
+    <section className="w-full relative h-[78vh]">
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         <img 
@@ -18,32 +18,32 @@ const LargeHero = () => {
       {/* Content Overlay */}
       <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-12 lg:px-20">
         <div className="max-w-xl">
-          <h1 
-            className="text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6 opacity-0 animate-fade-in"
-            style={{ 
-              fontFamily: 'Georgia, Times, serif',
-              fontStyle: 'italic',
+          <h1
+            className="text-4xl md:text-5xl lg:text-6xl text-white leading-[1.1] mb-6 opacity-0 animate-fade-up"
+            style={{
+              fontFamily: "Georgia, Times, serif",
+              fontStyle: "italic",
               fontWeight: 400,
-              animationDelay: '0.2s',
-              animationFillMode: 'forwards'
+              animationDelay: "0.2s",
+              animationFillMode: "forwards",
             }}
           >
             Handcrafted Lamps That Turn Waste Into Light
           </h1>
-          <p 
-            className="text-base md:text-lg text-white/90 font-light leading-relaxed mb-8 max-w-md opacity-0 animate-fade-in"
-            style={{ 
-              animationDelay: '0.5s',
-              animationFillMode: 'forwards'
+          <p
+            className="text-base md:text-lg text-white/90 font-light leading-relaxed mb-8 max-w-md opacity-0 animate-fade-up"
+            style={{
+              animationDelay: "0.45s",
+              animationFillMode: "forwards",
             }}
           >
             Transform your space with our sustainable lighting pieces, handmade from recycled bottles, metal, and industrial elements.
           </p>
-          <div 
-            className="opacity-0 animate-fade-in"
-            style={{ 
-              animationDelay: '0.8s',
-              animationFillMode: 'forwards'
+          <div
+            className="opacity-0 animate-fade-up"
+            style={{
+              animationDelay: "0.7s",
+              animationFillMode: "forwards",
             }}
           >
             <Link to="/category/all">
@@ -58,23 +58,26 @@ const LargeHero = () => {
       </div>
 
       {/* Scroll Indicator */}
-      <div 
-        className="absolute bottom-8 right-8 z-10 flex items-center gap-2 text-white/80 opacity-0 animate-fade-in"
-        style={{ 
-          animationDelay: '1.1s',
-          animationFillMode: 'forwards'
+      <button
+        type="button"
+        onClick={() => document.getElementById("featured-products")?.scrollIntoView({ behavior: "smooth" })}
+        className="absolute bottom-8 right-8 z-10 flex items-center gap-2 text-white/80 opacity-0 animate-fade-up"
+        style={{
+          animationDelay: "1.1s",
+          animationFillMode: "forwards",
         }}
+        aria-label="Scroll to featured products"
       >
         <span className="text-sm font-light tracking-wide">Scroll</span>
         <ArrowDown className="w-4 h-4 animate-bounce" />
-      </div>
+      </button>
 
       {/* Slide Indicators */}
-      <div 
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 opacity-0 animate-fade-in"
-        style={{ 
-          animationDelay: '1.1s',
-          animationFillMode: 'forwards'
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 opacity-0 animate-fade-up"
+        style={{
+          animationDelay: "1.1s",
+          animationFillMode: "forwards",
         }}
       >
         <div className="w-8 h-0.5 bg-white/40 rounded-full"></div>
