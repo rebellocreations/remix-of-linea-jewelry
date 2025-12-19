@@ -1,70 +1,18 @@
-import { ArrowRight, X, Minus, Plus } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import ShoppingBag from "./ShoppingBag";
-import pantheonImage from "@/assets/pantheon.jpg";
-import eclipseImage from "@/assets/eclipse.jpg";
-import haloImage from "@/assets/halo.jpg";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  quantity: number;
-  category: string;
-}
+import CartDrawer from "@/components/cart/CartDrawer";
+import { useCartStore } from "@/stores/cartStore";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
   
-  // Shopping bag state with 3 mock items
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Pantheon",
-      price: "€2,850",
-      image: pantheonImage,
-      quantity: 1,
-      category: "Earrings"
-    },
-    {
-      id: 2,
-      name: "Eclipse",
-      price: "€3,200", 
-      image: eclipseImage,
-      quantity: 1,
-      category: "Bracelets"
-    },
-    {
-      id: 3,
-      name: "Halo",
-      price: "€1,950",
-      image: haloImage, 
-      quantity: 1,
-      category: "Earrings"
-    }
-  ]);
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      setCartItems(items => items.filter(item => item.id !== id));
-    } else {
-      setCartItems(items => 
-        items.map(item => 
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    }
-  };
+  const totalItems = useCartStore((state) => 
+    state.items.reduce((sum, item) => sum + item.quantity, 0)
+  );
   
   // Preload dropdown images for faster display
   useEffect(() => {
@@ -216,20 +164,7 @@ const Navigation = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
           </button>
-          <button 
-            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
-            aria-label="Shopping bag"
-            onClick={() => setIsShoppingBagOpen(true)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-            </svg>
-            {totalItems > 0 && (
-              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-[30%] text-[0.5rem] font-semibold text-black pointer-events-none">
-                {totalItems}
-              </span>
-            )}
-          </button>
+          <CartDrawer />
         </div>
       </div>
 
@@ -373,17 +308,6 @@ const Navigation = () => {
         </div>
       )}
       
-      {/* Shopping Bag Component */}
-      <ShoppingBag 
-        isOpen={isShoppingBagOpen}
-        onClose={() => setIsShoppingBagOpen(false)}
-        cartItems={cartItems}
-        updateQuantity={updateQuantity}
-        onViewFavorites={() => {
-          setIsShoppingBagOpen(false);
-          setOffCanvasType('favorites');
-        }}
-      />
       
       {/* Favorites Off-canvas overlay */}
       {offCanvasType === 'favorites' && (
