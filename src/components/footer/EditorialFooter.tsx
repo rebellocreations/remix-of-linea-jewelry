@@ -1,6 +1,27 @@
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 const EditorialFooter = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const footerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (footerRef.current) {
+      observer.observe(footerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const footerLinks = {
     shop: [
       { name: "All Lamps", href: "/category/shop" },
@@ -22,11 +43,23 @@ const EditorialFooter = () => {
   };
 
   return (
-    <footer className="bg-charcoal text-charcoal-foreground">
+    <footer 
+      ref={footerRef}
+      className={`bg-charcoal text-charcoal-foreground transition-all duration-700 ease-editorial ${
+        isVisible 
+          ? "opacity-100 translate-y-0" 
+          : "opacity-0 translate-y-8"
+      }`}
+    >
       <div className="px-6 lg:px-12 py-16 lg:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand column */}
-          <div className="lg:col-span-1">
+          <div 
+            className={`lg:col-span-1 transition-all duration-600 ease-editorial ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+            style={{ transitionDelay: "100ms" }}
+          >
             <Link to="/" className="font-serif text-2xl tracking-wide">
               REBELLO
             </Link>
@@ -37,7 +70,12 @@ const EditorialFooter = () => {
           </div>
 
           {/* Shop */}
-          <div>
+          <div
+            className={`transition-all duration-600 ease-editorial ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+            style={{ transitionDelay: "200ms" }}
+          >
             <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
               Shop
             </h4>
@@ -46,7 +84,7 @@ const EditorialFooter = () => {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300"
+                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300 editorial-link"
                   >
                     {link.name}
                   </Link>
@@ -56,7 +94,12 @@ const EditorialFooter = () => {
           </div>
 
           {/* Support */}
-          <div>
+          <div
+            className={`transition-all duration-600 ease-editorial ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+            style={{ transitionDelay: "300ms" }}
+          >
             <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
               Support
             </h4>
@@ -65,7 +108,7 @@ const EditorialFooter = () => {
                 <li key={link.name}>
                   <Link
                     to={link.href}
-                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300"
+                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300 editorial-link"
                   >
                     {link.name}
                   </Link>
@@ -74,8 +117,13 @@ const EditorialFooter = () => {
             </ul>
           </div>
 
-          {/* Connect */}
-          <div>
+          {/* Connect - social links with underline animation */}
+          <div
+            className={`transition-all duration-600 ease-editorial ${
+              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            }`}
+            style={{ transitionDelay: "400ms" }}
+          >
             <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
               Connect
             </h4>
@@ -90,7 +138,7 @@ const EditorialFooter = () => {
                         ? "noopener noreferrer"
                         : undefined
                     }
-                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300"
+                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300 editorial-link"
                   >
                     {link.name}
                   </a>
@@ -101,7 +149,12 @@ const EditorialFooter = () => {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-16 pt-8 border-t border-charcoal-foreground/10">
+        <div 
+          className={`mt-16 pt-8 border-t border-charcoal-foreground/10 transition-all duration-600 ease-editorial ${
+            isVisible ? "opacity-100" : "opacity-0"
+          }`}
+          style={{ transitionDelay: "500ms" }}
+        >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-xs text-charcoal-foreground/40">
               © {new Date().getFullYear()} Rebello Creations. All rights
