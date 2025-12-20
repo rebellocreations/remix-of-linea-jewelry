@@ -1,9 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 
+// Import material images
+import organicFormsImg from "@/assets/materials/organic-forms.jpg";
+import industrialCraftImg from "@/assets/materials/industrial-craft.jpg";
+import warmGlowImg from "@/assets/materials/warm-glow.jpg";
+
 interface EditorialImage {
   caption: string;
   description: string;
   size: "large" | "medium" | "small";
+  image: string;
 }
 
 const EditorialImageBlocks = () => {
@@ -17,21 +23,19 @@ const EditorialImageBlocks = () => {
       caption: "Organic Forms",
       description: "Nature-inspired shapes formed through heat and hand-cut glass",
       size: "large",
+      image: organicFormsImg,
     },
     {
       caption: "Industrial Craft",
       description: "Raw metal meets warm recycled glass",
       size: "medium",
+      image: industrialCraftImg,
     },
     {
       caption: "Warm Glow",
       description: "Filament bulbs casting amber light through textured surfaces",
       size: "medium",
-    },
-    {
-      caption: "The Process",
-      description: "Hands working, shaping, assembling each unique piece",
-      size: "small",
+      image: warmGlowImg,
     },
   ];
 
@@ -81,16 +85,15 @@ const EditorialImageBlocks = () => {
         </h2>
       </div>
 
-      {/* Horizontal scrolling container on desktop */}
+      {/* Grid layout */}
       <div 
         ref={scrollContainerRef}
-        className="lg:flex lg:gap-6 lg:overflow-x-auto lg:pb-8 lg:-mx-6 lg:px-6 lg:scrollbar-hide grid grid-cols-12 gap-4"
-        style={{ scrollBehavior: 'smooth' }}
+        className="grid grid-cols-12 gap-4 lg:gap-6"
       >
         {/* Large image */}
         <div
           data-index={0}
-          className={`col-span-12 lg:col-span-8 lg:flex-shrink-0 lg:w-[60vw] transition-all duration-700 ease-editorial ${
+          className={`col-span-12 lg:col-span-8 transition-all duration-700 ease-editorial ${
             visibleItems.has(0)
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-8"
@@ -102,15 +105,15 @@ const EditorialImageBlocks = () => {
           onMouseLeave={() => setHoveredItem(null)}
         >
           <div 
-            className={`aspect-[16/10] bg-beige relative overflow-hidden group transition-all duration-500 ease-editorial ${
+            className={`aspect-[16/10] relative overflow-hidden group transition-all duration-500 ease-editorial ${
               hoveredItem === 0 ? 'shadow-2xl -translate-y-1' : ''
             }`}
           >
-            <div className="w-full h-full bg-gradient-to-br from-olive/20 to-beige flex items-center justify-center">
-              <span className="font-serif text-xl text-muted-foreground italic">
-                {images[0].caption}
-              </span>
-            </div>
+            <img 
+              src={images[0].image}
+              alt={images[0].caption}
+              className="w-full h-full object-cover"
+            />
             <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/10 transition-colors duration-500" />
           </div>
           <div className="mt-4">
@@ -125,11 +128,11 @@ const EditorialImageBlocks = () => {
           </div>
         </div>
 
-        {/* Medium images - stacked on mobile, horizontal on desktop */}
-        <div className="col-span-12 lg:col-span-4 lg:flex-shrink-0 lg:w-[35vw] space-y-4 lg:space-y-6 lg:flex lg:flex-col">
+        {/* Medium images - stacked right */}
+        <div className="col-span-12 lg:col-span-4 space-y-4 lg:space-y-6">
           <div
             data-index={1}
-            className={`flex-1 transition-all duration-700 ease-editorial ${
+            className={`transition-all duration-700 ease-editorial ${
               visibleItems.has(1)
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
@@ -142,15 +145,15 @@ const EditorialImageBlocks = () => {
             onMouseLeave={() => setHoveredItem(null)}
           >
             <div 
-              className={`aspect-square bg-beige relative overflow-hidden group transition-all duration-500 ease-editorial ${
+              className={`aspect-square relative overflow-hidden group transition-all duration-500 ease-editorial ${
                 hoveredItem === 1 ? 'shadow-2xl -translate-y-1' : ''
               }`}
             >
-              <div className="w-full h-full bg-gradient-to-br from-amber/20 to-beige flex items-center justify-center">
-                <span className="font-serif text-lg text-muted-foreground italic">
-                  {images[1].caption}
-                </span>
-              </div>
+              <img 
+                src={images[1].image}
+                alt={images[1].caption}
+                className="w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/10 transition-colors duration-500" />
             </div>
             <div className="mt-3">
@@ -166,7 +169,7 @@ const EditorialImageBlocks = () => {
 
           <div
             data-index={2}
-            className={`flex-1 transition-all duration-700 ease-editorial ${
+            className={`transition-all duration-700 ease-editorial ${
               visibleItems.has(2)
                 ? "opacity-100 translate-y-0"
                 : "opacity-0 translate-y-8"
@@ -179,15 +182,15 @@ const EditorialImageBlocks = () => {
             onMouseLeave={() => setHoveredItem(null)}
           >
             <div 
-              className={`aspect-[4/3] bg-beige relative overflow-hidden group transition-all duration-500 ease-editorial ${
+              className={`aspect-[4/3] relative overflow-hidden group transition-all duration-500 ease-editorial ${
                 hoveredItem === 2 ? 'shadow-2xl -translate-y-1' : ''
               }`}
             >
-              <div className="w-full h-full bg-gradient-to-br from-charcoal/10 to-beige flex items-center justify-center">
-                <span className="font-serif text-lg text-muted-foreground italic">
-                  {images[2].caption}
-                </span>
-              </div>
+              <img 
+                src={images[2].image}
+                alt={images[2].caption}
+                className="w-full h-full object-cover"
+              />
               <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/10 transition-colors duration-500" />
             </div>
             <div className="mt-3">
@@ -202,17 +205,6 @@ const EditorialImageBlocks = () => {
           </div>
         </div>
       </div>
-
-      {/* Hide scrollbar utility */}
-      <style>{`
-        .scrollbar-hide::-webkit-scrollbar {
-          display: none;
-        }
-        .scrollbar-hide {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </section>
   );
 };
