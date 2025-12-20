@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
+// Import demo product images
+import amberFloorLamp from "@/assets/products/amber-floor-lamp.jpg";
+import oliveTableLamp from "@/assets/products/olive-table-lamp.jpg";
+import clearPendantLamp from "@/assets/products/clear-pendant-lamp.jpg";
+
 interface DemoProduct {
   id: string;
   name: string;
   price: string;
   handle: string;
+  image: string;
   featured?: boolean;
 }
 
@@ -19,12 +25,14 @@ const FeaturedProducts = () => {
       name: "Amber Bottle Floor Lamp",
       price: "₹7,499",
       handle: "amber-bottle-floor-lamp",
+      image: amberFloorLamp,
     },
     {
       id: "2",
       name: "Olive Glass Table Lamp",
       price: "₹5,999",
       handle: "olive-glass-table-lamp",
+      image: oliveTableLamp,
       featured: true,
     },
     {
@@ -32,6 +40,7 @@ const FeaturedProducts = () => {
       name: "Clear Cut Pendant Lamp",
       price: "₹6,499",
       handle: "clear-cut-pendant-lamp",
+      image: clearPendantLamp,
     },
   ];
 
@@ -102,25 +111,16 @@ const FeaturedProducts = () => {
               className={`relative overflow-hidden bg-beige ${
                 product.featured ? "aspect-[3/4]" : "aspect-square"
               } transition-all duration-500 ease-editorial group-hover:shadow-2xl`}
-              style={{
-                transitionProperty: 'transform, box-shadow',
-              }}
             >
-              {/* Placeholder gradient for demo */}
-              <div 
-                className="w-full h-full bg-gradient-to-br from-beige to-olive/10 flex items-center justify-center transition-transform duration-500 ease-editorial group-hover:scale-[1.03] group-hover:rotate-[1deg]"
-              >
-                <span className="font-serif text-lg text-muted-foreground/50 italic">
-                  {product.name.split(' ')[0]}
-                </span>
-              </div>
+              <img 
+                src={product.image}
+                alt={product.name}
+                className="w-full h-full object-cover transition-transform duration-500 ease-editorial group-hover:scale-[1.03] group-hover:rotate-[1deg]"
+              />
 
               {/* Expanding shadow on hover */}
               <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                style={{
-                  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15) inset',
-                }}
+                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-t from-charcoal/20 to-transparent"
               />
             </div>
 

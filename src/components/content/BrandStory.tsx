@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import brandStoryImage from "@/assets/brand-story.jpg";
 
 const BrandStory = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -97,20 +98,18 @@ const BrandStory = () => {
       {/* Image column with parallax and grain */}
       <div className="relative h-[60vh] lg:h-auto order-1 lg:order-2 overflow-hidden">
         <div
-          className={`absolute inset-0 bg-beige transition-all duration-1000 ease-editorial ${
+          className={`absolute inset-0 transition-all duration-1000 ease-editorial ${
             isVisible ? "scale-100" : "scale-110"
           }`}
           style={{
             transform: `translateY(${scrollY}px) ${isVisible ? 'scale(1)' : 'scale(1.1)'}`,
           }}
         >
-          {/* Placeholder - would use actual image */}
-          <div className="w-full h-full bg-gradient-to-br from-beige to-olive/20 flex items-center justify-center">
-            <div className="text-center text-muted-foreground">
-              <p className="font-serif text-xl italic">Craft in progress</p>
-              <p className="text-sm mt-2">Hands shaping glass</p>
-            </div>
-          </div>
+          <img 
+            src={brandStoryImage}
+            alt="Artisan hands crafting a lamp from recycled glass"
+            className="w-full h-full object-cover"
+          />
         </div>
         
         {/* Grain texture overlay */}
