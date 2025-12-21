@@ -23,13 +23,13 @@ const BrandStory = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Parallax effect for the image
+  // Slow parallax effect for the image
   useEffect(() => {
     const handleScroll = () => {
       if (sectionRef.current) {
         const rect = sectionRef.current.getBoundingClientRect();
         const scrollProgress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-        setScrollY(scrollProgress * 50); // Max 50px parallax
+        setScrollY(scrollProgress * 80); // Max 80px parallax for more dramatic effect
       }
     };
 

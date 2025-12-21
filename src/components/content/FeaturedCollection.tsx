@@ -6,6 +6,7 @@ import { ArrowRight } from "lucide-react";
 const FeaturedCollection = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isButtonHovered, setIsButtonHovered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -60,8 +61,17 @@ const FeaturedCollection = () => {
           )`,
         }}
       />
+
+      {/* Animated noise texture overlay */}
+      <div 
+        className="absolute inset-0 opacity-[0.08] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+          animation: 'noiseShift 8s steps(10) infinite',
+        }}
+      />
         
-      {/* Subtle texture pattern */}
+      {/* Subtle dot pattern */}
       <div 
         className="absolute inset-0 opacity-10"
         style={{
@@ -120,17 +130,41 @@ const FeaturedCollection = () => {
               : "opacity-0 translate-y-4"
           }`}
           style={{ transitionDelay: "650ms" }}
+          onMouseEnter={() => setIsButtonHovered(true)}
+          onMouseLeave={() => setIsButtonHovered(false)}
         >
           <Button
             variant="outline"
             size="lg"
-            className="border-charcoal-foreground/30 text-charcoal-foreground hover:bg-amber hover:text-charcoal hover:border-amber rounded-none px-8 py-6 text-sm tracking-wide transition-all duration-500"
+            className="relative border-charcoal-foreground/30 text-charcoal-foreground hover:text-charcoal hover:border-amber rounded-none px-8 py-6 text-sm tracking-wide transition-all duration-500 overflow-hidden"
+            style={{
+              boxShadow: isButtonHovered 
+                ? '0 0 30px hsl(38 90% 55% / 0.4), 0 0 60px hsl(38 90% 55% / 0.2)' 
+                : 'none',
+              backgroundColor: isButtonHovered ? 'hsl(38 90% 55%)' : 'transparent',
+            }}
           >
             Explore Collection
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </Link>
       </div>
+
+      {/* Noise shift animation */}
+      <style>{`
+        @keyframes noiseShift {
+          0%, 100% { transform: translate(0, 0); }
+          10% { transform: translate(-5%, -5%); }
+          20% { transform: translate(5%, 5%); }
+          30% { transform: translate(-3%, 3%); }
+          40% { transform: translate(3%, -3%); }
+          50% { transform: translate(-2%, 2%); }
+          60% { transform: translate(4%, -4%); }
+          70% { transform: translate(-4%, 4%); }
+          80% { transform: translate(2%, -2%); }
+          90% { transform: translate(-1%, 1%); }
+        }
+      `}</style>
     </section>
   );
 };

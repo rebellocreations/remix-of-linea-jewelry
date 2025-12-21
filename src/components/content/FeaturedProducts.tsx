@@ -17,6 +17,8 @@ interface DemoProduct {
 
 const FeaturedProducts = () => {
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [scrollY, setScrollY] = useState(0);
   const sectionRef = useRef<HTMLElement>(null);
 
   const demoProducts: DemoProduct[] = [
@@ -50,7 +52,6 @@ const FeaturedProducts = () => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = Number(entry.target.getAttribute("data-index"));
-            // Stagger the reveal
             setTimeout(() => {
               setVisibleItems((prev) => new Set([...prev, index]));
             }, index * 200);
@@ -66,11 +67,27 @@ const FeaturedProducts = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Scroll-tied breathing effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Calculate breathing scale based on scroll
+  const getBreathingScale = (index: number) => {
+    const offset = scrollY * 0.0002 + index * 0.3;
+    const breathe = Math.sin(offset) * 0.01 + 1;
+    return breathe;
+  };
+
   return (
     <section 
       id="products" 
       ref={sectionRef} 
-      className="px-6 lg:px-12 py-20 lg:py-32 bg-background"
+      className="px-6 lg:px-12 py-20 lg:py-32 bg-background relative"
     >
       {/* Section header */}
       <div className="flex items-end justify-between mb-12 lg:mb-16">
@@ -102,25 +119,61 @@ const FeaturedProducts = () => {
                 ? "opacity-100"
                 : "opacity-0"
             } ${
-              // Uneven vertical alignment - middle product lower
               index === 1 ? "md:mt-12" : index === 2 ? "md:-mt-8" : ""
             }`}
+            onMouseEnter={() => setHoveredItem(index)}
+            onMouseLeave={() => setHoveredItem(null)}
           >
-            {/* Product image container with tilt hover */}
+            {/* Product image container with ambient glow */}
             <div 
               className={`relative overflow-hidden bg-beige ${
                 product.featured ? "aspect-[3/4]" : "aspect-square"
-              } transition-all duration-500 ease-editorial group-hover:shadow-2xl`}
+              } transition-all duration-500 ease-editorial`}
+              style={{
+                transform: `scale(${getBreathingScale(index)})`,
+              }}
             >
+              {/* Ambient glow behind lamp - pulses slowly */}
+              <div 
+                className={`absolute inset-0 transition-all duration-700 ${
+                  hoveredItem === index 
+                    ? "opacity-100" 
+                    : "opacity-40"
+                }`}
+                style={{
+                  background: `radial-gradient(ellipse 60% 50% at 50% 40%, hsl(38 90% 55% / ${hoveredItem === index ? 0.4 : 0.15}) 0%, transparent 70%)`,
+                  animation: 'ambientPulse 4s ease-in-out infinite',
+                  animationDelay: `${index * 0.5}s`,
+                }}
+              />
+
               <img 
                 src={product.image}
                 alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-500 ease-editorial group-hover:scale-[1.03] group-hover:rotate-[1deg]"
+                className={`relative z-10 w-full h-full object-cover transition-all duration-500 ease-editorial ${
+                  hoveredItem === index 
+                    ? "scale-[1.03] brightness-110 contrast-105" 
+                    : ""
+                }`}
               />
 
-              {/* Expanding shadow on hover */}
+              {/* Warm glow overlay on hover - lamp "turns on" */}
               <div 
-                className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-t from-charcoal/20 to-transparent"
+                className={`absolute inset-0 z-20 pointer-events-none transition-opacity duration-700 ${
+                  hoveredItem === index ? "opacity-100" : "opacity-0"
+                }`}
+                style={{
+                  background: `radial-gradient(ellipse 50% 40% at 50% 35%, hsl(38 90% 55% / 0.25) 0%, transparent 60%)`,
+                }}
+              />
+
+              {/* Subtle shadow expansion */}
+              <div 
+                className={`absolute inset-0 z-0 transition-all duration-500 ${
+                  hoveredItem === index 
+                    ? "shadow-[0_25px_60px_-15px_rgba(0,0,0,0.2)]" 
+                    : ""
+                }`}
               />
             </div>
 
@@ -160,6 +213,14 @@ const FeaturedProducts = () => {
           View all lamps
         </Link>
       </div>
+
+      {/* Ambient pulse animation */}
+      <style>{`
+        @keyframes ambientPulse {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.05); }
+        }
+      `}</style>
     </section>
   );
 };
