@@ -1,8 +1,10 @@
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight, X, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { useCartStore } from "@/stores/cartStore";
+import { useAuthStore } from "@/stores/authStore";
+import AuthPanel from "@/components/auth/AuthPanel";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -13,6 +15,8 @@ const Navigation = () => {
   const totalItems = useCartStore((state) => 
     state.items.reduce((sum, item) => sum + item.quantity, 0)
   );
+  
+  const { customer, openAuthPanel } = useAuthStore();
   
   // Preload dropdown images for faster display
   useEffect(() => {
@@ -164,9 +168,22 @@ const Navigation = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
           </button>
+          <button 
+            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
+            aria-label="Account"
+            onClick={() => openAuthPanel()}
+          >
+            <User size={20} strokeWidth={1.5} />
+            {customer && (
+              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
+            )}
+          </button>
           <CartDrawer />
         </div>
       </div>
+      
+      {/* Auth Panel */}
+      <AuthPanel />
 
       {/* Full width dropdown */}
       {activeDropdown && (
