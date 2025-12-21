@@ -6,10 +6,20 @@ import BrandStory from "@/components/content/BrandStory";
 import FeaturedCollection from "@/components/content/FeaturedCollection";
 import EditorialImageBlocks from "@/components/content/EditorialImageBlocks";
 import TransitionLine from "@/components/content/TransitionLine";
+import GrainOverlay from "@/components/ambient/GrainOverlay";
+import FloatingQuote from "@/components/ambient/FloatingQuote";
+import ScrollStoryline from "@/components/ambient/ScrollStoryline";
+import ScrollPause from "@/components/ambient/ScrollPause";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      {/* Subtle grain texture across entire page */}
+      <GrainOverlay opacity={0.025} />
+      
+      {/* Scroll-connected vertical storyline */}
+      <ScrollStoryline />
+      
       <EditorialHeader />
       
       <main>
@@ -19,13 +29,34 @@ const Index = () => {
         
         <FeaturedProducts />
         
+        {/* Floating quote after products */}
+        <FloatingQuote 
+          text="Each lamp holds a past life." 
+          position="right" 
+        />
+        
         <BrandStory />
+        
+        {/* Intentional scroll pause after story */}
+        <ScrollPause text="This is not mass-produced lighting." />
         
         <TransitionLine text="Each lamp begins as waste." />
         
         <FeaturedCollection />
         
+        {/* Floating quote before materials */}
+        <FloatingQuote 
+          text="Light, shaped by hand." 
+          position="left" 
+        />
+        
         <EditorialImageBlocks />
+        
+        {/* Final floating quote */}
+        <FloatingQuote 
+          text="No two pieces are alike." 
+          position="center" 
+        />
       </main>
       
       <EditorialFooter />
