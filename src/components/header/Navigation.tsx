@@ -1,22 +1,19 @@
 import { ArrowRight, X, User } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CartDrawer from "@/components/cart/CartDrawer";
 import { useCartStore } from "@/stores/cartStore";
-import { useAuthStore } from "@/stores/authStore";
-import AuthPanel from "@/components/auth/AuthPanel";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
   
   const totalItems = useCartStore((state) => 
     state.items.reduce((sum, item) => sum + item.quantity, 0)
   );
-  
-  const { customer, openAuthPanel } = useAuthStore();
   
   // Preload dropdown images for faster display
   useEffect(() => {
@@ -89,6 +86,10 @@ const Navigation = () => {
       ]
     }
   ];
+
+  const handleAccountClick = () => {
+    navigate('/account');
+  };
 
   return (
     <nav 
@@ -169,21 +170,15 @@ const Navigation = () => {
             </svg>
           </button>
           <button 
-            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
+            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
             aria-label="Account"
-            onClick={() => openAuthPanel()}
+            onClick={handleAccountClick}
           >
             <User size={20} strokeWidth={1.5} />
-            {customer && (
-              <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full" />
-            )}
           </button>
           <CartDrawer />
         </div>
       </div>
-      
-      {/* Auth Panel */}
-      <AuthPanel />
 
       {/* Full width dropdown */}
       {activeDropdown && (
@@ -297,7 +292,7 @@ const Navigation = () => {
         <div className="lg:hidden absolute top-full left-0 right-0 bg-nav border-b border-border z-50">
           <div className="px-6 py-8">
             <div className="space-y-6">
-              {navItems.map((item, index) => (
+              {navItems.map((item) => (
                 <div key={item.name}>
                   <Link
                     to={item.href}
@@ -320,6 +315,15 @@ const Navigation = () => {
                    </div>
                 </div>
               ))}
+              
+              {/* Account link in mobile menu */}
+              <Link
+                to="/account"
+                className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-lg font-light block py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Account
+              </Link>
             </div>
           </div>
         </div>
