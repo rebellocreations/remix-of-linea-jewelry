@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
+import { useAuthSession } from "./hooks/useAuthSession";
 import Index from "./pages/Index";
 import Category from "./pages/Category";
 import ProductDetail from "./pages/ProductDetail";
@@ -16,8 +17,17 @@ import CustomerCare from "./pages/about/CustomerCare";
 import StoreLocator from "./pages/about/StoreLocator";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import AccountLayout from "./pages/account/Account";
+import Profile from "./pages/account/Profile";
+import Orders from "./pages/account/Orders";
+import Addresses from "./pages/account/Addresses";
 
 const queryClient = new QueryClient();
+
+const AuthSessionProvider = ({ children }: { children: React.ReactNode }) => {
+  useAuthSession();
+  return <>{children}</>;
+};
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -36,6 +46,12 @@ const AnimatedRoutes = () => {
         <Route path="/about/store-locator" element={<StoreLocator />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
+        {/* Account Routes */}
+        <Route path="/account" element={<AccountLayout />}>
+          <Route index element={<Profile />} />
+          <Route path="orders" element={<Orders />} />
+          <Route path="addresses" element={<Addresses />} />
+        </Route>
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
@@ -49,8 +65,10 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <ScrollToTop />
-        <AnimatedRoutes />
+        <AuthSessionProvider>
+          <ScrollToTop />
+          <AnimatedRoutes />
+        </AuthSessionProvider>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
