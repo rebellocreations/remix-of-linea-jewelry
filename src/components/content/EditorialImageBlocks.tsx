@@ -17,7 +17,10 @@ const EditorialImageBlocks = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [activeSlide, setActiveSlide] = useState(0);
   const [scrollY, setScrollY] = useState(0);
+  const [headerVisible, setHeaderVisible] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
 
   const images: EditorialImage[] = [
     {
@@ -40,18 +43,38 @@ const EditorialImageBlocks = () => {
     },
   ];
 
-  // Visibility observer
+  // Header visibility
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setHeaderVisible(true);
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    if (headerRef.current) {
+      observer.observe(headerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Visibility observer for items with blur-in
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = Number(entry.target.getAttribute("data-index"));
-            setVisibleItems((prev) => new Set([...prev, index]));
+            setTimeout(() => {
+              setVisibleItems((prev) => new Set([...prev, index]));
+            }, index * 120);
           }
         });
       },
-      { threshold: 0.2, rootMargin: "50px" }
+      { threshold: 0.15, rootMargin: "50px" }
     );
 
     const items = sectionRef.current?.querySelectorAll("[data-index]");
@@ -60,14 +83,16 @@ const EditorialImageBlocks = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Auto-looping cross-fade for process visualization
+  // Auto-looping cross-fade for process visualization - pause on hover
   useEffect(() => {
+    if (isPaused) return;
+    
     const interval = setInterval(() => {
       setActiveSlide((prev) => (prev + 1) % images.length);
-    }, 4000);
+    }, 5000);
 
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, [images.length, isPaused]);
 
   // Scroll-tied parallax
   useEffect(() => {
@@ -84,23 +109,47 @@ const EditorialImageBlocks = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="px-6 lg:px-12 py-20 lg:py-32 relative">
-      <div className="mb-12 lg:mb-16">
-        <span className="text-xs tracking-[0.2em] uppercase text-olive mb-2 block">
+    <section ref={sectionRef} className="px-6 lg:px-12 py-24 lg:py-36 relative">
+      {/* Header with reveal animation */}
+      <div 
+        ref={headerRef}
+        className={`mb-14 lg:mb-20 transition-all duration-800 ease-premium ${
+          headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        }`}
+      >
+        <span 
+          className={`text-xs tracking-[0.2em] uppercase text-olive mb-3 block transition-all duration-700 ease-premium ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+          style={{ transitionDelay: "100ms" }}
+        >
           Behind the Craft
         </span>
-        <h2 className="font-serif text-3xl lg:text-4xl text-foreground">
+        <h2 
+          className={`font-serif text-3xl lg:text-4xl text-foreground transition-all duration-700 ease-premium ${
+            headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+          }`}
+          style={{ transitionDelay: "200ms" }}
+        >
           Materials & Process
         </h2>
       </div>
 
-      {/* Auto-looping process slideshow - visible on mobile */}
-      <div className="lg:hidden mb-12 relative aspect-[4/3] overflow-hidden">
+      {/* Auto-looping process slideshow - visible on mobile with pause on hover */}
+      <div 
+        className="lg:hidden mb-14 relative aspect-[4/3] overflow-hidden"
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setTimeout(() => setIsPaused(false), 3000)}
+      >
         {images.map((img, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ease-editorial ${
-              activeSlide === index ? "opacity-100" : "opacity-0"
+            className={`absolute inset-0 transition-all duration-1000 ease-premium ${
+              activeSlide === index 
+                ? "opacity-100 scale-100" 
+                : "opacity-0 scale-[1.02]"
             }`}
           >
             <img
@@ -108,72 +157,88 @@ const EditorialImageBlocks = () => {
               alt={img.caption}
               className="w-full h-full object-cover"
             />
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-charcoal/80 to-transparent">
+            <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-charcoal/80 to-transparent">
               <p className="font-serif text-lg text-charcoal-foreground">{img.caption}</p>
               <p className="text-sm text-charcoal-foreground/70 mt-1">{img.description}</p>
             </div>
           </div>
         ))}
         
-        {/* Slide indicators */}
-        <div className="absolute bottom-4 right-4 flex gap-2">
+        {/* Slide indicators with animated progress */}
+        <div className="absolute bottom-5 right-5 flex gap-2">
           {images.map((_, index) => (
             <button
               key={index}
               onClick={() => setActiveSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                activeSlide === index ? "bg-amber w-6" : "bg-charcoal-foreground/30"
+              className={`h-2 rounded-full transition-all duration-500 ease-premium ${
+                activeSlide === index 
+                  ? "bg-amber w-8" 
+                  : "bg-charcoal-foreground/30 w-2 hover:bg-charcoal-foreground/50"
               }`}
             />
           ))}
         </div>
       </div>
 
-      {/* Desktop grid layout with parallax */}
-      <div className="hidden lg:grid grid-cols-12 gap-4 lg:gap-6">
+      {/* Desktop grid layout with parallax and blur-in */}
+      <div className="hidden lg:grid grid-cols-12 gap-5 lg:gap-8">
         {/* Large image with parallax */}
         <div
           data-index={0}
-          className={`col-span-8 transition-all duration-700 ease-editorial ${
+          className={`col-span-8 transition-all duration-800 ease-premium ${
             visibleItems.has(0)
               ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-8"
+              : "opacity-0 translate-y-10"
           }`}
           style={{
-            filter: visibleItems.has(0) ? 'blur(0px)' : 'blur(8px)',
+            filter: visibleItems.has(0) ? 'blur(0px)' : 'blur(10px)',
           }}
           onMouseEnter={() => setHoveredItem(0)}
           onMouseLeave={() => setHoveredItem(null)}
         >
           <div 
-            className={`aspect-[16/10] relative overflow-hidden group transition-all duration-500 ease-editorial ${
-              hoveredItem === 0 ? 'shadow-2xl -translate-y-2' : ''
+            className={`aspect-[16/10] relative overflow-hidden group transition-all duration-500 ease-premium ${
+              hoveredItem === 0 ? 'shadow-2xl' : ''
             }`}
+            style={{
+              transform: hoveredItem === 0 ? 'translateY(-6px)' : 'translateY(0)',
+            }}
           >
             <img 
               src={images[0].image}
               alt={images[0].caption}
-              className="w-full h-full object-cover transition-transform duration-700"
+              className="w-full h-full object-cover transition-transform duration-800 ease-premium"
               style={{
-                transform: `translateY(${scrollY * 20}px) scale(1.1)`,
+                transform: `translateY(${scrollY * 25}px) scale(1.12) ${
+                  hoveredItem === 0 ? 'scale(1.15)' : ''
+                }`,
               }}
             />
             
             {/* Warm glow on hover */}
             <div 
-              className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+              className={`absolute inset-0 pointer-events-none transition-opacity duration-600 ease-premium ${
                 hoveredItem === 0 ? "opacity-100" : "opacity-0"
               }`}
               style={{
-                background: 'radial-gradient(ellipse at center, hsl(38 90% 55% / 0.15) 0%, transparent 70%)',
+                background: 'radial-gradient(ellipse at center, hsl(38 90% 55% / 0.18) 0%, transparent 70%)',
               }}
             />
-            <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/10 transition-colors duration-500" />
+            
+            {/* Glow border effect */}
+            <div 
+              className={`absolute inset-0 pointer-events-none transition-all duration-500 ease-premium ${
+                hoveredItem === 0 ? "opacity-100" : "opacity-0"
+              }`}
+              style={{
+                boxShadow: 'inset 0 0 0 1px hsl(38 90% 55% / 0.3)',
+              }}
+            />
           </div>
-          <div className="mt-4">
+          <div className="mt-5">
             <h3 className="font-serif text-lg text-foreground">{images[0].caption}</h3>
             <p 
-              className={`text-sm text-muted-foreground mt-1 transition-all duration-500 ${
+              className={`text-sm text-muted-foreground mt-1 transition-all duration-500 ease-premium ${
                 hoveredItem === 0 ? 'opacity-100 translate-y-0' : 'opacity-70 translate-y-1'
               }`}
             >
@@ -183,51 +248,65 @@ const EditorialImageBlocks = () => {
         </div>
 
         {/* Medium images - stacked right with parallax */}
-        <div className="col-span-4 space-y-4 lg:space-y-6">
+        <div className="col-span-4 space-y-5 lg:space-y-8">
           {[1, 2].map((idx) => (
             <div
               key={idx}
               data-index={idx}
-              className={`transition-all duration-700 ease-editorial ${
+              className={`transition-all duration-800 ease-premium ${
                 visibleItems.has(idx)
                   ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-8"
+                  : "opacity-0 translate-y-10"
               }`}
               style={{ 
-                transitionDelay: `${idx * 100}ms`,
-                filter: visibleItems.has(idx) ? 'blur(0px)' : 'blur(8px)',
+                transitionDelay: `${idx * 150}ms`,
+                filter: visibleItems.has(idx) ? 'blur(0px)' : 'blur(10px)',
               }}
               onMouseEnter={() => setHoveredItem(idx)}
               onMouseLeave={() => setHoveredItem(null)}
             >
               <div 
-                className={`${idx === 1 ? 'aspect-square' : 'aspect-[4/3]'} relative overflow-hidden group transition-all duration-500 ease-editorial ${
-                  hoveredItem === idx ? 'shadow-2xl -translate-y-2' : ''
+                className={`${idx === 1 ? 'aspect-square' : 'aspect-[4/3]'} relative overflow-hidden group transition-all duration-500 ease-premium ${
+                  hoveredItem === idx ? 'shadow-2xl' : ''
                 }`}
+                style={{
+                  transform: hoveredItem === idx ? 'translateY(-6px)' : 'translateY(0)',
+                }}
               >
                 <img 
                   src={images[idx].image}
                   alt={images[idx].caption}
-                  className="w-full h-full object-cover transition-transform duration-700"
+                  className="w-full h-full object-cover transition-transform duration-800 ease-premium"
                   style={{
-                    transform: `translateY(${scrollY * (15 + idx * 5)}px) scale(1.1)`,
+                    transform: `translateY(${scrollY * (18 + idx * 6)}px) scale(1.12) ${
+                      hoveredItem === idx ? 'scale(1.15)' : ''
+                    }`,
                   }}
                 />
                 
                 {/* Warm glow on hover */}
                 <div 
-                  className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${
+                  className={`absolute inset-0 pointer-events-none transition-opacity duration-600 ease-premium ${
                     hoveredItem === idx ? "opacity-100" : "opacity-0"
                   }`}
                   style={{
-                    background: 'radial-gradient(ellipse at center, hsl(38 90% 55% / 0.15) 0%, transparent 70%)',
+                    background: 'radial-gradient(ellipse at center, hsl(38 90% 55% / 0.18) 0%, transparent 70%)',
                   }}
                 />
-                <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/10 transition-colors duration-500" />
+                
+                {/* Glow border effect */}
+                <div 
+                  className={`absolute inset-0 pointer-events-none transition-all duration-500 ease-premium ${
+                    hoveredItem === idx ? "opacity-100" : "opacity-0"
+                  }`}
+                  style={{
+                    boxShadow: 'inset 0 0 0 1px hsl(38 90% 55% / 0.3)',
+                  }}
+                />
               </div>
-              <div className="mt-3">
+              <div className="mt-4">
                 <p 
-                  className={`text-sm text-muted-foreground transition-all duration-500 ${
+                  className={`text-sm text-muted-foreground transition-all duration-500 ease-premium ${
                     hoveredItem === idx ? 'opacity-100 translate-y-0' : 'opacity-70 translate-y-1'
                   }`}
                 >
