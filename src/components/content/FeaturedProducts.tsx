@@ -78,26 +78,23 @@ const FeaturedProducts = () => {
       aria-labelledby="featured-products"
     >
       {/* Header with reveal animation */}
-      <div 
+      <div
         ref={headerRef}
-        className={`flex items-end justify-between mb-14 lg:mb-20 transition-all duration-800 ease-premium ${
-          headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
+        className={`flex items-end justify-between mb-16 lg:mb-24 transition-all duration-1000 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+          }`}
       >
         <div>
-          <span 
-            className={`text-xs tracking-[0.2em] uppercase text-olive mb-3 block transition-all duration-700 ease-premium ${
-              headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+          <span
+            className={`text-xs tracking-[0.2em] uppercase text-olive/80 mb-4 block transition-all duration-700 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             style={{ transitionDelay: "100ms" }}
           >
-            Featured Lamps
+            Curated Collection
           </span>
-          <h2 
-            id="featured-products" 
-            className={`font-serif text-3xl lg:text-4xl text-foreground transition-all duration-700 ease-premium ${
-              headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+          <h2
+            id="featured-products"
+            className={`font-serif text-3xl md:text-4xl lg:text-5xl text-foreground font-light tracking-tight transition-all duration-700 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             style={{ transitionDelay: "200ms" }}
           >
             Handcrafted Pieces
@@ -105,140 +102,104 @@ const FeaturedProducts = () => {
         </div>
         <Link
           to="/category/shop"
-          className={`text-sm text-muted-foreground hover:text-foreground transition-all duration-500 editorial-link hidden lg:block ${
-            headerVisible ? "opacity-100" : "opacity-0"
-          }`}
+          className={`text-sm text-muted-foreground hover:text-foreground transition-all duration-500 border-b border-transparent hover:border-foreground pb-0.5 hidden lg:block ${headerVisible ? "opacity-100" : "opacity-0"
+            }`}
           style={{ transitionDelay: "300ms" }}
         >
-          View all
+          View all objects
         </Link>
       </div>
 
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className={i === 1 ? "md:mt-12" : i === 2 ? "md:-mt-8" : ""}>
-              <Skeleton className={i === 1 ? "aspect-[3/4]" : "aspect-square"} />
-              <div className="mt-6 space-y-2">
-                <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-5 w-1/3" />
+            <div key={i} className={i === 1 ? "lg:mt-16" : ""}>
+              <Skeleton className="aspect-[4/5] rounded-xl" />
+              <div className="mt-6 space-y-3">
+                <Skeleton className="h-6 w-2/3" />
+                <Skeleton className="h-4 w-1/3" />
               </div>
             </div>
           ))}
         </div>
       ) : products.length === 0 ? (
-        <div className="py-10">
+        <div className="py-20 text-center">
           <p className="text-sm text-muted-foreground">
-            No Shopify products found. Make sure products are <span className="font-medium">Active</span> and available on the
-            <span className="font-medium"> Online Store</span> sales channel.
+            No products found in the collection.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16 lg:gap-x-12">
           {products.map((product, index) => {
             const image = product.node.images.edges?.[0]?.node;
             const price = product.node.priceRange.minVariantPrice;
-            const isFeatured = index === 1;
             const isHovered = hoveredItem === index;
+
+            // Masonry-like offset logic: 
+            // 2nd item pushes down on desktop
+            // 3rd item pulls up slightly on desktop if desired, or we just keep it simple
+            const offsetClass = index === 1 ? "lg:mt-16" : index === 2 ? "lg:-mt-8" : "";
 
             return (
               <Link
                 key={product.node.id}
                 to={`/product/${product.node.handle}`}
                 data-index={index}
-                className={`group block transition-all duration-700 ease-premium ${
-                  visibleItems.has(index) 
-                    ? "opacity-100 translate-y-0" 
-                    : "opacity-0 translate-y-12"
-                } ${index === 1 ? "md:mt-12" : index === 2 ? "md:-mt-8" : ""}`}
-                style={{ 
-                  filter: visibleItems.has(index) ? 'blur(0px)' : 'blur(8px)',
-                }}
+                className={`group block transition-all duration-1000 ease-out ${visibleItems.has(index)
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-16"
+                  } ${offsetClass}`}
                 onMouseEnter={() => setHoveredItem(index)}
                 onMouseLeave={() => setHoveredItem(null)}
               >
-                {/* Image container with hover effects */}
+                {/* Image Card */}
                 <div
-                  className={`relative overflow-hidden bg-beige ${
-                    isFeatured ? "aspect-[3/4]" : "aspect-square"
-                  } transition-all duration-500 ease-premium ${
-                    isHovered ? "shadow-2xl" : "shadow-none"
-                  }`}
-                  style={{
-                    transform: isHovered ? 'translateY(-8px)' : 'translateY(0)',
-                  }}
-                >
-                  {/* Ambient glow behind product */}
-                  <div
-                    className={`absolute inset-0 transition-opacity duration-700 ease-premium ${
-                      isHovered ? "opacity-100" : "opacity-30"
+                  className={`relative overflow-hidden rounded-2xl bg-[#F5F5F0] aspect-[4/5] transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${isHovered ? "shadow-xl translate-y-[-4px]" : "shadow-sm translate-y-0"
                     }`}
-                    style={{
-                      background: `radial-gradient(ellipse 60% 50% at 50% 40%, hsl(38 90% 55% / ${
-                        isHovered ? 0.35 : 0.12
-                      }) 0%, transparent 70%)`,
-                    }}
+                >
+                  {/* Warm overlay on hover */}
+                  <div
+                    className={`absolute inset-0 bg-[#F5EAD4]/20 transition-opacity duration-500 pointer-events-none z-10 ${isHovered ? "opacity-100" : "opacity-0"
+                      }`}
                   />
 
                   {image ? (
                     <img
                       src={image.url}
-                      alt={image.altText || `${product.node.title} handcrafted lamp`}
+                      alt={image.altText || product.node.title}
                       loading="lazy"
-                      className={`relative z-10 w-full h-full object-cover transition-all duration-600 ease-premium ${
-                        isHovered ? "scale-[1.04] brightness-105" : "scale-100"
-                      }`}
+                      className={`relative z-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${isHovered ? "scale-105" : "scale-100"
+                        }`}
                     />
                   ) : (
-                    <div className="relative z-10 w-full h-full grid place-items-center text-sm text-muted-foreground">
-                      No image
+                    <div className="flex items-center justify-center h-full text-muted-foreground/50 text-sm">
+                      No Image
                     </div>
                   )}
 
-                  {/* Hover glow overlay */}
+                  {/* Floating Action Button */}
                   <div
-                    className={`absolute inset-0 z-20 pointer-events-none transition-opacity duration-500 ease-premium ${
-                      isHovered ? "opacity-100" : "opacity-0"
-                    }`}
-                    style={{
-                      background:
-                        "radial-gradient(ellipse 50% 40% at 50% 35%, hsl(38 90% 55% / 0.2) 0%, transparent 60%)",
-                    }}
-                  />
-                  
-                  {/* CTA that fades in on hover */}
-                  <div 
-                    className={`absolute bottom-4 left-4 right-4 z-30 transition-all duration-400 ease-premium ${
-                      isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                    }`}
+                    className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-20 transition-all duration-500 ease-out ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                      }`}
                   >
-                    <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      className="w-full bg-background/90 backdrop-blur-sm hover:bg-background text-foreground rounded-none text-xs tracking-wide"
+                    <Button
+                      variant="secondary"
+                      className="bg-white/90 hover:bg-white text-foreground rounded-full px-6 shadow-md backdrop-blur-sm h-10 text-xs uppercase tracking-wider font-medium"
                     >
-                      View Details
-                      <ArrowRight className="ml-2 h-3 w-3" />
+                      View Item
                     </Button>
                   </div>
                 </div>
 
-                {/* Product info with staggered reveal */}
-                <div className="mt-6 space-y-1">
-                  <h3
-                    className={`font-serif text-xl lg:text-2xl text-foreground transition-all duration-600 ease-premium ${
-                      visibleItems.has(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                    }`}
-                    style={{ transitionDelay: `${index * 150 + 200}ms` }}
-                  >
+                {/* Content */}
+                <div className="mt-6 text-center space-y-1.5 px-2">
+                  <h3 className="font-serif text-2xl text-foreground font-light">
                     {product.node.title}
                   </h3>
-                  <p
-                    className={`text-base text-muted-foreground transition-all duration-600 ease-premium ${
-                      visibleItems.has(index) ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-                    }`}
-                    style={{ transitionDelay: `${index * 150 + 350}ms` }}
-                  >
+                  <p className="text-xs text-olive/70 tracking-wide uppercase">
+                    Handcrafted from recycled glass
+                  </p>
+                  <p className="text-sm text-muted-foreground font-medium pt-1">
                     {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
                   </p>
                 </div>
@@ -248,13 +209,13 @@ const FeaturedProducts = () => {
         </div>
       )}
 
-      {/* Mobile view all link */}
-      <div className="mt-14 text-center lg:hidden">
+      {/* Mobile Footer Link */}
+      <div className="mt-16 text-center lg:hidden">
         <Link
           to="/category/shop"
-          className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-500 editorial-link"
+          className="inline-block text-sm text-muted-foreground border-b border-muted-foreground/30 hover:border-foreground pb-1 transition-all duration-300"
         >
-          View all lamps
+          View all objects
         </Link>
       </div>
     </section>
