@@ -9,7 +9,7 @@ interface Store {
 
 const stores: Store[] = [
   {
-    name: "LINEA Madison Avenue",
+    name: "Rebello Creations Madison Avenue",
     address: "789 Madison Avenue, New York, NY 10065",
     phone: "+1 (212) 555-0123",
     hours: "Mon-Sat: 10AM-8PM, Sun: 12PM-6PM",
@@ -17,7 +17,7 @@ const stores: Store[] = [
     lng: -73.9776
   },
   {
-    name: "LINEA Beverly Hills", 
+    name: "Rebello Creations Beverly Hills",
     address: "456 Rodeo Drive, Beverly Hills, CA 90210",
     phone: "+1 (310) 555-0456",
     hours: "Mon-Sat: 10AM-8PM, Sun: 12PM-6PM",
@@ -25,8 +25,8 @@ const stores: Store[] = [
     lng: -118.4014
   },
   {
-    name: "LINEA SoHo",
-    address: "123 Spring Street, New York, NY 10012", 
+    name: "Rebello Creations SoHo",
+    address: "123 Spring Street, New York, NY 10012",
     phone: "+1 (212) 555-0789",
     hours: "Mon-Sat: 11AM-8PM, Sun: 12PM-7PM",
     lat: 40.7253,
@@ -48,7 +48,7 @@ const StoreMap = () => {
         referrerPolicy="no-referrer-when-downgrade"
         className="w-full h-full"
       />
-      
+
       {/* Overlay with store markers */}
       <div className="absolute top-4 left-4 bg-background/90 backdrop-blur-sm rounded-lg p-4 max-w-xs">
         <h4 className="text-sm font-medium text-foreground mb-3">Our Locations</h4>

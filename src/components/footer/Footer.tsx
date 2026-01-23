@@ -5,15 +5,15 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-8">
           {/* Brand - Left side */}
           <div>
-            <img 
-              src="/Linea_Jewelry_Inc-2.svg" 
-              alt="Linea Jewelry Inc." 
-              className="mb-4 h-6 w-auto"
+            <img
+              src="/logo.PNG"
+              alt="Rebello Creations"
+              className="mb-4 h-10 w-auto invert brightness-0"
             />
             <p className="text-sm font-light text-black/70 leading-relaxed max-w-md mb-6">
-              Minimalist jewelry crafted for the modern individual
+              Handcrafted lighting and home decor from recycled materials
             </p>
-            
+
             {/* Contact Information */}
             <div className="space-y-2 text-sm font-light text-black/70">
               <div>
@@ -24,7 +24,7 @@ const Footer = () => {
               <div>
                 <p className="font-normal text-black mb-1 mt-3">Contact</p>
                 <p>+1 (212) 555-0123</p>
-                <p>hello@lineajewelry.com</p>
+                <p>hello@rebellocreations.com</p>
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@ const Footer = () => {
       <div className="border-t border-[#e5e5e5] -mx-6 px-6 pt-2">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm font-light text-black mb-1 md:mb-0">
-            © 2024 Linea. All rights reserved.
+            © {new Date().getFullYear()} Rebello Creations. All rights reserved.
           </p>
           <div className="flex space-x-6">
             <a href="/privacy-policy" className="text-sm font-light text-black hover:text-black/70 transition-colors">

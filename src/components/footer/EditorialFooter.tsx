@@ -30,13 +30,13 @@ const EditorialFooter = () => {
       { name: "Floor Lamps", href: "/category/floor-lamps" },
     ],
     support: [
-      { name: "Shipping & Returns", href: "/about/customer-care" },
+      { name: "Return Policy", href: "/return-policy" },
       { name: "Care Instructions", href: "/about/care" },
       { name: "Size Guide", href: "/about/size-guide" },
-      { name: "Contact Us", href: "/about/contact" },
+      { name: "Contact Us", href: "/contact" },
     ],
     connect: [
-      { name: "Instagram", href: "https://instagram.com" },
+      { name: "Instagram", href: "https://www.instagram.com/rebello.creations/" },
       { name: "Pinterest", href: "https://pinterest.com" },
       { name: "Newsletter", href: "/newsletter" },
     ],

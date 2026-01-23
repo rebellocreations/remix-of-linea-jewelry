@@ -122,6 +122,13 @@ const EditorialHeader = () => {
           >
             Blog
           </Link>
+
+          <Link
+            to="/contact"
+            className="text-sm tracking-wide text-foreground/80 hover:text-foreground transition-colors duration-300 editorial-link"
+          >
+            Contact
+          </Link>
         </div>
 
         {/* Mobile menu button */}
@@ -212,6 +219,14 @@ const EditorialHeader = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Blog
+              </Link>
+
+              <Link
+                to="/contact"
+                className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Contact
               </Link>
 
               {/* Account link in mobile menu */}

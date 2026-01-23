@@ -20,6 +20,11 @@ import AccountPage from "./pages/account/Account";
 import Collections from "./pages/Collections";
 import Blogs from "./pages/Blogs";
 import BlogDetail from "./pages/BlogDetail";
+import Contact from "./pages/Contact";
+import CareInstructions from "./pages/about/CareInstructions";
+import Newsletter from "./pages/Newsletter";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import TermsAndConditions from "./pages/TermsOfService";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +49,11 @@ const AnimatedRoutes = () => {
         <Route path="/collections" element={<Collections />} />
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blogs/:slug" element={<BlogDetail />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/about/care" element={<CareInstructions />} />
+        <Route path="/newsletter" element={<Newsletter />} />
+        <Route path="/return-policy" element={<ReturnPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
