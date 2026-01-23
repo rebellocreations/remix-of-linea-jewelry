@@ -1,11 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, User, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import CartDrawer from "@/components/cart/CartDrawer";
+
+// Rebello Creations collections
+const collections = [
+  { name: "Glasses & Bowls", handle: "glasses-bowls" },
+  { name: "Platters", handle: "platters" },
+  { name: "Lamps", handle: "lamps" },
+  { name: "Candles", handle: "candles" },
+  { name: "Planters", handle: "planters" },
+  { name: "Soap Dispenser", handle: "soap-dispenser" },
+  { name: "Sippers & Jars", handle: "sippers-jars" },
+];
 
 const EditorialHeader = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isCollectionHovered, setIsCollectionHovered] = useState(false);
+  const dropdownTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,36 +30,98 @@ const EditorialHeader = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { name: "Shop", href: "/category/shop" },
-    { name: "Collection", href: "/category/collection" },
-    { name: "About", href: "/about/our-story" },
-  ];
-
   const handleAccountClick = () => {
     navigate('/account');
   };
 
+  const handleCollectionMouseEnter = () => {
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    setIsCollectionHovered(true);
+  };
+
+  const handleCollectionMouseLeave = () => {
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setIsCollectionHovered(false);
+    }, 200);
+  };
+
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-editorial ${
-        isScrolled
-          ? "bg-background/95 backdrop-blur-md border-b border-border"
-          : "bg-transparent"
-      }`}
+      className="fixed top-4 left-4 right-4 z-50 transition-all duration-500 ease-editorial bg-white/95 backdrop-blur-md border border-white/20 shadow-sm rounded-2xl"
     >
       <nav className="flex items-center justify-between h-20 px-6 lg:px-12">
         {/* Left - Navigation */}
         <div className="hidden lg:flex items-center space-x-10">
-          {navLinks.map((link) => (
+          {/* Collections with dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={handleCollectionMouseEnter}
+            onMouseLeave={handleCollectionMouseLeave}
+          >
             <Link
-              key={link.name}
-              to={link.href}
-              className="text-sm tracking-wide text-foreground/80 hover:text-foreground transition-colors duration-300 editorial-link"
+              to="/collections"
+              className="text-sm tracking-wide text-foreground/80 hover:text-foreground transition-colors duration-300 editorial-link py-6 block"
             >
-              {link.name}
+              Collections
             </Link>
-          ))}
+
+            {/* Animated Dropdown */}
+            <AnimatePresence>
+              {isCollectionHovered && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="absolute top-full left-0 pt-2"
+                >
+                  <div className="bg-background border border-border/50 rounded-xl shadow-2xl min-w-[220px] py-2 overflow-hidden">
+                    {collections.map((collection, index) => (
+                      <motion.div
+                        key={collection.handle}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.03, duration: 0.15 }}
+                      >
+                        <Link
+                          to={`/collections?collection=${collection.handle}`}
+                          className="block px-5 py-2.5 text-sm text-foreground/80 hover:text-foreground hover:bg-olive/5 transition-all duration-200"
+                          onClick={() => setIsCollectionHovered(false)}
+                        >
+                          {collection.name}
+                        </Link>
+                      </motion.div>
+                    ))}
+                    <div className="border-t border-border/50 mt-2 pt-2">
+                      <Link
+                        to="/collections"
+                        className="block px-5 py-2.5 text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+                        onClick={() => setIsCollectionHovered(false)}
+                      >
+                        View all →
+                      </Link>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <Link
+            to="/about/our-story"
+            className="text-sm tracking-wide text-foreground/80 hover:text-foreground transition-colors duration-300 editorial-link"
+          >
+            About
+          </Link>
+
+          <Link
+            to="/blogs"
+            className="text-sm tracking-wide text-foreground/80 hover:text-foreground transition-colors duration-300 editorial-link"
+          >
+            Blog
+          </Link>
         </div>
 
         {/* Mobile menu button */}
@@ -60,9 +136,13 @@ const EditorialHeader = () => {
         {/* Center - Logo */}
         <Link
           to="/"
-          className="absolute left-1/2 transform -translate-x-1/2 font-serif text-2xl lg:text-3xl tracking-wide text-foreground"
+          className="absolute left-1/2 transform -translate-x-1/2"
         >
-          REBELLO
+          <img
+            src="/logo.PNG"
+            alt="Rebello Creations"
+            className="brand-logo h-16 md:h-24 lg:h-28"
+          />
         </Link>
 
         {/* Right - Icons */}
@@ -85,31 +165,67 @@ const EditorialHeader = () => {
       </nav>
 
       {/* Mobile menu */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden bg-background border-t border-border animate-fade-up">
-          <div className="px-6 py-8 space-y-6">
-            {navLinks.map((link) => (
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3 }}
+            className="lg:hidden bg-background border-t border-border overflow-hidden"
+          >
+            <div className="px-6 py-8 space-y-6">
+              {/* Collections with sub-items */}
+              <div>
+                <Link
+                  to="/collections"
+                  className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Collections
+                </Link>
+                <div className="mt-3 pl-4 space-y-2">
+                  {collections.map((collection) => (
+                    <Link
+                      key={collection.handle}
+                      to={`/collections?collection=${collection.handle}`}
+                      className="block text-muted-foreground hover:text-foreground transition-colors duration-200 py-1"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {collection.name}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
               <Link
-                key={link.name}
-                to={link.href}
+                to="/about/our-story"
                 className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                {link.name}
+                About
               </Link>
-            ))}
-            
-            {/* Account link in mobile menu */}
-            <Link
-              to="/account"
-              className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              Account
-            </Link>
-          </div>
-        </div>
-      )}
+
+              <Link
+                to="/blogs"
+                className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+
+              {/* Account link in mobile menu */}
+              <Link
+                to="/account"
+                className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Account
+              </Link>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

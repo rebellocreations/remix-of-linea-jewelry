@@ -4,6 +4,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .brand-logo {
+    @apply object-contain block w-auto;
+    max-width: 100%;
+    /* Ensure no residual margins/padding from user agent styles */
+    margin: 0;
+    padding: 0;
+    /* Prevent shrinking */
+    flex-shrink: 0;
+  }
+}
+
+
 /* Rebello Creations - Premium Editorial Design System */
 
 @layer base {
@@ -11,59 +24,59 @@
     /* Warm, premium palette - off-white backgrounds, charcoal, olive, amber */
     --background: 40 20% 97%;
     --foreground: 30 10% 12%;
-    
+
     /* Charcoal black for strong elements */
     --charcoal: 30 10% 12%;
     --charcoal-foreground: 40 20% 97%;
-    
+
     /* Warm beige */
     --beige: 35 30% 92%;
     --beige-foreground: 30 10% 12%;
-    
+
     /* Olive green accent */
     --olive: 75 25% 35%;
     --olive-foreground: 40 20% 97%;
-    
+
     /* Amber highlight */
     --amber: 38 90% 55%;
     --amber-foreground: 30 10% 12%;
-    
+
     /* Navigation - transparent initially */
     --nav-background: 40 20% 97%;
     --nav-foreground: 30 10% 25%;
     --nav-hover: 30 10% 12%;
-    
+
     /* Interactive elements */
     --primary: 30 10% 12%;
     --primary-foreground: 40 20% 97%;
     --primary-hover: 30 10% 20%;
-    
+
     /* Subtle elements */
     --secondary: 35 25% 90%;
     --secondary-foreground: 30 10% 25%;
-    
+
     --muted: 35 20% 88%;
     --muted-foreground: 30 10% 45%;
-    
+
     --accent: 75 25% 35%;
     --accent-foreground: 40 20% 97%;
-    
+
     --border: 35 15% 85%;
     --input: 35 15% 85%;
     --ring: 30 10% 12%;
-    
+
     /* Cards and surfaces */
     --card: 40 25% 98%;
     --card-foreground: 30 10% 12%;
-    
+
     --popover: 40 25% 98%;
     --popover-foreground: 30 10% 12%;
-    
+
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    
+
     --radius: 0.25rem;
-    
+
     /* Premium transitions - slow, elegant */
     --transition-editorial: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
@@ -81,46 +94,46 @@
   .dark {
     --background: 30 10% 8%;
     --foreground: 35 20% 92%;
-    
+
     --charcoal: 35 20% 92%;
     --charcoal-foreground: 30 10% 8%;
-    
+
     --beige: 30 10% 15%;
     --beige-foreground: 35 20% 92%;
-    
+
     --olive: 75 20% 45%;
     --olive-foreground: 30 10% 8%;
-    
+
     --amber: 38 85% 50%;
     --amber-foreground: 30 10% 8%;
-    
+
     --nav-background: 30 10% 8%;
     --nav-foreground: 35 15% 75%;
     --nav-hover: 35 20% 92%;
-    
+
     --primary: 35 20% 92%;
     --primary-foreground: 30 10% 8%;
     --primary-hover: 35 15% 85%;
-    
+
     --secondary: 30 10% 15%;
     --secondary-foreground: 35 15% 75%;
-    
+
     --muted: 30 10% 18%;
     --muted-foreground: 35 10% 55%;
-    
+
     --accent: 75 20% 45%;
     --accent-foreground: 30 10% 8%;
-    
+
     --border: 30 8% 22%;
     --input: 30 8% 22%;
     --ring: 35 20% 92%;
-    
+
     --card: 30 10% 10%;
     --card-foreground: 35 20% 92%;
-    
+
     --popover: 30 10% 10%;
     --popover-foreground: 35 20% 92%;
-    
+
     --destructive: 0 62% 50%;
     --destructive-foreground: 0 0% 98%;
   }
@@ -143,7 +156,12 @@
   }
 
   /* Serif typography for headings */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: 'Cormorant Garamond', serif;
     font-weight: 400;
     letter-spacing: -0.01em;
@@ -151,11 +169,12 @@
 }
 
 @layer components {
+
   /* Editorial link with underline animation */
   .editorial-link {
     @apply relative inline-block;
   }
-  
+
   .editorial-link::after {
     content: '';
     @apply absolute bottom-0 left-0 w-full h-px bg-current;
@@ -163,7 +182,7 @@
     transform-origin: right;
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .editorial-link:hover::after {
     transform: scaleX(1);
     transform-origin: left;
@@ -171,10 +190,10 @@
 
   /* Premium hover lift - subtle, slow */
   .hover-lift {
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), 
-                box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .hover-lift:hover {
     transform: translateY(-6px);
     box-shadow: 0 25px 50px -15px rgba(0, 0, 0, 0.15);
@@ -184,11 +203,11 @@
   .image-zoom {
     @apply overflow-hidden;
   }
-  
+
   .image-zoom img {
     transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .image-zoom:hover img {
     transform: scale(1.03);
   }
@@ -199,10 +218,10 @@
     filter: blur(12px);
     transform: translateY(24px);
     transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-                filter 0.8s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      filter 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .reveal-blur.visible {
     opacity: 1;
     filter: blur(0px);
@@ -214,27 +233,44 @@
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .reveal-fade.visible {
     opacity: 1;
     transform: translateY(0);
   }
 
   /* Staggered children animation */
-  .stagger-children > * {
+  .stagger-children>* {
     opacity: 0;
     transform: translateY(20px);
     animation: staggerFadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
-  
-  .stagger-children > *:nth-child(1) { animation-delay: 0s; }
-  .stagger-children > *:nth-child(2) { animation-delay: 0.1s; }
-  .stagger-children > *:nth-child(3) { animation-delay: 0.2s; }
-  .stagger-children > *:nth-child(4) { animation-delay: 0.3s; }
-  .stagger-children > *:nth-child(5) { animation-delay: 0.4s; }
-  .stagger-children > *:nth-child(6) { animation-delay: 0.5s; }
+
+  .stagger-children>*:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .stagger-children>*:nth-child(2) {
+    animation-delay: 0.1s;
+  }
+
+  .stagger-children>*:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .stagger-children>*:nth-child(4) {
+    animation-delay: 0.3s;
+  }
+
+  .stagger-children>*:nth-child(5) {
+    animation-delay: 0.4s;
+  }
+
+  .stagger-children>*:nth-child(6) {
+    animation-delay: 0.5s;
+  }
 
   @keyframes staggerFadeUp {
     to {
@@ -246,9 +282,9 @@
   /* Premium product card hover */
   .product-card {
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-                box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .product-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.18);
@@ -259,9 +295,9 @@
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-                transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .group:hover .cta-fade {
     opacity: 1;
     transform: translateY(0);
@@ -270,27 +306,44 @@
   /* Glow border on hover */
   .glow-border {
     transition: box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-                border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      border-color 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   .glow-border:hover {
     border-color: hsl(var(--amber));
     box-shadow: 0 0 20px hsl(var(--amber) / 0.25);
   }
 
   /* Sequential entrance for trust icons */
-  .sequential-entrance > * {
+  .sequential-entrance>* {
     opacity: 0;
     transform: translateY(16px) scale(0.95);
     animation: sequentialPop 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   }
-  
-  .sequential-entrance > *:nth-child(1) { animation-delay: 0s; }
-  .sequential-entrance > *:nth-child(2) { animation-delay: 0.12s; }
-  .sequential-entrance > *:nth-child(3) { animation-delay: 0.24s; }
-  .sequential-entrance > *:nth-child(4) { animation-delay: 0.36s; }
-  .sequential-entrance > *:nth-child(5) { animation-delay: 0.48s; }
-  .sequential-entrance > *:nth-child(6) { animation-delay: 0.6s; }
+
+  .sequential-entrance>*:nth-child(1) {
+    animation-delay: 0s;
+  }
+
+  .sequential-entrance>*:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .sequential-entrance>*:nth-child(3) {
+    animation-delay: 0.24s;
+  }
+
+  .sequential-entrance>*:nth-child(4) {
+    animation-delay: 0.36s;
+  }
+
+  .sequential-entrance>*:nth-child(5) {
+    animation-delay: 0.48s;
+  }
+
+  .sequential-entrance>*:nth-child(6) {
+    animation-delay: 0.6s;
+  }
 
   @keyframes sequentialPop {
     to {
@@ -302,9 +355,9 @@
   /* Micro hover for icons */
   .micro-hover {
     transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-                opacity 0.3s ease;
+      opacity 0.3s ease;
   }
-  
+
   .micro-hover:hover {
     transform: scale(1.08);
     opacity: 0.9;
@@ -316,17 +369,31 @@
   }
 
   @keyframes testimonialCrossfade {
-    0%, 40% { opacity: 1; }
-    50%, 90% { opacity: 0; }
-    100% { opacity: 1; }
+
+    0%,
+    40% {
+      opacity: 1;
+    }
+
+    50%,
+    90% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
   }
 
   /* Ambient glow keyframe */
   @keyframes ambientGlow {
-    0%, 100% {
+
+    0%,
+    100% {
       opacity: 0.6;
       transform: translate(-50%, -50%) scale(1);
     }
+
     50% {
       opacity: 1;
       transform: translate(-50%, -50%) scale(1.15);
@@ -335,8 +402,17 @@
 
   /* Breathing pulse for background elements */
   @keyframes breathingPulse {
-    0%, 100% { opacity: 0.4; transform: scale(1); }
-    50% { opacity: 0.7; transform: scale(1.02); }
+
+    0%,
+    100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+
+    50% {
+      opacity: 0.7;
+      transform: scale(1.02);
+    }
   }
 
   /* Subtle divider line animation */
@@ -348,21 +424,24 @@
   }
 
   @keyframes expandLine {
-    to { transform: scaleX(1); }
+    to {
+      transform: scaleX(1);
+    }
   }
 }
 
 @layer utilities {
+
   /* Text balance for headings */
   .text-balance {
     text-wrap: balance;
   }
-  
+
   /* Premium easing utility */
   .ease-premium {
     transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   }
-  
+
   /* Parallax container */
   .parallax-slow {
     will-change: transform;

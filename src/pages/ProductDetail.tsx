@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import Header from "../components/header/Header";
-import Footer from "../components/footer/Footer";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
+import EditorialHeader from "@/components/header/EditorialHeader";
+import EditorialFooter from "@/components/footer/EditorialFooter";
 import { fetchProductByHandle } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
@@ -16,14 +14,21 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
+// New Components
+import ProductGallery from "@/components/product/ProductGallery";
+import ProductInfo from "@/components/product/ProductInfo";
+import ProductAccordion from "@/components/product/ProductAccordion";
+import Reviews from "@/components/product/Reviews";
+import SimilarProducts from "@/components/product/SimilarProducts";
+import { motion } from "framer-motion";
+import GrainOverlay from "@/components/ambient/GrainOverlay";
+
 const ProductDetail = () => {
-  // NOTE: Route is /product/:productId, but we use it as the Shopify handle.
   const { productId } = useParams();
   const handle = productId || "";
 
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<any>(null);
-  const [activeImage, setActiveImage] = useState(0);
   const addItem = useCartStore((s) => s.addItem);
 
   useEffect(() => {
@@ -32,7 +37,6 @@ const ProductDetail = () => {
       try {
         const p = await fetchProductByHandle(handle);
         setProduct(p);
-        setActiveImage(0);
       } catch (e) {
         console.error("Failed to load Shopify product:", e);
         setProduct(null);
@@ -46,9 +50,8 @@ const ProductDetail = () => {
 
   const images = useMemo(() => product?.images?.edges?.map((e: any) => e.node) ?? [], [product]);
   const variant = product?.variants?.edges?.[0]?.node;
-  const price = product?.priceRange?.minVariantPrice;
 
-  const onAddToCart = () => {
+  const onAddToCart = (quantity: number) => {
     if (!product || !variant) return;
 
     addItem({
@@ -56,136 +59,130 @@ const ProductDetail = () => {
       variantId: variant.id,
       variantTitle: variant.title,
       price: variant.price,
-      quantity: 1,
+      quantity: quantity,
       selectedOptions: variant.selectedOptions || [],
     });
 
     toast.success("Added to cart", {
-      description: product.title,
+      description: `${quantity}x ${product.title}`,
       position: "top-center",
     });
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
+  const onBuyNow = (quantity: number) => {
+    onAddToCart(quantity);
+    // In a real app, this would redirect to checkout immediately
+    window.location.href = "/checkout";
+  };
 
-      <main className="pt-6" aria-label="Product details">
-        <section className="w-full px-6">
-          <div className="lg:hidden mb-6">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/">Home</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link to="/category/shop">Shop</Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>{loading ? "Loading…" : product?.title || "Product"}</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+  if (loading) return <div className="min-h-screen grid place-items-center bg-[#F9F8F6]">Loading...</div>;
+  if (!product) return <div className="min-h-screen grid place-items-center bg-[#F9F8F6]">Product not found</div>;
+
+  return (
+    <div className="min-h-screen bg-[#FDFCF8] font-sans selection:bg-olive-100 relative overflow-hidden">
+      {/* Background Graphic Layer */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        {/* Faded Nature/Business Graphic */}
+        <motion.img
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.03 }}
+          transition={{ duration: 1.5 }}
+          src="/bgimage.png"
+          alt=""
+          className="w-full h-full object-cover mix-blend-multiply"
+        />
+        {/* Ambient Color Orbs */}
+        <motion.div
+          animate={{
+            scale: [1, 1.2, 1],
+            opacity: [0.2, 0.3, 0.2],
+            rotate: [0, 90, 0]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-0 right-0 w-[500px] h-[500px] bg-olive-200/20 rounded-full blur-[100px] mix-blend-multiply"
+        />
+        <motion.div
+          animate={{
+            scale: [1, 1.3, 1],
+            opacity: [0.2, 0.4, 0.2],
+            x: [0, -50, 0]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-100/30 rounded-full blur-[120px] mix-blend-multiply"
+        />
+      </div>
+
+      <GrainOverlay opacity={0.03} />
+      <EditorialHeader />
+
+      <motion.main
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="pt-28 pb-20 px-6 lg:px-12 max-w-[1600px] mx-auto relative z-10"
+        aria-label="Product details"
+      >
+
+        {/* Breadcrumb */}
+        <div className="mb-8 hidden lg:block">
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/">Home</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link to="/collections">Shop</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="font-medium text-stone-800">{product.title}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          {/* Left Column: Gallery (7 Cols) */}
+          <div className="lg:col-span-7">
+            <ProductGallery images={images} />
           </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-              <Skeleton className="aspect-square w-full" />
-              <div className="space-y-4">
-                <Skeleton className="h-10 w-3/4" />
-                <Skeleton className="h-6 w-1/3" />
-                <Skeleton className="h-24 w-full" />
-                <Skeleton className="h-12 w-full" />
-              </div>
+          {/* Right Column: Info (5 Cols) */}
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-32">
+              <ProductInfo
+                product={product}
+                variant={variant}
+                onAddToCart={onAddToCart}
+                onBuyNow={onBuyNow}
+              />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+              >
+                <ProductAccordion description={product.description} />
+              </motion.div>
             </div>
-          ) : !product ? (
-            <div className="py-16 text-center">
-              <h1 className="font-serif text-3xl text-foreground">Product not found</h1>
-              <p className="mt-3 text-sm text-muted-foreground">
-                This product may be unpublished on the Online Store channel, or the handle may be incorrect.
-              </p>
-              <div className="mt-8">
-                <Button asChild variant="secondary">
-                  <Link to="/category/shop">Back to shop</Link>
-                </Button>
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-              <div>
-                <div className="aspect-square overflow-hidden bg-muted/10">
-                  {images[activeImage] ? (
-                    <img
-                      src={images[activeImage].url}
-                      alt={images[activeImage].altText || `${product.title} lamp image`}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full grid place-items-center text-muted-foreground">No image</div>
-                  )}
-                </div>
+          </div>
+        </div>
 
-                {images.length > 1 ? (
-                  <div className="mt-4 grid grid-cols-5 gap-2">
-                    {images.slice(0, 5).map((img: any, idx: number) => (
-                      <button
-                        key={img.url}
-                        type="button"
-                        className={`aspect-square overflow-hidden bg-muted/10 ring-1 transition-colors ${
-                          idx === activeImage ? "ring-foreground/30" : "ring-border"
-                        }`}
-                        onClick={() => setActiveImage(idx)}
-                        aria-label={`View image ${idx + 1}`}
-                      >
-                        <img
-                          src={img.url}
-                          alt={img.altText || `${product.title} thumbnail ${idx + 1}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
+        {/* Full Width Sections */}
+        <div className="mt-24 lg:mt-32 max-w-5xl mx-auto">
+          <Reviews productId={product.id} />
+        </div>
 
-              <div className="lg:sticky lg:top-6 lg:h-fit">
-                <header>
-                  <h1 className="font-serif text-3xl lg:text-4xl text-foreground">{product.title}</h1>
-                  {price ? (
-                    <p className="mt-3 text-lg text-muted-foreground tabular-nums">
-                      {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
-                    </p>
-                  ) : null}
-                </header>
+        <div className="mt-16 border-t border-stone-200 pt-16">
+          <SimilarProducts />
+        </div>
+      </motion.main>
 
-                {product.description ? (
-                  <section className="mt-6">
-                    <p className="text-sm leading-relaxed text-muted-foreground">{product.description}</p>
-                  </section>
-                ) : null}
-
-                <section className="mt-8">
-                  <Button className="w-full" size="lg" onClick={onAddToCart} disabled={!variant}>
-                    Add to cart
-                  </Button>
-                  <p className="mt-3 text-xs text-muted-foreground">
-                    Checkout is created via Shopify Storefront API from your cart.
-                  </p>
-                </section>
-              </div>
-            </div>
-          )}
-        </section>
-      </main>
-
-      <Footer />
+      <EditorialFooter />
     </div>
   );
 };

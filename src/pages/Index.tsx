@@ -2,10 +2,17 @@ import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 import EditorialHero from "@/components/content/EditorialHero";
 import FeaturedProducts from "@/components/content/FeaturedProducts";
+import OurCollections from "@/components/content/OurCollections";
+import TransformationSlider from "@/components/content/TransformationSlider";
+import ReelsSection from "@/components/content/ReelsSection";
+import EnvironmentalImpact from "@/components/content/EnvironmentalImpact";
 import BrandStory from "@/components/content/BrandStory";
 import EditorialJourney from "@/components/content/EditorialJourney";
+import SignatureCollection from "@/components/content/SignatureCollection";
+import MaterialsCraft from "@/components/content/MaterialsCraft";
+import Testimonials from "@/components/content/Testimonials";
+import ClosingCTA from "@/components/content/ClosingCTA";
 import FeaturedCollection from "@/components/content/FeaturedCollection";
-import EditorialImageBlocks from "@/components/content/EditorialImageBlocks";
 import TransitionLine from "@/components/content/TransitionLine";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
 import FloatingQuote from "@/components/ambient/FloatingQuote";
@@ -26,9 +33,15 @@ const Index = () => {
       <main>
         <EditorialHero />
 
-        <TransitionLine text="Made slowly, not in bulk." />
+
 
         <FeaturedProducts />
+
+        <OurCollections />
+
+        <TransformationSlider />
+
+        <ReelsSection />
 
         {/* Floating quote after products */}
         <FloatingQuote
@@ -38,28 +51,27 @@ const Index = () => {
 
         <BrandStory />
 
-        {/* Intentional scroll pause after story */}
-        <ScrollPause text="This is not mass-produced lighting." />
 
-        <TransitionLine text="Each lamp begins as waste." />
 
         <EditorialJourney />
 
-        <FeaturedCollection />
+        {/* New premium sections */}
+        <SignatureCollection />
 
-        {/* Floating quote before materials */}
-        <FloatingQuote
-          text="Light, shaped by hand."
-          position="left"
-        />
+        <MaterialsCraft />
 
-        <EditorialImageBlocks />
+        <Testimonials />
 
-        {/* Final floating quote */}
-        <FloatingQuote
-          text="No two pieces are alike."
-          position="center"
-        />
+        <ClosingCTA />
+
+
+
+
+
+
+
+
+        <EnvironmentalImpact />
       </main>
 
       <EditorialFooter />
@@ -68,3 +80,4 @@ const Index = () => {
 };
 
 export default Index;
+

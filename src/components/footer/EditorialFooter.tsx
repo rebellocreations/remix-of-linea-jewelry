@@ -43,25 +43,27 @@ const EditorialFooter = () => {
   };
 
   return (
-    <footer 
+    <footer
       ref={footerRef}
-      className={`bg-charcoal text-charcoal-foreground transition-all duration-700 ease-editorial ${
-        isVisible 
-          ? "opacity-100 translate-y-0" 
-          : "opacity-0 translate-y-8"
-      }`}
+      className={`bg-charcoal text-charcoal-foreground transition-all duration-700 ease-editorial ${isVisible
+        ? "opacity-100 translate-y-0"
+        : "opacity-0 translate-y-8"
+        }`}
     >
       <div className="px-6 lg:px-12 py-16 lg:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand column */}
-          <div 
-            className={`lg:col-span-1 transition-all duration-600 ease-editorial ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+          <div
+            className={`lg:col-span-1 transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             style={{ transitionDelay: "100ms" }}
           >
-            <Link to="/" className="font-serif text-2xl tracking-wide">
-              REBELLO
+            <Link to="/" className="block mb-6">
+              <img
+                src="/logo.PNG"
+                alt="Rebello Creations"
+                className="brand-logo h-32 md:h-40 opacity-100 invert brightness-0"
+              />
             </Link>
             <p className="mt-6 text-sm text-charcoal-foreground/60 leading-relaxed max-w-xs">
               Handcrafted lighting from recycled materials. Each piece tells a
@@ -71,9 +73,8 @@ const EditorialFooter = () => {
 
           {/* Shop */}
           <div
-            className={`transition-all duration-600 ease-editorial ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             style={{ transitionDelay: "200ms" }}
           >
             <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
@@ -95,9 +96,8 @@ const EditorialFooter = () => {
 
           {/* Support */}
           <div
-            className={`transition-all duration-600 ease-editorial ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             style={{ transitionDelay: "300ms" }}
           >
             <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
@@ -119,9 +119,8 @@ const EditorialFooter = () => {
 
           {/* Connect - social links with underline animation */}
           <div
-            className={`transition-all duration-600 ease-editorial ${
-              isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
+            className={`transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              }`}
             style={{ transitionDelay: "400ms" }}
           >
             <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
@@ -149,10 +148,9 @@ const EditorialFooter = () => {
         </div>
 
         {/* Bottom bar */}
-        <div 
-          className={`mt-16 pt-8 border-t border-charcoal-foreground/10 transition-all duration-600 ease-editorial ${
-            isVisible ? "opacity-100" : "opacity-0"
-          }`}
+        <div
+          className={`mt-16 pt-8 border-t border-charcoal-foreground/10 transition-all duration-600 ease-editorial ${isVisible ? "opacity-100" : "opacity-0"
+            }`}
           style={{ transitionDelay: "500ms" }}
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">

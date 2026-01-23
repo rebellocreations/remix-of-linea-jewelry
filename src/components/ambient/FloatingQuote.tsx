@@ -34,28 +34,25 @@ const FloatingQuote = ({ text, position = "center", delay = 0 }: FloatingQuotePr
   };
 
   return (
-    <div 
+    <div
       ref={ref}
       className={`py-20 lg:py-28 ${positionClasses[position]} relative`}
     >
       {/* Subtle decorative line */}
-      <div 
-        className={`absolute ${
-          position === "left" ? "left-6 lg:left-20" : 
-          position === "right" ? "right-6 lg:right-20" : 
-          "left-1/2 -translate-x-1/2"
-        } top-1/2 -translate-y-1/2 w-px h-12 bg-border transition-all duration-1000 ease-premium ${
-          isVisible ? "opacity-40 scale-y-100" : "opacity-0 scale-y-0"
-        }`}
+      <div
+        className={`absolute ${position === "left" ? "left-6 lg:left-20" :
+          position === "right" ? "right-6 lg:right-20" :
+            "left-1/2 -translate-x-1/2"
+          } top-1/2 -translate-y-1/2 w-px h-12 bg-border transition-all duration-1000 ease-premium ${isVisible ? "opacity-40 scale-y-100" : "opacity-0 scale-y-0"
+          }`}
         style={{ transitionDelay: "200ms" }}
       />
-      
-      <p 
-        className={`font-serif text-lg md:text-xl lg:text-2xl text-muted-foreground/50 italic transition-all duration-1000 ease-premium ${
-          isVisible 
-            ? "opacity-100 translate-y-0 blur-0" 
-            : "opacity-0 translate-y-6 blur-sm"
-        }`}
+
+      <p
+        className={`font-serif text-lg md:text-xl lg:text-2xl text-muted-foreground/50 italic transition-all duration-1000 ease-premium ${isVisible
+          ? "opacity-100 translate-y-0 blur-0"
+          : "opacity-0 translate-y-6 blur-sm"
+          }`}
       >
         "{text}"
       </p>
