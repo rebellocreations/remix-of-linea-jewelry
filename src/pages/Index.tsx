@@ -10,8 +10,6 @@ import BrandStory from "@/components/content/BrandStory";
 import EditorialJourney from "@/components/content/EditorialJourney";
 import SignatureCandles from "@/components/content/SignatureCandles";
 import Testimonials from "@/components/content/Testimonials";
-import FeaturedCollection from "@/components/content/FeaturedCollection";
-import TransitionLine from "@/components/content/TransitionLine";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
 import FloatingQuote from "@/components/ambient/FloatingQuote";
 import ScrollStoryline from "@/components/ambient/ScrollStoryline";
@@ -36,8 +34,6 @@ const Index = () => {
         <FeaturedProducts />
 
         <OurCollections />
-
-        <TransformationSlider />
 
         <ReelsSection />
 
