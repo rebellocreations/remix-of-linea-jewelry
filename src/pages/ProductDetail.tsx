@@ -178,7 +178,10 @@ const ProductDetail = () => {
         </div>
 
         <div className="mt-16 border-t border-stone-200 pt-16">
-          <SimilarProducts />
+          <SimilarProducts 
+            currentProductId={product.id}
+            currentProductHandle={product.handle}
+          />
         </div>
       </motion.main>
 

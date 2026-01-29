@@ -4,7 +4,7 @@ import {
     AccordionItem,
     AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AlertTriangle, Leaf, ShieldCheck, Video } from "lucide-react";
+import { AlertTriangle, Leaf, ShieldCheck, Video, Clock, Mail } from "lucide-react";
 import { returnPolicyConfig } from "@/config/returnPolicy";
 
 interface ProductAccordionProps {
@@ -53,29 +53,83 @@ const ProductAccordion = ({ description }: ProductAccordionProps) => {
                 <AccordionItem value="return">
                     <AccordionTrigger className="font-serif text-lg text-stone-800">Return & Exchange Policy</AccordionTrigger>
                     <AccordionContent className="text-stone-600 leading-relaxed font-light space-y-4">
-                        <div className="flex items-center gap-2 text-sm">
-                            <ShieldCheck className="w-4 h-4 text-stone-400" />
-                            <span>{returnPolicyConfig.returnWindowText}</span>
+                        
+                        {/* Intro */}
+                        <p className="text-sm text-stone-500 italic">
+                            {returnPolicyConfig.tagline}
+                        </p>
+
+                        {/* Eligibility */}
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm font-medium text-stone-700">
+                                <ShieldCheck className="w-4 h-4 text-olive-600" />
+                                <span>{returnPolicyConfig.eligibility.title}</span>
+                            </div>
+                            <p className="text-sm text-stone-600">{returnPolicyConfig.eligibility.description}</p>
+                            <ul className="list-disc pl-5 space-y-1 text-sm">
+                                {returnPolicyConfig.eligibility.conditions.map((condition, i) => (
+                                    <li key={i}>{condition}</li>
+                                ))}
+                            </ul>
+                            <p className="text-xs text-stone-500 bg-stone-50 p-3 rounded-lg border border-stone-100">
+                                <strong>Please Note:</strong> {returnPolicyConfig.eligibility.note}
+                            </p>
                         </div>
 
                         {/* Mandatory Video Warning */}
-                        <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 mt-3">
+                        <div className="bg-amber-50 border border-amber-100 rounded-lg p-4">
                             <div className="flex items-center gap-2 mb-2 text-amber-800 font-medium">
                                 <Video size={18} />
-                                <span>{returnPolicyConfig.mandatoryVideoProof.warningText}</span>
+                                <span>{returnPolicyConfig.mandatoryVideoProof.title}</span>
                             </div>
                             <p className="text-sm text-amber-900/80 mb-2">
                                 {returnPolicyConfig.mandatoryVideoProof.description}
                             </p>
+                            <ul className="list-disc pl-5 space-y-1 text-sm text-amber-900/70 mb-3">
+                                {returnPolicyConfig.mandatoryVideoProof.requirements.map((req, i) => (
+                                    <li key={i}>{req}</li>
+                                ))}
+                            </ul>
                             <div className="text-xs font-bold text-amber-700 flex items-center gap-1.5 uppercase tracking-wide">
                                 <AlertTriangle size={12} />
                                 {returnPolicyConfig.mandatoryVideoProof.consequence}
                             </div>
                         </div>
 
-                        <div className="text-xs text-stone-400 pt-2 border-t border-dashed border-stone-200">
-                            *{returnPolicyConfig.conditionText}. {returnPolicyConfig.returnFeeText}.
+                        {/* Timeline */}
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2 text-sm font-medium text-stone-700">
+                                <Clock className="w-4 h-4 text-olive-600" />
+                                <span>{returnPolicyConfig.timeline.title}</span>
+                            </div>
+                            <p className="text-sm text-stone-600">{returnPolicyConfig.timeline.description}</p>
+                            <ul className="list-disc pl-5 space-y-1 text-sm">
+                                {returnPolicyConfig.timeline.conditions.map((condition, i) => (
+                                    <li key={i}>{condition}</li>
+                                ))}
+                            </ul>
                         </div>
+
+                        {/* How to Initiate */}
+                        <div className="space-y-2 border-t border-stone-200 pt-4">
+                            <div className="flex items-center gap-2 text-sm font-medium text-stone-700">
+                                <Mail className="w-4 h-4 text-olive-600" />
+                                <span>{returnPolicyConfig.howToInitiate.title}</span>
+                            </div>
+                            <p className="text-sm text-stone-600">{returnPolicyConfig.howToInitiate.description}</p>
+                            <ul className="list-disc pl-5 space-y-1 text-sm">
+                                {returnPolicyConfig.howToInitiate.requirements.map((req, i) => (
+                                    <li key={i}>{req}</li>
+                                ))}
+                            </ul>
+                            <a 
+                                href={`mailto:${returnPolicyConfig.howToInitiate.email}`}
+                                className="inline-block mt-2 text-sm text-olive-700 hover:text-olive-900 underline underline-offset-2"
+                            >
+                                {returnPolicyConfig.howToInitiate.email}
+                            </a>
+                        </div>
+
                     </AccordionContent>
                 </AccordionItem>
 
