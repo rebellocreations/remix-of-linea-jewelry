@@ -8,10 +8,8 @@ import ReelsSection from "@/components/content/ReelsSection";
 import EnvironmentalImpact from "@/components/content/EnvironmentalImpact";
 import BrandStory from "@/components/content/BrandStory";
 import EditorialJourney from "@/components/content/EditorialJourney";
-import SignatureCollection from "@/components/content/SignatureCollection";
-import MaterialsCraft from "@/components/content/MaterialsCraft";
+import SignatureCandles from "@/components/content/SignatureCandles";
 import Testimonials from "@/components/content/Testimonials";
-import ClosingCTA from "@/components/content/ClosingCTA";
 import FeaturedCollection from "@/components/content/FeaturedCollection";
 import TransitionLine from "@/components/content/TransitionLine";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
@@ -56,13 +54,9 @@ const Index = () => {
         <EditorialJourney />
 
         {/* New premium sections */}
-        <SignatureCollection />
-
-        <MaterialsCraft />
+        <SignatureCandles />
 
         <Testimonials />
-
-        <ClosingCTA />
 
 
 

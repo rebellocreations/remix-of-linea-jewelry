@@ -148,7 +148,7 @@ const EditorialHeader = () => {
           <img
             src="/logo.PNG"
             alt="Rebello Creations"
-            className="brand-logo h-16 md:h-24 lg:h-28"
+            className="brand-logo h-20 md:h-24 lg:h-28"
           />
         </Link>
 
@@ -181,22 +181,22 @@ const EditorialHeader = () => {
             transition={{ duration: 0.3 }}
             className="lg:hidden bg-background border-t border-border overflow-hidden"
           >
-            <div className="px-6 py-8 space-y-6">
+            <div className="px-6 py-10 space-y-8">
               {/* Collections with sub-items */}
               <div>
                 <Link
                   to="/collections"
-                  className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
+                  className="block font-serif text-xl tracking-tight text-foreground hover:text-amber-700 transition-colors duration-300"
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   Collections
                 </Link>
-                <div className="mt-3 pl-4 space-y-2">
+                <div className="mt-4 grid grid-cols-2 gap-y-3 gap-x-4">
                   {collections.map((collection) => (
                     <Link
                       key={collection.handle}
                       to={`/collections?collection=${collection.handle}`}
-                      className="block text-muted-foreground hover:text-foreground transition-colors duration-200 py-1"
+                      className="block text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       {collection.name}
@@ -205,38 +205,39 @@ const EditorialHeader = () => {
                 </div>
               </div>
 
-              <Link
-                to="/about/our-story"
-                className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                About
-              </Link>
+              <div className="space-y-4 pt-4 border-t border-border/50">
+                <Link
+                  to="/about/our-story"
+                  className="block font-serif text-xl tracking-tight text-foreground hover:text-amber-700 transition-colors duration-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  About
+                </Link>
 
-              <Link
-                to="/blogs"
-                className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Blog
-              </Link>
+                <Link
+                  to="/blogs"
+                  className="block font-serif text-xl tracking-tight text-foreground hover:text-amber-700 transition-colors duration-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Blog
+                </Link>
 
-              <Link
-                to="/contact"
-                className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Contact
-              </Link>
+                <Link
+                  to="/contact"
+                  className="block font-serif text-xl tracking-tight text-foreground hover:text-amber-700 transition-colors duration-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Contact
+                </Link>
 
-              {/* Account link in mobile menu */}
-              <Link
-                to="/account"
-                className="block font-serif text-2xl text-foreground hover:text-olive transition-colors duration-300"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Account
-              </Link>
+                <Link
+                  to="/account"
+                  className="block font-serif text-xl tracking-tight text-foreground hover:text-amber-700 transition-colors duration-300"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Account
+                </Link>
+              </div>
             </div>
           </motion.div>
         )}

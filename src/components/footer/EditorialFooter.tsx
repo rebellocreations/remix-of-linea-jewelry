@@ -50,11 +50,11 @@ const EditorialFooter = () => {
         : "opacity-0 translate-y-8"
         }`}
     >
-      <div className="px-6 lg:px-12 py-16 lg:py-24">
+      <div className="px-6 lg:px-12 py-10 md:py-16 lg:py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Brand column */}
           <div
-            className={`lg:col-span-1 transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`lg:col-span-1 transition-all duration-600 ease-editorial flex flex-col items-center lg:items-start text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             style={{ transitionDelay: "100ms" }}
           >
@@ -62,7 +62,7 @@ const EditorialFooter = () => {
               <img
                 src="/logo.PNG"
                 alt="Rebello Creations"
-                className="brand-logo h-32 md:h-40 opacity-100 invert brightness-0"
+                className="brand-logo h-24 md:h-40 opacity-100 invert brightness-0"
               />
             </Link>
             <p className="mt-6 text-sm text-charcoal-foreground/60 leading-relaxed max-w-xs">
@@ -73,7 +73,7 @@ const EditorialFooter = () => {
 
           {/* Shop */}
           <div
-            className={`transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`transition-all duration-600 ease-editorial text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             style={{ transitionDelay: "200ms" }}
           >
@@ -96,7 +96,7 @@ const EditorialFooter = () => {
 
           {/* Support */}
           <div
-            className={`transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`transition-all duration-600 ease-editorial text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             style={{ transitionDelay: "300ms" }}
           >
@@ -119,7 +119,7 @@ const EditorialFooter = () => {
 
           {/* Connect - social links with underline animation */}
           <div
-            className={`transition-all duration-600 ease-editorial ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`transition-all duration-600 ease-editorial text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             style={{ transitionDelay: "400ms" }}
           >

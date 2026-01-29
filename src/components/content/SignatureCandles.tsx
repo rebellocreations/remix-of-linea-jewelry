@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
-const SignatureCollection = () => {
+const SignatureCandles = () => {
     const [isVisible, setIsVisible] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
 
@@ -26,10 +26,10 @@ const SignatureCollection = () => {
     return (
         <section
             ref={sectionRef}
-            className="relative min-h-[600px] lg:h-[700px] flex items-center bg-cover bg-center bg-no-repeat overflow-hidden"
+            className="relative min-h-[500px] md:min-h-[600px] lg:h-[700px] flex items-center bg-cover bg-center bg-no-repeat overflow-hidden"
             style={{
-                backgroundImage: "url('/amber-signature-bg.png')",
-                backgroundPosition: "center 40%", // Slightly adjust vertical focus
+                backgroundImage: "url('/signature_candles_bg.png')",
+                backgroundPosition: "center",
             }}
         >
             {/* Dark overlay for text readability on left side */}
@@ -40,31 +40,36 @@ const SignatureCollection = () => {
                 }}
             />
 
-            <div className="container mx-auto px-6 lg:px-12 relative z-10">
-                <div className="max-w-xl">
+            <div className="container mx-auto px-6 lg:px-12 relative z-10 py-16 md:py-0">
+                <div className="max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={isVisible ? { opacity: 1, y: 0 } : {}}
                         transition={{ duration: 0.8, ease: "easeOut" }}
                     >
-                        <h2 className="font-serif text-4xl md:text-5xl lg:text-6xl text-amber-50 font-light leading-tight mb-8 drop-shadow-lg">
-                            Signatures in Amber
+                        <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-light leading-tight mb-4 drop-shadow-lg">
+                            Signature Candles
                         </h2>
+
+                        <p className="text-white/90 text-base md:text-xl font-light leading-relaxed mb-8 drop-shadow-md">
+                            Hand-poured candles crafted from reclaimed glass bottles.
+                            Designed to add warmth, character, and purpose to your space.
+                        </p>
 
                         <ul className="space-y-4 mb-10">
                             {[
-                                "Sustainable recycled glass.",
-                                "Hand-shaped with care.",
-                                "Warm, inviting glow."
+                                "Made from upcycled liquor and wine bottles",
+                                "Clean, warm glow for everyday spaces",
+                                "Handcrafted in small batches"
                             ].map((item, index) => (
                                 <motion.li
                                     key={index}
                                     initial={{ opacity: 0, x: -20 }}
                                     animate={isVisible ? { opacity: 1, x: 0 } : {}}
                                     transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                                    className="flex items-center gap-4 text-amber-100/90 text-lg font-light tracking-wide shadow-sm"
+                                    className="flex items-center justify-center lg:justify-start gap-3 md:gap-4 text-white/90 text-sm md:text-lg font-light tracking-wide"
                                 >
-                                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400/80 shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
+                                    <span className="w-1.5 h-1.5 rounded-full bg-white/80 shadow-[0_0_8px_rgba(255,255,255,0.5)]" />
                                     <span style={{ textShadow: "0 2px 4px rgba(0,0,0,0.3)" }}>{item}</span>
                                 </motion.li>
                             ))}
@@ -76,10 +81,10 @@ const SignatureCollection = () => {
                             transition={{ duration: 0.6, delay: 0.6 }}
                         >
                             <Link
-                                to="/category/amber-series"
-                                className="inline-block px-8 py-3.5 bg-[#D4C5B9]/10 border border-[#D4C5B9]/40 text-[#D4C5B9] text-sm tracking-widest uppercase hover:bg-[#D4C5B9]/20 hover:border-[#D4C5B9]/60 hover:text-white transition-all duration-300 backdrop-blur-sm"
+                                to="/collections?collection=candles"
+                                className="inline-block w-full sm:w-auto px-6 md:px-8 py-3 md:py-3.5 bg-white/10 border border-white/40 text-white text-xs md:text-sm tracking-widest uppercase hover:bg-white/20 hover:border-white transition-all duration-300 backdrop-blur-sm"
                             >
-                                Explore the Amber Series
+                                Explore Candles →
                             </Link>
                         </motion.div>
                     </motion.div>
@@ -89,4 +94,4 @@ const SignatureCollection = () => {
     );
 };
 
-export default SignatureCollection;
+export default SignatureCandles;

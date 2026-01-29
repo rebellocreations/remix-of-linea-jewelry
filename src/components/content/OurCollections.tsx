@@ -65,34 +65,35 @@ const OurCollections = () => {
         <section
             id="our-collections-section"
             ref={sectionRef}
-            className="py-20 bg-[#FDFCFA]"
+            className="py-12 md:py-20 bg-[#FDFCFA]"
         >
             <div className="container mx-auto px-6 lg:px-12">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={isVisible ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="text-center mb-16"
+                    className="text-center mb-8 md:mb-16"
                 >
-                    <h2 className="font-serif text-4xl text-foreground font-light tracking-tight">
+                    <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light tracking-tight">
                         Our Collections
                     </h2>
                 </motion.div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-8 max-w-7xl mx-auto">
+                <div className="flex overflow-x-auto sm:grid sm:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6 md:gap-x-8 max-w-7xl mx-auto no-scrollbar pb-8 sm:pb-0 snap-x snap-mandatory px-4 sm:px-0">
                     {collections.map((collection, index) => (
                         <motion.div
                             key={collection.handle}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={isVisible ? { opacity: 1, scale: 1 } : {}}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
+                            className="flex-shrink-0 snap-center"
                         >
                             <Link
-                                to={`/category/${collection.handle}`}
+                                to={`/collections?collection=${collection.handle}`}
                                 className="group flex flex-col items-center"
                             >
                                 {/* Circular Thumbnail */}
-                                <div className="relative w-40 h-40 md:w-48 md:h-48 rounded-full overflow-hidden border border-[#E5DCD5] group-hover:border-[#D4C5B9] transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(212,197,185,0.3)] bg-[#F5F5F0]">
+                                <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border border-[#E5DCD5] group-hover:border-[#D4C5B9] transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(212,197,185,0.3)] bg-[#F5F5F0]">
                                     <img
                                         src={collection.image}
                                         alt={collection.name}
@@ -107,7 +108,7 @@ const OurCollections = () => {
                                 </div>
 
                                 {/* Collection Name */}
-                                <span className="mt-6 text-lg text-foreground font-light tracking-wide group-hover:text-amber-700 transition-colors duration-300">
+                                <span className="mt-4 md:mt-6 text-base md:text-lg text-foreground font-light tracking-wide group-hover:text-amber-700 transition-colors duration-300 text-center px-2">
                                     {collection.name}
                                 </span>
                             </Link>

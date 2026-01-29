@@ -36,7 +36,7 @@ const Testimonials = () => {
     return (
         <section
             ref={sectionRef}
-            className="py-20 bg-[#F5F2EE]"
+            className="py-12 md:py-20 bg-[#F5F2EE]"
         >
             <div className="container mx-auto px-6 lg:px-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24 max-w-5xl mx-auto">
@@ -48,7 +48,7 @@ const Testimonials = () => {
                             transition={{ duration: 0.7, delay: index * 0.15 }}
                             className="text-center"
                         >
-                            <blockquote className="font-serif text-2xl md:text-3xl lg:text-[2rem] text-foreground/90 font-light leading-snug mb-6">
+                            <blockquote className="font-serif text-xl sm:text-2xl md:text-3xl lg:text-[2rem] text-foreground/90 font-light leading-snug mb-4 md:mb-6 px-4">
                                 “{testimonial.quote}”
                             </blockquote>
                             <cite className="text-sm tracking-wide text-muted-foreground not-italic uppercase opacity-80">

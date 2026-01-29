@@ -156,6 +156,7 @@ export default {
       transitionTimingFunction: {
         "editorial": "cubic-bezier(0.22, 1, 0.36, 1)",
         "premium": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "smooth": "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
       },
     },
   },

@@ -25,7 +25,7 @@ const EditorialHero = () => {
   return (
     <section
       ref={heroRef}
-      className="relative h-screen min-h-[700px] w-full overflow-hidden flex items-center justify-center lg:justify-start"
+      className="relative h-[90vh] md:h-screen min-h-[600px] md:min-h-[700px] w-full overflow-hidden flex items-center justify-center lg:justify-start"
     >
       {/* Background Image with Parallax */}
       <motion.div
@@ -50,19 +50,19 @@ const EditorialHero = () => {
       <div className="relative z-10 container mx-auto px-6 lg:px-16 pt-20">
         <div className="max-w-2xl">
           {/* Headline - Elegant Serif */}
-          <div className="overflow-hidden mb-6">
+          <div className="overflow-hidden mb-4 md:mb-6 text-center lg:text-left">
             <h1
-              className={`font-serif text-5xl md:text-6xl lg:text-7xl text-white leading-[1.1] transition-all duration-1000 ease-out delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
+              className={`font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] transition-all duration-1000 ease-out delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
                 }`}
             >
-              Giving Glass a<br />
+              Giving Glass a<br className="hidden sm:block" />
               <span className="italic">Second Life</span>
             </h1>
           </div>
 
           {/* Subtext - Clean Sans-serif */}
           <p
-            className={`text-lg md:text-xl text-white/90 font-light max-w-lg mb-10 leading-relaxed transition-all duration-1000 ease-out delay-500 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            className={`text-base md:text-xl text-white/90 font-light max-w-lg mb-8 md:mb-10 leading-relaxed text-center lg:text-left mx-auto lg:mx-0 transition-all duration-1000 ease-out delay-500 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
               }`}
           >
             Handcrafted home décor made from recycled bottles — sustainable, timeless, and unique.
@@ -70,23 +70,23 @@ const EditorialHero = () => {
 
           {/* CTAs */}
           <div
-            className={`flex flex-wrap items-center gap-6 transition-all duration-1000 ease-out delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+            className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 md:gap-6 transition-all duration-1000 ease-out delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
               }`}
           >
             {/* Primary CTA */}
             <Link
               to="/collections"
-              className="group relative inline-flex items-center px-8 py-4 bg-white text-[#2D2D2D] text-sm tracking-widest uppercase font-medium overflow-hidden transition-all duration-300 hover:bg-[#F5F5F0] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+              className="group relative inline-flex items-center justify-center w-full sm:w-auto px-6 md:px-8 py-3.5 md:py-4 bg-white text-[#2D2D2D] text-xs md:text-sm tracking-widest uppercase font-medium overflow-hidden transition-all duration-300 hover:bg-[#F5F5F0] hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]"
             >
               <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-1">
-                Explore the Collection
+                Explore Collection
               </span>
             </Link>
 
             {/* Secondary CTA */}
             <Link
               to="/about/our-story"
-              className="group flex items-center gap-2 text-white hover:text-white/80 text-sm tracking-widest uppercase font-medium transition-all duration-300"
+              className="group flex items-center gap-2 text-white hover:text-white/80 text-xs md:text-sm tracking-widest uppercase font-medium transition-all duration-300 py-2"
             >
               <span className="relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:bg-white after:transition-all after:duration-300 group-hover:after:w-full">
                 Our Process

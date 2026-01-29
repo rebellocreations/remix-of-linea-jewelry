@@ -34,14 +34,14 @@ const ReelsSection = () => {
     return (
         <section
             ref={sectionRef}
-            className="py-16 lg:py-24 bg-[#FAF9F6] overflow-hidden" // Off-white neutral background
+            className="py-12 md:py-16 lg:py-24 bg-[#FAF9F6] overflow-hidden" // Off-white neutral background
         >
             <div className="container mx-auto px-6 lg:px-12 mb-10 lg:mb-12">
                 <motion.h2
                     initial={{ opacity: 0, y: 10 }}
                     animate={isVisible ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
-                    className="font-serif text-2xl lg:text-3xl text-foreground/80 font-light tracking-wide text-center"
+                    className="font-serif text-xl md:text-2xl lg:text-3xl text-foreground/80 font-light tracking-wide text-center px-4"
                 >
                     Watch how waste transforms into design
                 </motion.h2>
@@ -63,7 +63,7 @@ const ReelsSection = () => {
                 {videos.map((id, index) => (
                     <div
                         key={`${id}-${index}`}
-                        className="flex-shrink-0 snap-center relative w-[280px] h-[500px] md:w-[320px] md:h-[570px] bg-black/5 rounded-2xl overflow-hidden shadow-lg group"
+                        className="flex-shrink-0 snap-center relative w-[240px] h-[430px] sm:w-[280px] sm:h-[500px] md:w-[320px] md:h-[570px] bg-black/5 rounded-2xl overflow-hidden shadow-lg group"
                     >
                         {/* 
               Vimeo Embed 

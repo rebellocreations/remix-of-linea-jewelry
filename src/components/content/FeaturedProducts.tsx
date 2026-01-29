@@ -4,6 +4,7 @@ import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { motion, PanInfo } from "framer-motion";
 
 const FeaturedProducts = () => {
   const [visibleItems, setVisibleItems] = useState<Set<number>>(new Set());
@@ -11,6 +12,8 @@ const FeaturedProducts = () => {
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [headerVisible, setHeaderVisible] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isSwiping, setIsSwiping] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
@@ -18,7 +21,7 @@ const FeaturedProducts = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        const data = await fetchProducts(3);
+        const data = await fetchProducts(6); // Fetch more for carousel
         setProducts(data);
       } catch (e) {
         console.error("Failed to load featured Shopify products:", e);
@@ -28,6 +31,17 @@ const FeaturedProducts = () => {
     };
     load();
   }, []);
+
+  // Auto-slide for mobile
+  useEffect(() => {
+    if (products.length <= 1 || isSwiping) return; // Disable auto-slide during swipe
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % products.length);
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [products.length, isSwiping]);
 
   // Header visibility observer
   useEffect(() => {
@@ -47,14 +61,13 @@ const FeaturedProducts = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Product items visibility observer with staggered reveal
+  // Product items visibility observer (Desktop)
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = Number(entry.target.getAttribute("data-index"));
-            // Staggered delay based on index
             setTimeout(() => {
               setVisibleItems((prev) => new Set([...prev, index]));
             }, index * 150);
@@ -74,18 +87,18 @@ const FeaturedProducts = () => {
     <section
       id="products"
       ref={sectionRef}
-      className="px-6 lg:px-12 py-24 lg:py-36 bg-background relative"
+      className="px-4 sm:px-6 lg:px-12 py-16 md:py-24 lg:py-36 bg-background relative"
       aria-labelledby="featured-products"
     >
       {/* Header with reveal animation */}
       <div
         ref={headerRef}
-        className={`flex items-end justify-between mb-16 lg:mb-24 transition-all duration-1000 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        className={`flex items-end justify-between mb-10 md:mb-16 lg:mb-24 transition-all duration-1000 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
       >
         <div>
           <span
-            className={`text-xs tracking-[0.2em] uppercase text-olive/80 mb-4 block transition-all duration-700 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`text-[10px] md:text-xs tracking-[0.2em] uppercase text-olive/80 mb-2 md:mb-4 block transition-all duration-700 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             style={{ transitionDelay: "100ms" }}
           >
@@ -93,7 +106,7 @@ const FeaturedProducts = () => {
           </span>
           <h2
             id="featured-products"
-            className={`font-serif text-3xl md:text-4xl lg:text-5xl text-foreground font-light tracking-tight transition-all duration-700 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            className={`font-serif text-2xl md:text-4xl lg:text-5xl text-foreground font-light tracking-tight transition-all duration-700 ease-out ${headerVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
             style={{ transitionDelay: "200ms" }}
           >
@@ -102,11 +115,11 @@ const FeaturedProducts = () => {
         </div>
         <Link
           to="/category/shop"
-          className={`text-sm text-muted-foreground hover:text-foreground transition-all duration-500 border-b border-transparent hover:border-foreground pb-0.5 hidden lg:block ${headerVisible ? "opacity-100" : "opacity-0"
+          className={`text-xs md:text-sm text-muted-foreground hover:text-foreground transition-all duration-500 border-b border-transparent hover:border-foreground pb-0.5 hidden sm:block ${headerVisible ? "opacity-100" : "opacity-0"
             }`}
           style={{ transitionDelay: "300ms" }}
         >
-          View all objects
+          View all
         </Link>
       </div>
 
@@ -129,95 +142,143 @@ const FeaturedProducts = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-16 lg:gap-x-12">
-          {products.map((product, index) => {
-            const image = product.node.images.edges?.[0]?.node;
-            const price = product.node.priceRange.minVariantPrice;
-            const isHovered = hoveredItem === index;
+        <div className="relative">
+          {/* Desktop Grid */}
+          <div className="hidden sm:grid grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12 lg:gap-x-12">
+            {products.slice(0, 3).map((product, index) => {
+              const image = product.node.images.edges?.[0]?.node;
+              const price = product.node.priceRange.minVariantPrice;
+              const isHovered = hoveredItem === index;
+              const offsetClass = index === 1 ? "lg:mt-16" : index === 2 ? "lg:-mt-8" : "";
 
-            // Masonry-like offset logic: 
-            // 2nd item pushes down on desktop
-            // 3rd item pulls up slightly on desktop if desired, or we just keep it simple
-            const offsetClass = index === 1 ? "lg:mt-16" : index === 2 ? "lg:-mt-8" : "";
-
-            return (
-              <Link
-                key={product.node.id}
-                to={`/product/${product.node.handle}`}
-                data-index={index}
-                className={`group block transition-all duration-1000 ease-out ${visibleItems.has(index)
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 translate-y-16"
-                  } ${offsetClass}`}
-                onMouseEnter={() => setHoveredItem(index)}
-                onMouseLeave={() => setHoveredItem(null)}
-              >
-                {/* Image Card */}
-                <div
-                  className={`relative overflow-hidden rounded-2xl bg-[#F5F5F0] aspect-[4/5] transition-all duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${isHovered ? "shadow-xl translate-y-[-4px]" : "shadow-sm translate-y-0"
-                    }`}
+              return (
+                <Link
+                  key={product.node.id}
+                  to={`/products/${product.node.handle}`}
+                  data-index={index}
+                  className={`group block transition-all duration-1000 ease-out ${visibleItems.has(index)
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 translate-y-12 sm:translate-y-16"
+                    } ${offsetClass}`}
+                  onMouseEnter={() => setHoveredItem(index)}
+                  onMouseLeave={() => setHoveredItem(null)}
                 >
-                  {/* Warm overlay on hover */}
                   <div
-                    className={`absolute inset-0 bg-[#F5EAD4]/20 transition-opacity duration-500 pointer-events-none z-10 ${isHovered ? "opacity-100" : "opacity-0"
-                      }`}
-                  />
-
-                  {image ? (
-                    <img
-                      src={image.url}
-                      alt={image.altText || product.node.title}
-                      loading="lazy"
-                      className={`relative z-0 w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${isHovered ? "scale-105" : "scale-100"
-                        }`}
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground/50 text-sm">
-                      No Image
-                    </div>
-                  )}
-
-                  {/* Floating Action Button */}
-                  <div
-                    className={`absolute bottom-6 left-1/2 -translate-x-1/2 z-20 transition-all duration-500 ease-out ${isHovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                    className={`relative overflow-hidden rounded-xl md:rounded-2xl bg-[#F5F5F0] aspect-[4/5] transition-all duration-700 ease-smooth ${isHovered ? "shadow-xl translate-y-[-4px]" : "shadow-sm translate-y-0"
                       }`}
                   >
-                    <Button
-                      variant="secondary"
-                      className="bg-white/90 hover:bg-white text-foreground rounded-full px-6 shadow-md backdrop-blur-sm h-10 text-xs uppercase tracking-wider font-medium"
-                    >
-                      View Item
-                    </Button>
+                    {image ? (
+                      <img
+                        src={image.url}
+                        alt={image.altText || product.node.title}
+                        className={`w-full h-full object-cover transition-transform duration-1000 ease-out ${isHovered ? "scale-110" : "scale-100"
+                          }`}
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-olive/5 flex items-center justify-center">
+                        <p className="text-xs text-olive/40 italic">Coming soon</p>
+                      </div>
+                    )}
+                    <div className={`absolute inset-0 bg-amber/5 transition-opacity duration-700 ${isHovered ? "opacity-100" : "opacity-0"
+                      }`} />
                   </div>
-                </div>
 
-                {/* Content */}
-                <div className="mt-6 text-center space-y-1.5 px-2">
-                  <h3 className="font-serif text-2xl text-foreground font-light">
-                    {product.node.title}
-                  </h3>
-                  <p className="text-xs text-olive/70 tracking-wide uppercase">
-                    Handcrafted from recycled glass
-                  </p>
-                  <p className="text-sm text-muted-foreground font-medium pt-1">
-                    {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
-                  </p>
-                </div>
-              </Link>
-            );
-          })}
+                  <div className="mt-4 md:mt-6 text-center space-y-1 px-2">
+                    <h3 className="font-serif text-xl md:text-2xl text-foreground font-light leading-tight">
+                      {product.node.title}
+                    </h3>
+                    <p className="text-[10px] md:text-xs text-olive/70 tracking-wide uppercase">
+                      Handcrafted from recycled glass
+                    </p>
+                    <p className="text-sm text-muted-foreground font-medium pt-0.5 md:pt-1">
+                      {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Mobile Auto-sliding & Swipable Carousel */}
+          <div className="sm:hidden overflow-hidden py-4 cursor-grab active:cursor-grabbing">
+            <motion.div
+              drag="x"
+              dragConstraints={{ right: 0, left: 0 }}
+              dragElastic={0.2}
+              onDragStart={() => setIsSwiping(true)}
+              onDragEnd={(_e, info: PanInfo) => {
+                setIsSwiping(false);
+                const swipeThreshold = 50;
+                if (info.offset.x < -swipeThreshold) {
+                  // Swipe Left -> Next
+                  setCurrentIndex((prev) => (prev + 1) % products.length);
+                } else if (info.offset.x > swipeThreshold) {
+                  // Swipe Right -> Prev
+                  setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
+                }
+              }}
+              animate={{ x: `-${currentIndex * 80}%` }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              className="flex"
+            >
+              {products.map((product, index) => {
+                const image = product.node.images.edges?.[0]?.node;
+                const price = product.node.priceRange.minVariantPrice;
+
+                return (
+                  <Link
+                    key={`${product.node.id}-mobile`}
+                    to={isSwiping ? "#" : `/products/${product.node.handle}`}
+                    onClick={(e) => isSwiping && e.preventDefault()}
+                    className="flex-shrink-0 w-[80%] px-3 group"
+                  >
+                    <div className="relative overflow-hidden rounded-xl bg-[#F5F5F0] aspect-square shadow-sm">
+                      {image ? (
+                        <img
+                          src={image.url}
+                          alt={image.altText || product.node.title}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-olive/5 flex items-center justify-center">
+                          <p className="text-xs text-olive/40 italic">Coming soon</p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mt-4 text-center space-y-0.5">
+                      <h3 className="font-serif text-lg text-foreground font-light leading-tight">
+                        {product.node.title}
+                      </h3>
+                      <p className="text-[10px] text-olive/70 tracking-wide uppercase">
+                        Recycled Glass
+                      </p>
+                      <p className="text-xs text-muted-foreground font-medium">
+                        {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </motion.div>
+
+            {/* Carousel indicators */}
+            <div className="flex justify-center gap-1.5 mt-8">
+              {products.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setCurrentIndex(idx)}
+                  className={`w-1 h-1 rounded-full transition-all duration-300 ${currentIndex === idx ? "bg-amber w-3" : "bg-amber/20"
+                    }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       )}
-
-      {/* Mobile Footer Link */}
-      <div className="mt-16 text-center lg:hidden">
-        <Link
-          to="/category/shop"
-          className="inline-block text-sm text-muted-foreground border-b border-muted-foreground/30 hover:border-foreground pb-1 transition-all duration-300"
-        >
-          View all objects
-        </Link>
-      </div>
     </section>
   );
 };

@@ -36,7 +36,7 @@ const FloatingQuote = ({ text, position = "center", delay = 0 }: FloatingQuotePr
   return (
     <div
       ref={ref}
-      className={`py-20 lg:py-28 ${positionClasses[position]} relative`}
+      className={`py-12 md:py-20 lg:py-28 ${positionClasses[position]} relative`}
     >
       {/* Subtle decorative line */}
       <div
@@ -49,7 +49,7 @@ const FloatingQuote = ({ text, position = "center", delay = 0 }: FloatingQuotePr
       />
 
       <p
-        className={`font-serif text-lg md:text-xl lg:text-2xl text-muted-foreground/50 italic transition-all duration-1000 ease-premium ${isVisible
+        className={`font-serif text-base sm:text-lg md:text-xl lg:text-2xl text-muted-foreground/50 italic transition-all duration-1000 ease-premium px-6 ${isVisible
           ? "opacity-100 translate-y-0 blur-0"
           : "opacity-0 translate-y-6 blur-sm"
           }`}
