@@ -3,47 +3,58 @@ import { useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
-import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
+import { fetchProducts, fetchCollections, fetchProductsByCollection, ShopifyProduct, ShopifyCollection } from "@/lib/shopify";
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
-
-// Rebello Creations collections
-const collections = [
-    { name: "All", handle: "all" },
-    { name: "Glasses & Bowls", handle: "glasses-bowls" },
-    { name: "Platters", handle: "platters" },
-    { name: "Lamps", handle: "lamps" },
-    { name: "Candles", handle: "candles" },
-    { name: "Planters", handle: "planters" },
-    { name: "Soap Dispenser", handle: "soap-dispenser" },
-    { name: "Sippers & Jars", handle: "sippers-jars" },
-];
 
 const Collections = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [products, setProducts] = useState<ShopifyProduct[]>([]);
+    const [collections, setCollections] = useState<ShopifyCollection[]>([]);
     const [loading, setLoading] = useState(true);
+    const [collectionsLoading, setCollectionsLoading] = useState(true);
     const [headerVisible, setHeaderVisible] = useState(false);
 
     const activeCollection = searchParams.get("collection") || "all";
 
+    // Fetch collections on mount
     useEffect(() => {
-        const load = async () => {
+        const loadCollections = async () => {
+            try {
+                const data = await fetchCollections(20);
+                setCollections(data);
+            } catch (e) {
+                console.error("Failed to load collections:", e);
+            } finally {
+                setCollectionsLoading(false);
+            }
+        };
+        loadCollections();
+        setTimeout(() => setHeaderVisible(true), 100);
+    }, []);
+
+    // Fetch products when collection changes
+    useEffect(() => {
+        const loadProducts = async () => {
             setLoading(true);
             try {
-                // For now, fetch all products - in production, filter by collection tag
-                const data = await fetchProducts(24);
-                setProducts(data);
+                if (activeCollection === "all") {
+                    // Fetch all products
+                    const data = await fetchProducts(24);
+                    setProducts(data);
+                } else {
+                    // Fetch products by collection handle
+                    const data = await fetchProductsByCollection(activeCollection, 24);
+                    setProducts(data);
+                }
             } catch (e) {
                 console.error("Failed to load products:", e);
+                setProducts([]);
             } finally {
                 setLoading(false);
             }
         };
-        load();
-
-        // Trigger header animation
-        setTimeout(() => setHeaderVisible(true), 100);
+        loadProducts();
     }, [activeCollection]);
 
     const handleCollectionChange = (handle: string) => {
@@ -86,18 +97,38 @@ const Collections = () => {
                     className="px-6 lg:px-12 mb-16"
                 >
                     <div className="flex flex-wrap justify-center gap-3">
-                        {collections.map((collection) => (
-                            <button
-                                key={collection.handle}
-                                onClick={() => handleCollectionChange(collection.handle)}
-                                className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${activeCollection === collection.handle
-                                        ? "bg-foreground text-background"
-                                        : "bg-transparent text-foreground/70 hover:text-foreground border border-border/50 hover:border-border"
+                        {/* All Products Button */}
+                        <button
+                            onClick={() => handleCollectionChange("all")}
+                            className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${
+                                activeCollection === "all"
+                                    ? "bg-foreground text-background"
+                                    : "bg-transparent text-foreground/70 hover:text-foreground border border-border/50 hover:border-border"
+                            }`}
+                        >
+                            All
+                        </button>
+                        
+                        {/* Dynamic Collection Buttons from Shopify */}
+                        {collectionsLoading ? (
+                            [...Array(5)].map((_, i) => (
+                                <Skeleton key={i} className="h-10 w-24 rounded-full" />
+                            ))
+                        ) : (
+                            collections.map((collection) => (
+                                <button
+                                    key={collection.node.id}
+                                    onClick={() => handleCollectionChange(collection.node.handle)}
+                                    className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${
+                                        activeCollection === collection.node.handle
+                                            ? "bg-foreground text-background"
+                                            : "bg-transparent text-foreground/70 hover:text-foreground border border-border/50 hover:border-border"
                                     }`}
-                            >
-                                {collection.name}
-                            </button>
-                        ))}
+                                >
+                                    {collection.node.title}
+                                </button>
+                            ))
+                        )}
                     </div>
                 </motion.div>
 
