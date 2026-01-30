@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
-import { fetchProductByHandle } from "@/lib/shopify";
+import { fetchProductByHandle, createStorefrontCheckout } from "@/lib/shopify";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 import {
@@ -28,6 +28,7 @@ const ProductDetail = () => {
   const handle = productId || "";
 
   const [loading, setLoading] = useState(true);
+  const [buyNowLoading, setBuyNowLoading] = useState(false);
   const [product, setProduct] = useState<any>(null);
   const addItem = useCartStore((s) => s.addItem);
 
@@ -69,10 +70,24 @@ const ProductDetail = () => {
     });
   };
 
-  const onBuyNow = (quantity: number) => {
-    onAddToCart(quantity);
-    // In a real app, this would redirect to checkout immediately
-    window.location.href = "/checkout";
+  const onBuyNow = async (quantity: number) => {
+    if (!product || !variant) return;
+    
+    setBuyNowLoading(true);
+    try {
+      // Create Shopify checkout directly with this item
+      const checkoutUrl = await createStorefrontCheckout([
+        { variantId: variant.id, quantity }
+      ]);
+      
+      // Redirect to Shopify checkout in new tab
+      window.open(checkoutUrl, '_blank');
+    } catch (error) {
+      console.error('Buy Now checkout failed:', error);
+      toast.error("Checkout failed. Please try again.");
+    } finally {
+      setBuyNowLoading(false);
+    }
   };
 
   if (loading) return <div className="min-h-screen grid place-items-center bg-[#F9F8F6]">Loading...</div>;
@@ -160,6 +175,7 @@ const ProductDetail = () => {
                 variant={variant}
                 onAddToCart={onAddToCart}
                 onBuyNow={onBuyNow}
+                buyNowLoading={buyNowLoading}
               />
               <motion.div
                 initial={{ opacity: 0, y: 20 }}

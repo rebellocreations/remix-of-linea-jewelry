@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, ShoppingBag, Zap } from "lucide-react";
+import { Minus, Plus, ShoppingBag, Zap, Loader2 } from "lucide-react";
 import DeliveryCheck from "./DeliveryCheck";
 import { motion } from "framer-motion";
 
@@ -8,10 +8,11 @@ interface ProductInfoProps {
   product: any;
   variant: any;
   onAddToCart: (quantity: number) => void;
-  onBuyNow: (quantity: number) => void;
+  onBuyNow: (quantity: number) => Promise<void>;
+  buyNowLoading?: boolean;
 }
 
-const ProductInfo = ({ product, variant, onAddToCart, onBuyNow }: ProductInfoProps) => {
+const ProductInfo = ({ product, variant, onAddToCart, onBuyNow, buyNowLoading = false }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const price = variant?.price;
   const compareAtPrice = variant?.compareAtPrice;
@@ -116,13 +117,22 @@ const ProductInfo = ({ product, variant, onAddToCart, onBuyNow }: ProductInfoPro
           <ShoppingBag className="mr-2 h-5 w-5" /> Add to Cart
         </Button>
 
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <motion.div whileHover={{ scale: buyNowLoading ? 1 : 1.02 }} whileTap={{ scale: buyNowLoading ? 1 : 0.98 }}>
           <Button
             size="lg"
             className="w-full bg-[#3A3F35] hover:bg-[#2C3028] text-white h-14 rounded-xl text-base shadow-lg shadow-olive-900/20"
             onClick={() => onBuyNow(quantity)}
+            disabled={buyNowLoading}
           >
-            <Zap className="mr-2 h-5 w-5 fill-current" /> Buy Now
+            {buyNowLoading ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Processing...
+              </>
+            ) : (
+              <>
+                <Zap className="mr-2 h-5 w-5 fill-current" /> Buy Now
+              </>
+            )}
           </Button>
         </motion.div>
       </motion.div>
