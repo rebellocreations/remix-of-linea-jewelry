@@ -32,16 +32,7 @@ const FeaturedProducts = () => {
     load();
   }, []);
 
-  // Auto-slide for mobile
-  useEffect(() => {
-    if (products.length <= 1 || isSwiping) return; // Disable auto-slide during swipe
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % products.length);
-    }, 4500);
-
-    return () => clearInterval(interval);
-  }, [products.length, isSwiping]);
+  // No auto-slide - user controls the carousel manually for smoother experience
 
   // Header visibility observer
   useEffect(() => {
@@ -200,27 +191,35 @@ const FeaturedProducts = () => {
             })}
           </div>
 
-          {/* Mobile Auto-sliding & Swipable Carousel */}
-          <div className="sm:hidden overflow-hidden py-4 cursor-grab active:cursor-grabbing">
+          {/* Mobile Smooth Swipable Carousel */}
+          <div className="sm:hidden overflow-hidden py-4">
             <motion.div
               drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.05}
+              dragConstraints={{ left: -(products.length - 1) * 80 * window.innerWidth / 100, right: 0 }}
+              dragElastic={0.1}
+              dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
               onDragStart={() => setIsSwiping(true)}
               onDragEnd={(_e, info: PanInfo) => {
                 setIsSwiping(false);
-                const swipeThreshold = 50;
-                if (info.offset.x < -swipeThreshold) {
-                  setCurrentIndex((prev) => (prev + 1) % products.length);
-                } else if (info.offset.x > swipeThreshold) {
-                  setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
+                const swipeThreshold = 40;
+                const velocity = info.velocity.x;
+                
+                if (velocity < -300 || info.offset.x < -swipeThreshold) {
+                  setCurrentIndex((prev) => Math.min(prev + 1, products.length - 1));
+                } else if (velocity > 300 || info.offset.x > swipeThreshold) {
+                  setCurrentIndex((prev) => Math.max(prev - 1, 0));
                 }
               }}
               animate={{ x: `-${currentIndex * 80}%` }}
-              transition={{ type: "spring", stiffness: 200, damping: 25, mass: 0.5 }}
-              className="flex"
+              transition={{ 
+                type: "tween", 
+                duration: 0.4, 
+                ease: [0.22, 1, 0.36, 1]
+              }}
+              className="flex cursor-grab active:cursor-grabbing touch-pan-y"
+              style={{ touchAction: "pan-y" }}
             >
-              {products.map((product, index) => {
+              {products.map((product) => {
                 const image = product.node.images.edges?.[0]?.node;
                 const price = product.node.priceRange.minVariantPrice;
 
@@ -230,14 +229,16 @@ const FeaturedProducts = () => {
                     to={isSwiping ? "#" : `/product/${product.node.handle}`}
                     onClick={(e) => isSwiping && e.preventDefault()}
                     className="flex-shrink-0 w-[80%] px-3 group"
+                    draggable={false}
                   >
                     <div className="relative overflow-hidden rounded-xl bg-[#F5F5F0] aspect-square shadow-sm">
                       {image ? (
                         <img
                           src={image.url}
                           alt={image.altText || product.node.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover pointer-events-none select-none"
                           loading="lazy"
+                          draggable={false}
                         />
                       ) : (
                         <div className="w-full h-full bg-olive/5 flex items-center justify-center">
@@ -263,13 +264,14 @@ const FeaturedProducts = () => {
             </motion.div>
 
             {/* Carousel indicators */}
-            <div className="flex justify-center gap-1.5 mt-8">
+            <div className="flex justify-center gap-2 mt-8">
               {products.map((_, idx) => (
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`w-1 h-1 rounded-full transition-all duration-300 ${currentIndex === idx ? "bg-amber w-3" : "bg-amber/20"
-                    }`}
+                  className={`h-1.5 rounded-full transition-all duration-400 ease-out ${
+                    currentIndex === idx ? "bg-olive w-6" : "bg-olive/20 w-1.5"
+                  }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}

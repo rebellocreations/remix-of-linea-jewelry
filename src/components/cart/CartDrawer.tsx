@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,11 +30,13 @@ export const CartDrawer = () => {
     try {
       const checkoutUrl = await createCheckout();
       if (checkoutUrl) {
+        // Must open in new tab for Shopify checkout to work properly
         window.open(checkoutUrl, '_blank');
         setIsOpen(false);
       }
     } catch (error) {
       console.error('Checkout failed:', error);
+      toast.error("Checkout failed. Please try again.");
     }
   };
 
