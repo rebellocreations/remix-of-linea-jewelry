@@ -79,18 +79,18 @@ const OurCollections = () => {
                     </h2>
                 </motion.div>
 
-                <div className="flex overflow-x-auto sm:grid sm:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6 md:gap-x-8 max-w-7xl mx-auto no-scrollbar pb-8 sm:pb-0 snap-x snap-mandatory px-4 sm:px-0">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6 md:gap-x-8 max-w-7xl mx-auto px-4 sm:px-0">
                     {collections.map((collection, index) => (
                         <motion.div
                             key={collection.handle}
                             initial={{ opacity: 0, scale: 0.9 }}
                             animate={isVisible ? { opacity: 1, scale: 1 } : {}}
                             transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="flex-shrink-0 snap-center"
+                            className="flex flex-col items-center"
                         >
                             <Link
                                 to={`/collections?collection=${collection.handle}`}
-                                className="group flex flex-col items-center"
+                                className="group flex flex-col items-center w-full"
                             >
                                 {/* Circular Thumbnail */}
                                 <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border border-[#E5DCD5] group-hover:border-[#D4C5B9] transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(212,197,185,0.3)] bg-[#F5F5F0]">

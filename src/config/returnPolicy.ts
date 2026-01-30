@@ -2,7 +2,7 @@ export const returnPolicyConfig = {
     title: "Return & Replacement Policy",
     tagline: "Fairness and quality for all our customers.",
     intro: "At Rebello Creation, we take immense pride in the handcrafted nature of our upcycled products. Because each piece is unique and made-to-order, we maintain a strict policy to ensure fairness and quality for all our customers.",
-    
+
     eligibility: {
         title: "1. Eligibility for Replacement",
         description: "We offer replacements only in the following cases:",
@@ -36,7 +36,7 @@ export const returnPolicyConfig = {
 
     howToInitiate: {
         title: "4. How to Initiate a Request",
-        description: "To start a replacement request, please email us at rebellocreations@gmail.com with:",
+        description: "To start a replacement request, please email us at rebellocreations@gmail.com or WhatsApp us at 7424942487 with:",
         requirements: [
             "Your Order Number.",
             "The mandatory Unboxing Video.",

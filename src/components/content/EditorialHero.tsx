@@ -55,7 +55,7 @@ const EditorialHero = () => {
               className={`font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] transition-all duration-1000 ease-out delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
                 }`}
             >
-              Giving Glass a<br className="hidden sm:block" />
+              Giving Glass a <br className="hidden sm:block" />
               <span className="italic">Second Life</span>
             </h1>
           </div>

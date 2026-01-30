@@ -87,16 +87,67 @@ const ReturnPolicy = () => {
                         </div>
 
                         {/* 4. How to Initiate a Request */}
-                        <div className="space-y-6 pb-12">
+                        <div className="space-y-6">
                             <h2 className="font-serif text-2xl lg:text-3xl text-[#1a1a1a]">4. How to Initiate a Request</h2>
                             <p className="text-stone-600 font-light leading-relaxed">
-                                To start a replacement request, please email us at <a href="mailto:rebellocreations@gmail.com" className="font-bold hover:text-amber-700 transition-colors">rebellocreations@gmail.com</a> with:
+                                To start a replacement request, please email us at <a href="mailto:rebellocreations@gmail.com" className="font-bold hover:text-amber-700 transition-colors">rebellocreations@gmail.com</a> or WhatsApp us at <a href="https://wa.me/917424942487" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-amber-700 transition-colors">7424942487</a> with:
                             </p>
                             <ul className="space-y-3 text-stone-600 font-light leading-relaxed pl-4 list-disc marker:text-stone-300">
                                 <li>Your Order Number.</li>
                                 <li>The mandatory Unboxing Video.</li>
                                 <li>High-resolution photos of the damage (if applicable).</li>
                             </ul>
+                        </div>
+
+                         {/* General Terms & Conditions */}
+                         <div className="space-y-6 pt-12 border-t border-stone-200">
+                            <h2 className="font-serif text-2xl lg:text-3xl text-[#1a1a1a]">General Terms & Conditions</h2>
+                            <p className="text-stone-600 font-light leading-relaxed">
+                                To ensure a smooth experience for our community, the following rules apply to all orders placed on the Rebello Creation website:
+                            </p>
+                            
+                            <div className="space-y-8 mt-8">
+                                <div>
+                                    <h3 className="font-serif text-lg text-[#1a1a1a] mb-2">Handcrafted Variation</h3>
+                                    <p className="text-stone-600 font-light leading-relaxed">
+                                        No two Rebello pieces are identical. By purchasing, you acknowledge that slight variations in shape, size, and color from the website images are a hallmark of artisanal upcycling.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="font-serif text-lg text-[#1a1a1a] mb-2">Order Cancellation</h3>
+                                    <p className="text-stone-600 font-light leading-relaxed">
+                                        Orders can only be cancelled within 12 hours of placement. After this period, the upcycling process begins, and the order cannot be revoked.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="font-serif text-lg text-[#1a1a1a] mb-2">Shipping & Handling</h3>
+                                    <p className="text-stone-600 font-light leading-relaxed">
+                                        While we use premium eco-friendly packaging to secure your glass, Rebello Creation is not liable for delays caused by third-party courier services or unforeseen weather conditions.
+                                    </p>
+                                    <p className="text-stone-700 font-medium mt-2">
+                                        Free shipping above ₹1999 everywhere.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="font-serif text-lg text-[#1a1a1a] mb-2">Usage Disclaimer</h3>
+                                    <p className="text-stone-600 font-light leading-relaxed">
+                                        Our products (lamps/sippers) are made from reclaimed glass. Please follow the provided care instructions (e.g., hand-wash only, avoid extreme heat) to ensure the longevity of your piece.
+                                    </p>
+                                    <p className="text-red-800/80 text-sm font-medium mt-2 bg-red-50 inline-block px-3 py-1 rounded-sm border border-red-100">
+                                        Caution: Do not microwave.
+                                    </p>
+                                </div>
+
+                                <div>
+                                    <h3 className="font-serif text-lg text-[#1a1a1a] mb-2">Intellectual Property</h3>
+                                    <p className="text-stone-600 font-light leading-relaxed">
+                                        All designs, photography, and brand content are the property of Rebello Creation and Muskan Tyagi. Unauthorized use is strictly prohibited.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </motion.div>
                 </section>
