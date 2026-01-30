@@ -35,6 +35,8 @@ const Index = () => {
 
         <OurCollections />
 
+        <TransformationSlider />
+
         <ReelsSection />
 
         {/* Floating quote after products */}
