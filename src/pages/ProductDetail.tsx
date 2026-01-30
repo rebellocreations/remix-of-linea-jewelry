@@ -80,8 +80,8 @@ const ProductDetail = () => {
         { variantId: variant.id, quantity }
       ]);
       
-      // Redirect to Shopify checkout in new tab
-      window.open(checkoutUrl, '_blank');
+      // Redirect directly to Shopify checkout (same tab) to avoid popup blockers
+      window.location.href = checkoutUrl;
     } catch (error) {
       console.error('Buy Now checkout failed:', error);
       toast.error("Checkout failed. Please try again.");
