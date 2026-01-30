@@ -5,78 +5,98 @@ import GrainOverlay from "@/components/ambient/GrainOverlay";
 
 const ReturnPolicy = () => {
     return (
-        <div className="min-h-screen bg-[#F9F8F6] font-sans selection:bg-stone-200">
+        <div className="min-h-screen bg-[#FDFCFA] font-sans selection:bg-stone-200">
             <GrainOverlay opacity={0.03} />
             <EditorialHeader />
 
             <main className="pt-32 pb-20">
-                <section className="container mx-auto px-6 lg:px-12 py-24 lg:py-32 text-center max-w-4xl mx-auto">
+                <section className="container mx-auto px-6 lg:px-12 py-16 lg:py-24 text-center max-w-4xl">
                     <motion.h1
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="font-serif text-5xl lg:text-7xl text-[#2D2D2D] mb-8 tracking-tight"
+                        className="font-serif text-4xl sm:text-5xl lg:text-6xl text-[#1a1a1a] mb-6 tracking-tight"
                     >
-                        Return Policy
+                        Return & Replacement Policy
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
-                        className="font-serif italic text-2xl text-muted-foreground font-light"
+                        className="font-serif italic text-xl lg:text-2xl text-muted-foreground/80 font-light"
                     >
-                        Our commitment to your satisfaction and our planet.
+                        Fairness and quality for all our customers.
                     </motion.p>
                 </section>
 
-                <section className="container mx-auto px-6 lg:px-12 py-10 lg:py-20 max-w-3xl mx-auto">
+                <section className="container mx-auto px-6 lg:px-12 max-w-2xl">
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8 }}
-                        className="prose prose-stone max-w-none space-y-12"
+                        className="space-y-16"
                     >
-                        <div className="space-y-4">
-                            <h2 className="font-serif text-3xl text-[#2D2D2D]">Returns & Exchanges</h2>
-                            <p className="text-stone-600 font-light leading-relaxed">
-                                At Rebello Creations, we take immense pride in the craftsmanship of our upcycled products. Because each piece is handcrafted from unique discarded glass, minor variations in color, texture, and shape are part of the artistic charm and are not considered defects.
-                            </p>
-                            <p className="text-stone-600 font-light leading-relaxed">
-                                However, if you are not entirely satisfied with your purchase, we are here to help.
+                        {/* Introduction */}
+                        <div className="text-stone-600 font-light leading-relaxed text-sm md:text-base">
+                            <p>
+                                At Rebello Creation, we take immense pride in the handcrafted nature of our upcycled products. Because each piece is unique and made-to-order, we maintain a strict policy to ensure fairness and quality for all our customers.
                             </p>
                         </div>
 
-                        <div className="space-y-4">
-                            <h3 className="font-serif text-2xl text-[#2D2D2D]">Conditions for Return</h3>
-                            <ul className="space-y-3 text-stone-600 font-light leading-relaxed list-none pl-0">
-                                <li className="flex items-start gap-3">
-                                    <span className="w-1.5 h-1.5 mt-2.5 bg-stone-400 rounded-full flex-shrink-0" />
-                                    <span>Items must be returned within 14 days of receipt.</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <span className="w-1.5 h-1.5 mt-2.5 bg-stone-400 rounded-full flex-shrink-0" />
-                                    <span>Products must be in their original condition and packaging.</span>
-                                </li>
-                                <li className="flex items-start gap-3">
-                                    <span className="w-1.5 h-1.5 mt-2.5 bg-stone-400 rounded-full flex-shrink-0" />
-                                    <span>Custom-made or personalized pieces are final sale and cannot be returned.</span>
-                                </li>
+                        {/* 1. Eligibility for Replacement */}
+                        <div className="space-y-6">
+                            <h2 className="font-serif text-2xl lg:text-3xl text-[#1a1a1a]">1. Eligibility for Replacement</h2>
+                            <p className="text-stone-600 font-light leading-relaxed">
+                                We offer replacements only in the following cases:
+                            </p>
+                            <ul className="space-y-3 text-stone-600 font-light leading-relaxed pl-4 list-disc marker:text-stone-300">
+                                <li>The product arrived damaged or broken during transit.</li>
+                                <li>You received the wrong item.</li>
+                            </ul>
+                            <div className="bg-[#F8F7F5] border-l-2 border-stone-300 p-6 md:p-8 mt-8 italic text-stone-600 text-[13px] md:text-sm leading-relaxed">
+                                <span className="font-bold not-italic">Please Note:</span> Due to the nature of upcycled glass, minor imperfections, scratches, or variations in the original bottle's texture are not considered defects; they are part of the bottle's history and the "Rebello" aesthetic.
+                            </div>
+                        </div>
+
+                        {/* 2. Mandatory Unboxing Video Proof */}
+                        <div className="space-y-6">
+                            <h2 className="font-serif text-2xl lg:text-3xl text-[#1a1a1a]">2. Mandatory Unboxing Video Proof</h2>
+                            <p className="text-stone-600 font-light leading-relaxed">
+                                To protect both the customer and our brand against transit damage, we require a continuous unboxing video.
+                            </p>
+                            <ul className="space-y-3 text-stone-600 font-light leading-relaxed pl-4 list-disc marker:text-stone-300">
+                                <li>The video must show the unopened package and the shipping label clearly.</li>
+                                <li>The video must be uncut and unedited from the start of opening until the product is fully inspected.</li>
+                            </ul>
+                            <p className="text-stone-700 font-medium text-sm pt-2">
+                                Failure to provide a clear unboxing video will result in the immediate rejection of the replacement claim.
+                            </p>
+                        </div>
+
+                        {/* 3. Reporting Timeline */}
+                        <div className="space-y-6">
+                            <h2 className="font-serif text-2xl lg:text-3xl text-[#1a1a1a]">3. Reporting Timeline</h2>
+                            <p className="text-stone-600 font-light leading-relaxed">
+                                Time is of the essence for fragile goods.
+                            </p>
+                            <ul className="space-y-3 text-stone-600 font-light leading-relaxed pl-4 list-disc marker:text-stone-300">
+                                <li>Any request for a replacement must be initiated within 3 business days from the date of delivery (as confirmed by our logistics partner).</li>
+                                <li>Requests made after the 3-day window will not be entertained.</li>
                             </ul>
                         </div>
 
-                        <div className="space-y-4">
-                            <h3 className="font-serif text-2xl text-[#2D2D2D]">Damages during Transit</h3>
+                        {/* 4. How to Initiate a Request */}
+                        <div className="space-y-6 pb-12">
+                            <h2 className="font-serif text-2xl lg:text-3xl text-[#1a1a1a]">4. How to Initiate a Request</h2>
                             <p className="text-stone-600 font-light leading-relaxed">
-                                In the unlikely event that your order arrives damaged, please contact us at <strong>care@rebellocreations.com</strong> within 48 hours with photographs of the damaged item and packaging. we will arrange for a replacement or a full refund.
+                                To start a replacement request, please email us at <a href="mailto:rebellocreations@gmail.com" className="font-bold hover:text-amber-700 transition-colors">rebellocreations@gmail.com</a> with:
                             </p>
-                        </div>
-
-                        <div className="space-y-4">
-                            <h3 className="font-serif text-2xl text-[#2D2D2D]">How to Initiate a Return</h3>
-                            <p className="text-stone-600 font-light leading-relaxed">
-                                To begin a return, please email our care team with your order number. Once approved, we will provide instructions for shipping the item back to our studio.
-                            </p>
+                            <ul className="space-y-3 text-stone-600 font-light leading-relaxed pl-4 list-disc marker:text-stone-300">
+                                <li>Your Order Number.</li>
+                                <li>The mandatory Unboxing Video.</li>
+                                <li>High-resolution photos of the damage (if applicable).</li>
+                            </ul>
                         </div>
                     </motion.div>
                 </section>

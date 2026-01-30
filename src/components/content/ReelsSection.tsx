@@ -70,10 +70,11 @@ const ReelsSection = () => {
               background=1: Autoplay, muted, loop, no controls
             */}
                         <iframe
-                            src={`https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1`}
+                            src={`https://player.vimeo.com/video/${id}?background=1&autoplay=1&loop=1&byline=0&title=0&muted=1&playsinline=1`}
                             className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                             frameBorder="0"
                             allow="autoplay; fullscreen; picture-in-picture"
+                            loading="eager"
                             style={{ pointerEvents: "none" }} // Ensure no interaction/play button overlay
                             title={`Rebello Reel ${index + 1}`}
                         />

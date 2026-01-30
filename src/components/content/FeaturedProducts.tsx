@@ -154,7 +154,7 @@ const FeaturedProducts = () => {
               return (
                 <Link
                   key={product.node.id}
-                  to={`/products/${product.node.handle}`}
+                  to={`/product/${product.node.handle}`}
                   data-index={index}
                   className={`group block transition-all duration-1000 ease-out ${visibleItems.has(index)
                     ? "opacity-100 translate-y-0"
@@ -204,22 +204,20 @@ const FeaturedProducts = () => {
           <div className="sm:hidden overflow-hidden py-4 cursor-grab active:cursor-grabbing">
             <motion.div
               drag="x"
-              dragConstraints={{ right: 0, left: 0 }}
-              dragElastic={0.2}
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.05}
               onDragStart={() => setIsSwiping(true)}
               onDragEnd={(_e, info: PanInfo) => {
                 setIsSwiping(false);
                 const swipeThreshold = 50;
                 if (info.offset.x < -swipeThreshold) {
-                  // Swipe Left -> Next
                   setCurrentIndex((prev) => (prev + 1) % products.length);
                 } else if (info.offset.x > swipeThreshold) {
-                  // Swipe Right -> Prev
                   setCurrentIndex((prev) => (prev - 1 + products.length) % products.length);
                 }
               }}
               animate={{ x: `-${currentIndex * 80}%` }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              transition={{ type: "spring", stiffness: 200, damping: 25, mass: 0.5 }}
               className="flex"
             >
               {products.map((product, index) => {
@@ -229,7 +227,7 @@ const FeaturedProducts = () => {
                 return (
                   <Link
                     key={`${product.node.id}-mobile`}
-                    to={isSwiping ? "#" : `/products/${product.node.handle}`}
+                    to={isSwiping ? "#" : `/product/${product.node.handle}`}
                     onClick={(e) => isSwiping && e.preventDefault()}
                     className="flex-shrink-0 w-[80%] px-3 group"
                   >
