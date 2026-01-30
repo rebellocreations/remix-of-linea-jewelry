@@ -6,6 +6,15 @@ const SHOPIFY_STORE_PERMANENT_DOMAIN = '1urfjp-ta.myshopify.com';
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 const SHOPIFY_STOREFRONT_TOKEN = 'e14e2bcf86d5442c73f932e886b8a346';
 
+function normalizeCheckoutUrl(checkoutUrl: string): string {
+  // Shopify should return an absolute URL, but guard against relative URLs
+  // (which would otherwise navigate to the Vercel domain and 404).
+  if (!checkoutUrl) return checkoutUrl;
+  if (checkoutUrl.startsWith("http://") || checkoutUrl.startsWith("https://")) return checkoutUrl;
+  if (checkoutUrl.startsWith("/")) return `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}${checkoutUrl}`;
+  return `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/${checkoutUrl}`;
+}
+
 export interface ShopifyProduct {
   node: {
     id: string;
@@ -369,7 +378,8 @@ export async function createStorefrontCheckout(items: Array<{ variantId: string;
     throw new Error('No checkout URL returned from Shopify');
   }
 
-  const url = new URL(cart.checkoutUrl);
+  const normalized = normalizeCheckoutUrl(cart.checkoutUrl);
+  const url = new URL(normalized);
   url.searchParams.set('channel', 'online_store');
   return url.toString();
 }
