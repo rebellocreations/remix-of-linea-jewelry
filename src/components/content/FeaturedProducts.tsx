@@ -314,10 +314,7 @@ const FeaturedProducts = () => {
           ))}
         </div>
       </div>
-    </div>
-  )
-}
-    </section >
+    </section>
   );
 };
 
