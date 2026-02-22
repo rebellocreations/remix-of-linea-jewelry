@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
+import TextReveal from "@/components/animations/TextReveal";
+
 const EditorialHero = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
@@ -49,15 +51,20 @@ const EditorialHero = () => {
       {/* Content Content - Left Aligned */}
       <div className="relative z-10 container mx-auto px-6 lg:px-16 pt-20">
         <div className="max-w-2xl">
-          {/* Headline - Elegant Serif */}
-          <div className="overflow-hidden mb-4 md:mb-6 text-center lg:text-left">
-            <h1
-              className={`font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] transition-all duration-1000 ease-out delay-300 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-16 opacity-0"
-                }`}
-            >
-              Giving Glass a <br className="hidden sm:block" />
-              <span className="italic">Second Life</span>
-            </h1>
+          {/* Headline - Character Level Reveal */}
+          <div className="mb-4 md:mb-6 text-center lg:text-left">
+            <TextReveal
+              text="Giving Glass a"
+              className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] block"
+              as="h1"
+              delay={0.3}
+            />
+            <TextReveal
+              text="Second Life"
+              className="font-serif italic text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] block"
+              as="h1"
+              delay={0.7}
+            />
           </div>
 
           {/* Subtext - Clean Sans-serif */}

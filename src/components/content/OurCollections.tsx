@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import TextReveal from "@/components/animations/TextReveal";
 
 const collections = [
     {
@@ -68,16 +69,13 @@ const OurCollections = () => {
             className="py-12 md:py-20 bg-[#FDFCFA]"
         >
             <div className="container mx-auto px-6 lg:px-12">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isVisible ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="text-center mb-8 md:mb-16"
-                >
-                    <h2 className="font-serif text-3xl md:text-4xl text-foreground font-light tracking-tight">
-                        Our Collections
-                    </h2>
-                </motion.div>
+                <div className="text-center mb-8 md:mb-16">
+                    <TextReveal
+                        text="Our Collections"
+                        className="font-serif text-3xl md:text-4xl text-foreground font-light tracking-tight"
+                        as="h2"
+                    />
+                </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6 md:gap-x-8 max-w-7xl mx-auto px-4 sm:px-0">
                     {collections.map((collection, index) => (

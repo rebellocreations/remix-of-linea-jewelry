@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { motion } from "framer-motion";
+import TextReveal from "@/components/animations/TextReveal";
 
 const BestSellers = () => {
     const [products, setProducts] = useState<ShopifyProduct[]>([]);
@@ -23,20 +24,20 @@ const BestSellers = () => {
         load();
     }, []);
 
-    // Auto-scroll logic
+    // Auto-scroll logic - Butter smooth
     useEffect(() => {
         if (loading || isPaused || products.length === 0) return;
 
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
 
-        const scrollStep = 1; // Pixels per interval
-        const scrollInterval = 30; // ms
+        const scrollStep = 0.5; // Smaller step for smoothness
+        const scrollInterval = 16; // 60fps-ish (1000/60 = 16.6)
 
         const intervalId = setInterval(() => {
-            if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 1) {
-                // Reset to start for a "loop" feel (though not infinite scroll yet)
-                scrollContainer.scrollTo({ left: 0, behavior: 'auto' });
+            if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 2) {
+                // Smoothly reset or loop
+                scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
             } else {
                 scrollContainer.scrollLeft += scrollStep;
             }
@@ -54,15 +55,13 @@ const BestSellers = () => {
             <div className="max-w-screen-2xl mx-auto px-6 lg:px-12">
                 {/* Header */}
                 <div className="text-center mb-16 md:mb-24">
-                    <motion.h2
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                        className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1A1A1A] mb-6"
-                    >
-                        Our bestsellers
-                    </motion.h2>
+                    <div className="flex justify-center">
+                        <TextReveal
+                            text="Our bestsellers"
+                            className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1A1A1A] mb-6"
+                            as="h2"
+                        />
+                    </div>
                     <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
