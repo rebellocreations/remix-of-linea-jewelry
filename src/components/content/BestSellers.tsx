@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { motion } from "framer-motion";
-import TextReveal from "@/components/animations/TextReveal";
 
 const BestSellers = () => {
     const [products, setProducts] = useState<ShopifyProduct[]>([]);
     const [loading, setLoading] = useState(true);
     const scrollRef = useRef<HTMLDivElement>(null);
     const [isPaused, setIsPaused] = useState(false);
+
+    // Siatra-style "heavy" exponential ease
+    const siatraEase = [0.2, 0, 0, 1] as any;
 
     useEffect(() => {
         const load = async () => {
@@ -55,26 +57,32 @@ const BestSellers = () => {
             <div className="max-w-screen-2xl mx-auto px-6 lg:px-12">
                 {/* Header */}
                 <div className="text-center mb-16 md:mb-24">
-                    <div className="flex justify-center">
-                        <TextReveal
-                            text="Our bestsellers"
-                            className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1A1A1A] mb-6"
-                            as="h2"
-                        />
-                    </div>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: 0.4, duration: 0.8 }}
-                    >
-                        <Link
-                            to="/collections"
-                            className="text-[10px] tracking-[0.3em] uppercase text-[#1A1A1A]/60 border-b border-[#1A1A1A]/20 pb-1 hover:text-[#1A1A1A] hover:border-[#1A1A1A] transition-all"
+                    <div className="flex justify-center overflow-hidden pb-2 mb-6">
+                        <motion.h2
+                            initial={{ y: "100%", opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 1.2, ease: siatraEase }}
+                            className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#1A1A1A]"
                         >
-                            See All
-                        </Link>
-                    </motion.div>
+                            Our bestsellers
+                        </motion.h2>
+                    </div>
+                    <div className="overflow-hidden">
+                        <motion.div
+                            initial={{ y: "100%", opacity: 0 }}
+                            whileInView={{ y: 0, opacity: 1 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.2, duration: 1.2, ease: siatraEase }}
+                        >
+                            <Link
+                                to="/collections"
+                                className="text-[10px] tracking-[0.3em] uppercase text-[#1A1A1A]/60 border-b border-[#1A1A1A]/20 pb-1 hover:text-[#1A1A1A] hover:border-[#1A1A1A] transition-all"
+                            >
+                                See All
+                            </Link>
+                        </motion.div>
+                    </div>
                 </div>
 
                 {/* Product Grid/Scroll */}
@@ -99,10 +107,14 @@ const BestSellers = () => {
                             return (
                                 <motion.div
                                     key={product.node.id}
-                                    initial={{ opacity: 0, x: 20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: idx * 0.1, duration: 0.8 }}
+                                    initial={{ opacity: 0, y: 40 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{
+                                        delay: idx * 0.1,
+                                        duration: 1.2,
+                                        ease: siatraEase
+                                    }}
                                     className="flex-shrink-0 w-72 md:w-80 group"
                                 >
                                     <Link to={`/product/${product.node.handle}`} className="block">
@@ -112,15 +124,16 @@ const BestSellers = () => {
                                                     src={image.url}
                                                     alt={image.altText || product.node.title}
                                                     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                                                    loading="lazy"
                                                 />
                                             )}
                                             <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                         </div>
                                         <div className="text-center">
-                                            <h3 className="text-[10px] md:text-xs tracking-[0.2em] uppercase mb-2 text-[#1A1A1A] font-medium">
+                                            <h3 className="text-[10px] md:text-xs tracking-[0.2em] uppercase mb-2 text-[#1A1A1A] font-medium transition-colors duration-300 group-hover:text-stone-600">
                                                 {product.node.title}
                                             </h3>
-                                            <p className="text-xs text-stone-500 font-light uppercase tracking-tight">
+                                            <p className="text-xs text-stone-500 font-light uppercase tracking-tight transition-colors duration-300 group-hover:text-stone-900">
                                                 {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
                                             </p>
                                         </div>

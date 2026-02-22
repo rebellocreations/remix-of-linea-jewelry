@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import TextReveal from "@/components/animations/TextReveal";
 
 const collections = [
     {
@@ -22,28 +21,17 @@ const collections = [
     {
         name: "Candles",
         handle: "candles",
-        image: "/candles.png",
-    },
-    {
-        name: "Planters",
-        handle: "planters",
-        image: "/planters.png",
-    },
-    {
-        name: "Soap Dispenser",
-        handle: "soap-dispenser",
-        image: "/soapdispenser.png",
-    },
-    {
-        name: "Sippers & Jars",
-        handle: "sippers-jars",
-        image: "/sippersandjars.png",
+        image: "/candle.png",
     },
 ];
 
 const OurCollections = () => {
-    const [isVisible, setIsVisible] = useState(false);
     const sectionRef = useRef<HTMLElement>(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
+    // Siatra-style "heavy" exponential ease
+    const siatraEase = [0.2, 0, 0, 1] as any;
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -52,7 +40,7 @@ const OurCollections = () => {
                     setIsVisible(true);
                 }
             },
-            { threshold: 0.1 }
+            { threshold: 0.15 } // Trigger a bit earlier for smooth scroll experience
         );
 
         if (sectionRef.current) {
@@ -66,49 +54,77 @@ const OurCollections = () => {
         <section
             id="our-collections-section"
             ref={sectionRef}
-            className="py-12 md:py-20 bg-[#FDFCFA]"
+            className="py-16 md:py-24 lg:py-36 bg-[#F5F5F0] overflow-hidden"
+            aria-labelledby="collections-heading"
         >
             <div className="container mx-auto px-6 lg:px-12">
-                <div className="text-center mb-8 md:mb-16">
-                    <TextReveal
-                        text="Our Collections"
-                        className="font-serif text-3xl md:text-4xl text-foreground font-light tracking-tight"
-                        as="h2"
-                    />
+                {/* Header - Siatra Style Block Slide-Up */}
+                <div className="mb-12 md:mb-20 text-center flex flex-col items-center">
+                    <span
+                        className={`text-[10px] md:text-xs tracking-[0.2em] uppercase text-stone-500 mb-4 transition-all duration-700 ease-out ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+                            }`}
+                        style={{ transitionDelay: "100ms" }}
+                    >
+                        Explore by Category
+                    </span>
+                    <div className="overflow-hidden pb-2">
+                        <motion.h2
+                            id="collections-heading"
+                            initial={{ y: "100%", opacity: 0 }}
+                            animate={isVisible ? { y: 0, opacity: 1 } : { y: "100%", opacity: 0 }}
+                            transition={{ duration: 1.2, ease: siatraEase, delay: 0.2 }}
+                            className="font-serif text-4xl md:text-5xl lg:text-5xl text-[#1A1A1A] tracking-tight"
+                        >
+                            Our Collections
+                        </motion.h2>
+                    </div>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-y-12 gap-x-6 md:gap-x-8 max-w-7xl mx-auto px-4 sm:px-0">
+                {/* Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
                     {collections.map((collection, index) => (
                         <motion.div
-                            key={collection.handle}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-                            transition={{ duration: 0.5, delay: index * 0.1 }}
-                            className="flex flex-col items-center"
+                            key={collection.name}
+                            initial={{ opacity: 0, y: 50 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{
+                                duration: 1.2,
+                                ease: siatraEase,
+                                delay: 0.2 + index * 0.1 // Stagger by 0.1s
+                            }}
                         >
                             <Link
-                                to={`/collections?collection=${collection.handle}`}
-                                className="group flex flex-col items-center w-full"
+                                to={`/collections/${collection.handle}`}
+                                className="group block h-full flex flex-col"
+                                onMouseEnter={() => setHoveredIndex(index)}
+                                onMouseLeave={() => setHoveredIndex(null)}
                             >
-                                {/* Circular Thumbnail */}
-                                <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border border-[#E5DCD5] group-hover:border-[#D4C5B9] transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(212,197,185,0.3)] bg-[#F5F5F0]">
+                                <div className="relative overflow-hidden rounded-[2rem] bg-[#E8E8E0] aspect-square flex items-center justify-center p-8 transition-all duration-500 ease-smooth group-hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] group-hover:-translate-y-2 group-hover:bg-white">
+                                    <div className="absolute inset-0 border border-black/5 opacity-0 group-hover:opacity-100 rounded-[2rem] transition-opacity duration-500" />
+
                                     <img
                                         src={collection.image}
-                                        alt={collection.name}
-                                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                                        onError={(e) => {
-                                            e.currentTarget.src = "https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&h=400&fit=crop";
-                                        }}
+                                        alt={`${collection.name} category`}
+                                        className={`w-full h-full object-contain max-w-[80%] max-h-[80%] drop-shadow-sm transition-transform duration-700 ease-out ${hoveredIndex === index ? "scale-105" : "scale-100"
+                                            }`}
+                                        loading="lazy"
                                     />
 
-                                    {/* Subtle inner glow */}
-                                    <div className="absolute inset-0 rounded-full ring-1 ring-inset ring-black/5 pointer-events-none group-hover:ring-black/0 transition-all duration-500" />
+                                    <div className="absolute top-4 right-4 bg-white/80 backdrop-blur-md w-8 h-8 rounded-full flex items-center justify-center opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 border border-black/5">
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M1 11L11 1M11 1H3.5M11 1V8.5" stroke="#1A1A1A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
+                                    </div>
                                 </div>
-
-                                {/* Collection Name */}
-                                <span className="mt-4 md:mt-6 text-base md:text-lg text-foreground font-light tracking-wide group-hover:text-amber-700 transition-colors duration-300 text-center px-2">
-                                    {collection.name}
-                                </span>
+                                <div className="mt-5 flex items-center justify-between px-2">
+                                    <h3 className="font-serif text-xl text-[#1A1A1A] font-light group-hover:text-stone-600 transition-colors duration-300">
+                                        {collection.name}
+                                    </h3>
+                                    <span className="text-[9px] uppercase tracking-[0.1em] text-stone-400 group-hover:text-stone-900 transition-colors duration-300 font-medium">
+                                        Explore
+                                    </span>
+                                </div>
                             </Link>
                         </motion.div>
                     ))}
