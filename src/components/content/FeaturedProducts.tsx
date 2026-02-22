@@ -118,45 +118,35 @@ const FeaturedProducts = () => {
       <div className="container mx-auto px-6 lg:px-12 mb-16">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div className="space-y-4">
-            <div className="overflow-hidden pb-2">
-              <motion.h2
-                initial={{ y: "100%", opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: [0.2, 0, 0, 1], delay: 0.1 }}
-                className="font-serif text-4xl md:text-5xl lg:text-5xl text-[#1A1A1A] tracking-tight"
-              >
-                The Collections
-              </motion.h2>
-            </div>
-            <div className="overflow-hidden">
-              <motion.p
-                initial={{ y: "100%", opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: [0.2, 0, 0, 1], delay: 0.2 }}
-                className="text-stone-500 max-w-lg text-lg font-light leading-relaxed"
-              >
-                Discover our signature pieces, each handcrafted from rescued glass bottles with meticulous attention to detail.
-              </motion.p>
-            </div>
-          </div>
-          <div className="overflow-hidden">
-            <motion.div
-              initial={{ y: "100%", opacity: 0 }}
-              whileInView={{ y: 0, opacity: 1 }}
+            <TextReveal
+              text="The Collections"
+              className="font-serif text-4xl md:text-5xl lg:text-5xl text-[#1A1A1A] tracking-tight"
+              as="h2"
+            />
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: [0.2, 0, 0, 1], delay: 0.3 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              className="text-stone-500 max-w-lg text-lg font-light leading-relaxed"
             >
-              <Link
-                to="/collections"
-                className="group inline-flex items-center gap-2 text-stone-900 font-medium tracking-wide hover:gap-3 transition-all duration-300 border-b border-stone-200 pb-1"
-              >
-                Explore all treasures
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
+              Discover our signature pieces, each handcrafted from rescued glass bottles with meticulous attention to detail.
+            </motion.p>
           </div>
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+          >
+            <Link
+              to="/collections"
+              className="group inline-flex items-center gap-2 text-stone-900 font-medium tracking-wide hover:gap-3 transition-all duration-300 border-b border-stone-200 pb-1"
+            >
+              Explore all treasures
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </motion.div>
         </div>
       </div>
 
@@ -183,13 +173,13 @@ const FeaturedProducts = () => {
               return (
                 <motion.div
                   key={product.node.id}
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: "-50px" }}
                   transition={{
-                    duration: 1.2,
-                    delay: 0.2 + (index % 3) * 0.1, // Stagger by column
-                    ease: [0.2, 0, 0, 1] as any // Siatra heavy ease
+                    duration: 0.8,
+                    delay: (index % 3) * 0.1, // Stagger by column
+                    ease: [0.22, 1, 0.36, 1]
                   }}
                 >
                   <Link
