@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { Truck, RotateCcw, ShieldCheck, Headphones } from "lucide-react";
 
 const EditorialFooter = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,144 +24,145 @@ const EditorialFooter = () => {
   }, []);
 
   const footerLinks = {
-    shop: [
-      { name: "All Lamps", href: "/category/shop" },
-      { name: "Table Lamps", href: "/category/table-lamps" },
-      { name: "Pendant Lights", href: "/category/pendant-lights" },
-      { name: "Floor Lamps", href: "/category/floor-lamps" },
+    navigation: [
+      { name: "Index", href: "/" },
+      { name: "All Lamps", href: "/collections" },
+      { name: "Our Story", href: "/about/our-story" },
+      { name: "Sustainability", href: "/about/sustainability" },
     ],
-    support: [
+    legal: [
+      { name: "Privacy Policy", href: "/privacy-policy" },
+      { name: "Terms of Service", href: "/terms-of-service" },
       { name: "Return Policy", href: "/return-policy" },
-      { name: "Care Instructions", href: "/about/care" },
-      { name: "Size Guide", href: "/about/size-guide" },
-      { name: "Contact Us", href: "/contact" },
     ],
-    connect: [
-      { name: "Instagram", href: "https://www.instagram.com/rebello.creations/" },
-      { name: "Pinterest", href: "https://pinterest.com" },
-      { name: "Newsletter", href: "/newsletter" },
+    help: [
+      { name: "Contact", href: "/contact" },
+      { name: "FAQ", href: "/contact" },
+      { name: "Care Instructions", href: "/about/care" },
     ],
   };
+
+  const features = [
+    {
+      icon: <Truck className="w-6 h-6" />,
+      text: "Free shipping from ₹1999",
+    },
+    {
+      icon: <RotateCcw className="w-6 h-6" />,
+      text: "Easy returns within 3 days",
+    },
+    {
+      icon: <ShieldCheck className="w-6 h-6" />,
+      text: "Secure payments online",
+    },
+    {
+      icon: <Headphones className="w-6 h-6" />,
+      text: "24/7 customer support",
+    },
+  ];
 
   return (
     <footer
       ref={footerRef}
-      className={`bg-charcoal text-charcoal-foreground transition-all duration-700 ease-editorial ${isVisible
+      className={`bg-[#1A1A1A] text-white transition-all duration-700 ease-editorial ${isVisible
         ? "opacity-100 translate-y-0"
         : "opacity-0 translate-y-8"
         }`}
     >
-      <div className="px-6 lg:px-12 py-10 md:py-16 lg:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
-          {/* Brand column */}
-          <div
-            className={`lg:col-span-1 transition-all duration-600 ease-editorial flex flex-col items-center lg:items-start text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            style={{ transitionDelay: "100ms" }}
-          >
-            <Link to="/" className="block mb-6">
-              <img
-                src="/logo.PNG"
-                alt="Rebello Creations"
-                className="brand-logo h-24 md:h-40 opacity-100 invert brightness-0"
-              />
-            </Link>
-            <p className="mt-6 text-sm text-charcoal-foreground/60 leading-relaxed max-w-xs">
-              Handcrafted lighting from recycled materials. Each piece tells a
-              story of transformation.
-            </p>
-          </div>
-
-          {/* Shop */}
-          <div
-            className={`transition-all duration-600 ease-editorial text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            style={{ transitionDelay: "200ms" }}
-          >
-            <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
-              Shop
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.shop.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300 editorial-link"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support */}
-          <div
-            className={`transition-all duration-600 ease-editorial text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            style={{ transitionDelay: "300ms" }}
-          >
-            <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
-              Support
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300 editorial-link"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Connect - social links with underline animation */}
-          <div
-            className={`transition-all duration-600 ease-editorial text-center lg:text-left ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-              }`}
-            style={{ transitionDelay: "400ms" }}
-          >
-            <h4 className="text-xs tracking-[0.2em] uppercase text-charcoal-foreground/50 mb-6">
-              Connect
-            </h4>
-            <ul className="space-y-3">
-              {footerLinks.connect.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={
-                      link.href.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    className="text-sm text-charcoal-foreground/80 hover:text-charcoal-foreground transition-colors duration-300 editorial-link"
-                  >
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
+      {/* Top Features Section */}
+      <div className="border-b border-white/5">
+        <div className="px-6 lg:px-12 py-12 md:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+            {features.map((feature, idx) => (
+              <div
+                key={idx}
+                className="bg-white/5 p-8 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-white/10"
+              >
+                <div className="text-white/80">{feature.icon}</div>
+                <span className="text-xs md:text-sm tracking-wider font-light text-white/60">
+                  {feature.text}
+                </span>
+              </div>
+            ))}
           </div>
         </div>
+      </div>
 
-        {/* Bottom bar */}
-        <div
-          className={`mt-16 pt-8 border-t border-charcoal-foreground/10 transition-all duration-600 ease-editorial ${isVisible ? "opacity-100" : "opacity-0"
-            }`}
-          style={{ transitionDelay: "500ms" }}
-        >
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-charcoal-foreground/40">
-              © {new Date().getFullYear()} Rebello Creations. All rights
-              reserved.
-            </p>
-            <p className="text-xs text-charcoal-foreground/40 italic">
-              "Transforming waste into light, one bottle at a time."
-            </p>
+      {/* Main Footer Content */}
+      <div className="px-6 lg:px-12 py-16 md:py-24">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          {/* Brand Info */}
+          <div className="lg:col-span-6 flex flex-col items-center lg:items-start">
+            <h2 className="text-6xl md:text-8xl font-bold tracking-tighter mb-4 text-center lg:text-left">
+              REBELLO
+            </h2>
+            <div className="flex flex-col items-center lg:items-start gap-4">
+              <p className="text-sm tracking-[0.2em] text-white/40 uppercase">
+                Artisanal Upcycling
+              </p>
+              <p className="text-xs text-white/30 text-center lg:text-left">
+                © {new Date().getFullYear()} All Rights Reserved
+              </p>
+            </div>
+          </div>
+
+          {/* Links Sections */}
+          <div className="lg:col-span-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-12">
+              <div>
+                <h4 className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-6 font-medium">
+                  (Navigation)
+                </h4>
+                <ul className="space-y-4">
+                  {footerLinks.navigation.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        to={link.href}
+                        className="text-sm text-white/70 hover:text-white transition-colors duration-300 font-light"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-6 font-medium">
+                  (Legal)
+                </h4>
+                <ul className="space-y-4">
+                  {footerLinks.legal.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        to={link.href}
+                        className="text-sm text-white/70 hover:text-white transition-colors duration-300 font-light"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="col-span-2 md:col-span-1">
+                <h4 className="text-[10px] tracking-[0.2em] uppercase text-white/30 mb-6 font-medium">
+                  (Help)
+                </h4>
+                <ul className="space-y-4">
+                  {footerLinks.help.map((link) => (
+                    <li key={link.name}>
+                      <Link
+                        to={link.href}
+                        className="text-sm text-white/70 hover:text-white transition-colors duration-300 font-light"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>

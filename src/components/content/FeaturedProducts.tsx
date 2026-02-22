@@ -105,7 +105,7 @@ const FeaturedProducts = () => {
           </h2>
         </div>
         <Link
-          to="/category/shop"
+          to="/collections"
           className={`text-xs md:text-sm text-muted-foreground hover:text-foreground transition-all duration-500 border-b border-transparent hover:border-foreground pb-0.5 hidden sm:block ${headerVisible ? "opacity-100" : "opacity-0"
             }`}
           style={{ transitionDelay: "300ms" }}
@@ -203,7 +203,7 @@ const FeaturedProducts = () => {
                 setIsSwiping(false);
                 const swipeThreshold = 40;
                 const velocity = info.velocity.x;
-                
+
                 if (velocity < -300 || info.offset.x < -swipeThreshold) {
                   setCurrentIndex((prev) => Math.min(prev + 1, products.length - 1));
                 } else if (velocity > 300 || info.offset.x > swipeThreshold) {
@@ -211,9 +211,9 @@ const FeaturedProducts = () => {
                 }
               }}
               animate={{ x: `-${currentIndex * 80}%` }}
-              transition={{ 
-                type: "tween", 
-                duration: 0.4, 
+              transition={{
+                type: "tween",
+                duration: 0.4,
                 ease: [0.22, 1, 0.36, 1]
               }}
               className="flex cursor-grab active:cursor-grabbing touch-pan-y"
@@ -269,9 +269,8 @@ const FeaturedProducts = () => {
                 <button
                   key={idx}
                   onClick={() => setCurrentIndex(idx)}
-                  className={`h-1.5 rounded-full transition-all duration-400 ease-out ${
-                    currentIndex === idx ? "bg-olive w-6" : "bg-olive/20 w-1.5"
-                  }`}
+                  className={`h-1.5 rounded-full transition-all duration-400 ease-out ${currentIndex === idx ? "bg-olive w-6" : "bg-olive/20 w-1.5"
+                    }`}
                   aria-label={`Go to slide ${idx + 1}`}
                 />
               ))}
