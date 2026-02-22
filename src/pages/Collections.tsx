@@ -7,17 +7,38 @@ import { fetchProducts, fetchCollections, fetchProductsByCollection, ShopifyProd
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const FossilReveal = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
+const FossilStagger = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.05,
+            delayChildren: 0.1
+        }
+    }
+};
+
 const Collections = () => {
     const [searchParams, setSearchParams] = useSearchParams();
     const [products, setProducts] = useState<ShopifyProduct[]>([]);
     const [collections, setCollections] = useState<ShopifyCollection[]>([]);
     const [loading, setLoading] = useState(true);
     const [collectionsLoading, setCollectionsLoading] = useState(true);
-    const [headerVisible, setHeaderVisible] = useState(false);
 
     const activeCollection = searchParams.get("collection") || "all";
 
-    // Fetch collections on mount
     useEffect(() => {
         const loadCollections = async () => {
             try {
@@ -30,20 +51,16 @@ const Collections = () => {
             }
         };
         loadCollections();
-        setTimeout(() => setHeaderVisible(true), 100);
     }, []);
 
-    // Fetch products when collection changes
     useEffect(() => {
         const loadProducts = async () => {
             setLoading(true);
             try {
                 if (activeCollection === "all") {
-                    // Fetch all products
                     const data = await fetchProducts(24);
                     setProducts(data);
                 } else {
-                    // Fetch products by collection handle
                     const data = await fetchProductsByCollection(activeCollection, 24);
                     setProducts(data);
                 }
@@ -72,61 +89,59 @@ const Collections = () => {
             <main className="pt-32 pb-24">
                 {/* Hero Section */}
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: headerVisible ? 1 : 0, y: headerVisible ? 0 : 20 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    initial="hidden"
+                    animate="visible"
+                    variants={FossilStagger}
                     className="text-center px-6 mb-16"
                 >
-                    <span className="text-xs tracking-[0.25em] uppercase text-olive/80 mb-4 block">
+                    <motion.span variants={FossilReveal} className="text-xs tracking-[0.25em] uppercase text-olive/80 mb-4 block">
                         Explore Our
-                    </span>
-                    <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground font-light tracking-tight mb-6">
+                    </motion.span>
+                    <motion.h1 variants={FossilReveal} className="font-serif text-4xl md:text-5xl lg:text-6xl text-foreground font-light tracking-tight mb-6">
                         Collections
-                    </h1>
-                    <p className="text-muted-foreground max-w-xl mx-auto text-lg">
+                    </motion.h1>
+                    <motion.p variants={FossilReveal} className="text-muted-foreground max-w-xl mx-auto text-lg leading-relaxed">
                         Each piece is handcrafted from recycled glass bottles,
                         transformed into functional art for your home.
-                    </p>
+                    </motion.p>
                 </motion.div>
 
                 {/* Collection Filter Tabs */}
                 <motion.div
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: headerVisible ? 1 : 0, y: headerVisible ? 0 : 10 }}
-                    transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+                    initial="hidden"
+                    animate="visible"
+                    variants={FossilStagger}
                     className="px-6 lg:px-12 mb-16"
                 >
                     <div className="flex flex-wrap justify-center gap-3">
-                        {/* All Products Button */}
-                        <button
+                        <motion.button
+                            variants={FossilReveal}
                             onClick={() => handleCollectionChange("all")}
-                            className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${
-                                activeCollection === "all"
+                            className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${activeCollection === "all"
                                     ? "bg-foreground text-background"
                                     : "bg-transparent text-foreground/70 hover:text-foreground border border-border/50 hover:border-border"
-                            }`}
+                                }`}
                         >
                             All
-                        </button>
-                        
-                        {/* Dynamic Collection Buttons from Shopify */}
+                        </motion.button>
+
                         {collectionsLoading ? (
                             [...Array(5)].map((_, i) => (
                                 <Skeleton key={i} className="h-10 w-24 rounded-full" />
                             ))
                         ) : (
                             collections.map((collection) => (
-                                <button
+                                <motion.button
                                     key={collection.node.id}
+                                    variants={FossilReveal}
                                     onClick={() => handleCollectionChange(collection.node.handle)}
-                                    className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${
-                                        activeCollection === collection.node.handle
+                                    className={`px-5 py-2.5 rounded-full text-sm transition-all duration-300 ${activeCollection === collection.node.handle
                                             ? "bg-foreground text-background"
                                             : "bg-transparent text-foreground/70 hover:text-foreground border border-border/50 hover:border-border"
-                                    }`}
+                                        }`}
                                 >
                                     {collection.node.title}
-                                </button>
+                                </motion.button>
                             ))
                         )}
                     </div>
@@ -138,7 +153,7 @@ const Collections = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
                             {[...Array(6)].map((_, i) => (
                                 <div key={i}>
-                                    <Skeleton className="aspect-[4/5] rounded-xl" />
+                                    <Skeleton className="aspect-[4/5] rounded-[2rem]" />
                                     <div className="mt-6 space-y-3">
                                         <Skeleton className="h-4 w-1/4" />
                                         <Skeleton className="h-6 w-2/3" />
@@ -166,29 +181,29 @@ const Collections = () => {
                                             key={product.node.id}
                                             layout
                                             initial={{ opacity: 0, y: 30 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, scale: 0.95 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true, margin: "-50px" }}
                                             transition={{
-                                                duration: 0.5,
-                                                delay: index * 0.08,
-                                                ease: "easeOut"
+                                                duration: 0.8,
+                                                delay: index % 3 * 0.1, // Stagger based on column
+                                                ease: [0.22, 1, 0.36, 1]
                                             }}
                                         >
                                             <Link
                                                 to={`/product/${product.node.handle}`}
                                                 className="group block"
                                             >
-                                                {/* Image Card */}
-                                                <div className="relative overflow-hidden rounded-2xl bg-[#F5F5F0] aspect-[4/5] transition-all duration-500 ease-out group-hover:shadow-xl group-hover:-translate-y-1">
-                                                    {/* Warm overlay on hover */}
-                                                    <div className="absolute inset-0 bg-[#F5EAD4]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
+                                                <motion.div
+                                                    className="relative overflow-hidden rounded-[2rem] bg-[#F5F5F0] aspect-[4/5] shadow-sm transition-all duration-500 ease-smooth group-hover:shadow-2xl group-hover:-translate-y-2"
+                                                >
+                                                    <div className="absolute inset-0 bg-[#F5EAD4]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-10" />
 
                                                     {image ? (
                                                         <img
                                                             src={image.url}
                                                             alt={image.altText || product.node.title}
                                                             loading="lazy"
-                                                            className="relative z-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                                                            className="relative z-0 w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-105"
                                                         />
                                                     ) : (
                                                         <div className="flex items-center justify-center h-full text-muted-foreground/50 text-sm">
@@ -196,23 +211,21 @@ const Collections = () => {
                                                         </div>
                                                     )}
 
-                                                    {/* Floating Action Button */}
-                                                    <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-400 ease-out">
-                                                        <span className="bg-white/95 hover:bg-white text-foreground rounded-full px-6 py-2.5 shadow-lg backdrop-blur-sm text-xs uppercase tracking-wider font-medium inline-block">
-                                                            View Item
+                                                    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out">
+                                                        <span className="bg-white/95 hover:bg-white text-[#1A1A1A] rounded-full px-8 py-3 shadow-xl backdrop-blur-sm text-[10px] uppercase tracking-[0.2em] font-medium inline-block whitespace-nowrap border border-black/5">
+                                                            Shop Now
                                                         </span>
                                                     </div>
-                                                </div>
+                                                </motion.div>
 
-                                                {/* Content */}
-                                                <div className="mt-6 text-center space-y-1.5 px-2">
-                                                    <p className="text-xs text-olive/70 tracking-wide uppercase">
-                                                        Handcrafted
+                                                <div className="mt-8 text-center space-y-1.5 px-2">
+                                                    <p className="text-[10px] text-olive/60 tracking-[0.2em] uppercase font-medium">
+                                                        Handcrafted Glass
                                                     </p>
-                                                    <h3 className="font-serif text-xl text-foreground font-light">
+                                                    <h3 className="font-serif text-2xl text-[#1A1A1A] font-light leading-tight">
                                                         {product.node.title}
                                                     </h3>
-                                                    <p className="text-sm text-muted-foreground font-medium pt-1">
+                                                    <p className="text-xs text-stone-400 font-light tracking-wide pt-1">
                                                         {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
                                                     </p>
                                                 </div>

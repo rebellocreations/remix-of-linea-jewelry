@@ -4,12 +4,34 @@ import { Instagram, Mail, ArrowRight, Loader2 } from "lucide-react";
 import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 
+const FossilReveal = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.8,
+            ease: [0.22, 1, 0.36, 1]
+        }
+    }
+};
+
+const FossilStagger = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1,
+            delayChildren: 0.2
+        }
+    }
+};
+
 const Contact = () => {
     const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
 
     useEffect(() => {
         document.title = "Contact Rebello Creations | Sustainable Upcycled Glass Decor";
-        // Update meta description
         const metaDesc = document.querySelector('meta[name="description"]');
         if (metaDesc) {
             metaDesc.setAttribute(
@@ -52,14 +74,14 @@ const Contact = () => {
             <EditorialHeader />
 
             <main className="pt-32 pb-24 px-6 md:px-12 lg:px-20">
-                <div className="max-w-[750px] mx-auto">
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={FossilStagger}
+                    className="max-w-[750px] mx-auto"
+                >
                     {/* Header Section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-16"
-                    >
+                    <motion.div variants={FossilReveal} className="text-center mb-16">
                         <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl text-[#2C3028] mb-6">
                             Contact Rebello
                         </h1>
@@ -69,13 +91,9 @@ const Contact = () => {
                     </motion.div>
 
                     {/* Contact Details section */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.1 }}
-                        className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16"
-                    >
-                        <a
+                    <motion.div variants={FossilStagger} className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+                        <motion.a
+                            variants={FossilReveal}
                             href="https://www.instagram.com/rebello.creations/"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -91,9 +109,10 @@ const Contact = () => {
                                 </div>
                             </div>
                             <ArrowRight className="w-5 h-5 text-[#E8E4DE] group-hover:text-[#6B7B5C] transition-colors" />
-                        </a>
+                        </motion.a>
 
-                        <a
+                        <motion.a
+                            variants={FossilReveal}
                             href="mailto:rebellocreations@gmail.com"
                             className="group flex items-center justify-between p-6 bg-white rounded-2xl border border-[#E8E4DE] shadow-sm hover:shadow-md transition-all duration-300"
                         >
@@ -107,14 +126,12 @@ const Contact = () => {
                                 </div>
                             </div>
                             <ArrowRight className="w-5 h-5 text-[#E8E4DE] group-hover:text-[#6B7B5C] transition-colors" />
-                        </a>
+                        </motion.a>
                     </motion.div>
 
-                    {/* Form section with Success State */}
+                    {/* Form section */}
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        variants={FossilReveal}
                         className="bg-white rounded-[2rem] p-8 md:p-12 border border-[#E8E4DE] shadow-sm min-h-[400px] flex flex-col justify-center"
                     >
                         {status === "success" ? (
@@ -232,7 +249,7 @@ const Contact = () => {
                             </form>
                         )}
                     </motion.div>
-                </div>
+                </motion.div>
             </main>
 
             <EditorialFooter />

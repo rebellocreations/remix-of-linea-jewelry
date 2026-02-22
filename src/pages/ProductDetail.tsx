@@ -23,6 +23,29 @@ import SimilarProducts from "@/components/product/SimilarProducts";
 import { motion } from "framer-motion";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
 
+const FossilReveal = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.22, 1, 0.36, 1]
+    }
+  }
+};
+
+const FossilStagger = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
 const ProductDetail = () => {
   const { productId } = useParams();
   const handle = productId || "";
@@ -72,14 +95,14 @@ const ProductDetail = () => {
 
   const onBuyNow = async (quantity: number) => {
     if (!product || !variant) return;
-    
+
     setBuyNowLoading(true);
     try {
       // Create Shopify checkout directly with this item
       const checkoutUrl = await createStorefrontCheckout([
         { variantId: variant.id, quantity }
       ]);
-      
+
       // Redirect directly to Shopify checkout (same tab) to avoid popup blockers
       window.location.href = checkoutUrl;
     } catch (error) {
@@ -97,16 +120,14 @@ const ProductDetail = () => {
     <div className="min-h-screen bg-[#FDFCF8] font-sans selection:bg-olive-100 relative overflow-hidden">
       {/* Background Graphic Layer */}
       <div className="fixed inset-0 z-0 pointer-events-none">
-        {/* Faded Nature/Business Graphic */}
         <motion.img
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.03 }}
-          transition={{ duration: 1.5 }}
+          whileInView={{ opacity: 0.03 }}
+          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
           src="/bgimage.png"
           alt=""
           className="w-full h-full object-cover mix-blend-multiply"
         />
-        {/* Ambient Color Orbs */}
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -131,15 +152,14 @@ const ProductDetail = () => {
       <EditorialHeader />
 
       <motion.main
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        initial="hidden"
+        animate="visible"
+        variants={FossilStagger}
         className="pt-28 pb-20 px-6 lg:px-12 max-w-[1600px] mx-auto relative z-10"
         aria-label="Product details"
       >
-
         {/* Breadcrumb */}
-        <div className="mb-8 hidden lg:block">
+        <motion.div variants={FossilReveal} className="mb-8 hidden lg:block">
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
@@ -159,16 +179,16 @@ const ProductDetail = () => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-        </div>
+        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
-          {/* Left Column: Gallery (7 Cols) */}
-          <div className="lg:col-span-7">
+          {/* Left Column: Gallery */}
+          <motion.div variants={FossilReveal} className="lg:col-span-7">
             <ProductGallery images={images} />
-          </div>
+          </motion.div>
 
-          {/* Right Column: Info (5 Cols) */}
-          <div className="lg:col-span-5">
+          {/* Right Column: Info */}
+          <motion.div variants={FossilReveal} className="lg:col-span-5">
             <div className="lg:sticky lg:top-32">
               <ProductInfo
                 product={product}
@@ -179,26 +199,39 @@ const ProductDetail = () => {
               />
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.6 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ProductAccordion description={product.description} />
               </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Full Width Sections */}
-        <div className="mt-24 lg:mt-32 max-w-5xl mx-auto">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={FossilReveal}
+          className="mt-24 lg:mt-32 max-w-5xl mx-auto"
+        >
           <Reviews productId={product.id} />
-        </div>
+        </motion.div>
 
-        <div className="mt-16 border-t border-stone-200 pt-16">
-          <SimilarProducts 
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={FossilReveal}
+          className="mt-16 border-t border-stone-200 pt-16"
+        >
+          <SimilarProducts
             currentProductId={product.id}
             currentProductHandle={product.handle}
           />
-        </div>
+        </motion.div>
       </motion.main>
 
       <EditorialFooter />
