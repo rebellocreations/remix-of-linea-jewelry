@@ -1,18 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 
 const BestSellers = () => {
     const [products, setProducts] = useState<ShopifyProduct[]>([]);
     const [loading, setLoading] = useState(true);
-    const containerRef = useRef<HTMLDivElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [isPaused, setIsPaused] = useState(false);
 
     useEffect(() => {
         const load = async () => {
             try {
-                const data = await fetchProducts(8);
+                const data = await fetchProducts(10); // Fetch a few more for continuous feel
                 setProducts(data);
             } catch (e) {
                 console.error("Failed to load best sellers:", e);
@@ -23,8 +23,34 @@ const BestSellers = () => {
         load();
     }, []);
 
+    // Auto-scroll logic
+    useEffect(() => {
+        if (loading || isPaused || products.length === 0) return;
+
+        const scrollContainer = scrollRef.current;
+        if (!scrollContainer) return;
+
+        const scrollStep = 1; // Pixels per interval
+        const scrollInterval = 30; // ms
+
+        const intervalId = setInterval(() => {
+            if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 1) {
+                // Reset to start for a "loop" feel (though not infinite scroll yet)
+                scrollContainer.scrollTo({ left: 0, behavior: 'auto' });
+            } else {
+                scrollContainer.scrollLeft += scrollStep;
+            }
+        }, scrollInterval);
+
+        return () => clearInterval(intervalId);
+    }, [loading, isPaused, products]);
+
     return (
-        <section className="bg-[#FAF9F6] py-24 md:py-32 overflow-hidden">
+        <section
+            className="bg-[#FAF9F6] py-24 md:py-32 overflow-hidden"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+        >
             <div className="max-w-screen-2xl mx-auto px-6 lg:px-12">
                 {/* Header */}
                 <div className="text-center mb-16 md:mb-24">
@@ -56,11 +82,12 @@ const BestSellers = () => {
                 <div
                     ref={scrollRef}
                     className="flex gap-8 md:gap-12 overflow-x-auto no-scrollbar pb-12 -mx-6 px-6 cursor-grab active:cursor-grabbing"
+                    style={{ scrollBehavior: 'auto' }}
                 >
                     {loading ? (
                         [...Array(4)].map((_, i) => (
                             <div key={i} className="flex-shrink-0 w-72 md:w-80 animate-pulse">
-                                <div className="aspect-[4/5] bg-stone-200 rounded-sm mb-6" />
+                                <div className="aspect-[4/5] bg-stone-200 rounded-[2rem] mb-6" />
                                 <div className="h-4 bg-stone-200 w-2/3 mb-2" />
                                 <div className="h-4 bg-stone-100 w-1/3" />
                             </div>
@@ -80,7 +107,7 @@ const BestSellers = () => {
                                     className="flex-shrink-0 w-72 md:w-80 group"
                                 >
                                     <Link to={`/product/${product.node.handle}`} className="block">
-                                        <div className="aspect-[4/5] overflow-hidden bg-white mb-6 relative">
+                                        <div className="aspect-[4/5] overflow-hidden bg-white mb-6 relative rounded-[2rem] md:rounded-[3rem] shadow-sm transition-shadow duration-500 group-hover:shadow-xl">
                                             {image && (
                                                 <img
                                                     src={image.url}
@@ -91,10 +118,10 @@ const BestSellers = () => {
                                             <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                                         </div>
                                         <div className="text-center">
-                                            <h3 className="text-xs tracking-widest uppercase mb-2 text-[#1A1A1A]">
+                                            <h3 className="text-[10px] md:text-xs tracking-[0.2em] uppercase mb-2 text-[#1A1A1A] font-medium">
                                                 {product.node.title}
                                             </h3>
-                                            <p className="text-xs text-stone-500 font-light">
+                                            <p className="text-xs text-stone-500 font-light uppercase tracking-tight">
                                                 {price.currencyCode} {parseFloat(price.amount).toFixed(2)}
                                             </p>
                                         </div>
