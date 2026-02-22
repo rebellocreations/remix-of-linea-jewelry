@@ -10,6 +10,7 @@ import BrandStory from "@/components/content/BrandStory";
 import EditorialJourney from "@/components/content/EditorialJourney";
 import SignatureCandles from "@/components/content/SignatureCandles";
 import Testimonials from "@/components/content/Testimonials";
+import BestSellers from "@/components/content/BestSellers";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
 import FloatingQuote from "@/components/ambient/FloatingQuote";
 import ScrollStoryline from "@/components/ambient/ScrollStoryline";
@@ -38,6 +39,7 @@ const Index = () => {
         <TransformationSlider />
 
         <ReelsSection />
+        <BestSellers />
 
         {/* Floating quote after products */}
         <FloatingQuote
