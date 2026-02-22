@@ -3,8 +3,6 @@ import { Link } from "react-router-dom";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
-import TextReveal from "@/components/animations/TextReveal";
-
 const EditorialHero = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
@@ -15,8 +13,8 @@ const EditorialHero = () => {
   const opacity = useTransform(scrollY, [0, 500], [1, 0.5]);
 
   useEffect(() => {
-    // Simulate load delay for smooth entrance
-    const timer = setTimeout(() => setIsLoaded(true), 100);
+    // Siatra has a slight delay before triggering the hero sequence
+    const timer = setTimeout(() => setIsLoaded(true), 400);
     return () => clearTimeout(timer);
   }, []);
 
@@ -24,18 +22,21 @@ const EditorialHero = () => {
     document.getElementById("our-collections-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  // Siatra-style "heavy" exponential ease for slide-ups
+  const siatraEase = [0.2, 0, 0, 1] as any;
+
   return (
     <section
       ref={heroRef}
       className="relative h-[90vh] md:h-screen min-h-[600px] md:min-h-[700px] w-full overflow-hidden flex items-center justify-center lg:justify-start"
     >
-      {/* Background Image with Parallax */}
+      {/* Background Image with Parallax & Static Fade (Siatra Style) */}
       <motion.div
-        className="absolute inset-0 z-0"
+        className="absolute inset-0 z-0 bg-black"
         style={{ y, opacity }}
       >
         <div
-          className={`w-full h-full transition-all duration-1500 ease-out transform ${isLoaded ? "scale-100 opacity-100" : "scale-110 opacity-0"
+          className={`w-full h-full transition-opacity duration-[1500ms] ease-in-out ${isLoaded ? "opacity-100" : "opacity-0"
             }`}
         >
           <img
@@ -51,34 +52,37 @@ const EditorialHero = () => {
       {/* Content Content - Left Aligned */}
       <div className="relative z-10 container mx-auto px-6 lg:px-16 pt-20">
         <div className="max-w-2xl">
-          {/* Headline - Character Level Reveal */}
-          <div className="mb-4 md:mb-6 text-center lg:text-left">
-            <TextReveal
-              text="Giving Glass a"
+          {/* Headline - Whole Block Slide-Up (Siatra Style) */}
+          <div className="mb-4 md:mb-6 text-center lg:text-left overflow-hidden pb-2">
+            <motion.h1
+              initial={{ y: "100%", opacity: 0 }}
+              animate={isLoaded ? { y: 0, opacity: 1 } : { y: "100%", opacity: 0 }}
+              transition={{ duration: 1.2, ease: siatraEase, delay: 0.1 }}
               className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] block"
-              as="h1"
-              delay={0.3}
-            />
-            <TextReveal
-              text="Second Life"
-              className="font-serif italic text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] block"
-              as="h1"
-              delay={0.7}
-            />
+            >
+              Giving Glass a <br className="hidden sm:block" />
+              <span className="italic">Second Life</span>
+            </motion.h1>
           </div>
 
-          {/* Subtext - Clean Sans-serif */}
-          <p
-            className={`text-base md:text-xl text-white/90 font-light max-w-lg mb-8 md:mb-10 leading-relaxed text-center lg:text-left mx-auto lg:mx-0 transition-all duration-1000 ease-out delay-500 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-              }`}
-          >
-            Handcrafted home décor made from recycled bottles — sustainable, timeless, and unique.
-          </p>
+          {/* Subtext - Slide-Up Staggered (Siatra Style) */}
+          <div className="overflow-hidden mb-8 md:mb-10 text-center lg:text-left mx-auto lg:mx-0 max-w-lg">
+            <motion.p
+              initial={{ y: "100%", opacity: 0 }}
+              animate={isLoaded ? { y: 0, opacity: 1 } : { y: "100%", opacity: 0 }}
+              transition={{ duration: 1.2, ease: siatraEase, delay: 0.3 }}
+              className="text-base md:text-xl text-white/90 font-light leading-relaxed"
+            >
+              Handcrafted home décor made from recycled bottles — sustainable, timeless, and unique.
+            </motion.p>
+          </div>
 
-          {/* CTAs */}
-          <div
-            className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 md:gap-6 transition-all duration-1000 ease-out delay-700 ${isLoaded ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
-              }`}
+          {/* CTAs - Slide-Up / Fade-In Staggered (Siatra Style) */}
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={isLoaded ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
+            transition={{ duration: 1.2, ease: siatraEase, delay: 0.5 }}
+            className={`flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 md:gap-6`}
           >
             {/* Primary CTA */}
             <Link
@@ -100,16 +104,17 @@ const EditorialHero = () => {
               </span>
               <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
             </Link>
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Scroll Indicator */}
       <motion.button
         onClick={scrollToCollections}
-        className={`absolute bottom-10 left-1/2 -translate-x-1/2 text-white/70 hover:text-white transition-colors duration-300 flex flex-col items-center gap-2 ${isLoaded ? "opacity-100" : "opacity-0"
-          }`}
-        style={{ transitionDelay: "1200ms" }}
+        initial={{ opacity: 0 }}
+        animate={isLoaded ? { opacity: 1 } : { opacity: 0 }}
+        transition={{ duration: 1.5, ease: "easeInOut", delay: 1 }}
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/70 hover:text-white transition-colors duration-300 flex flex-col items-center gap-2"
       >
         <span className="text-[10px] uppercase tracking-[0.2em]">Scroll</span>
         <div className="w-px h-12 bg-white/30 relative overflow-hidden">
