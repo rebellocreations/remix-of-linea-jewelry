@@ -3,8 +3,10 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Suspense, lazy } from "react";
 import ScrollToTop from "./components/ScrollToTop";
-import Index from "./pages/Index";
+
+const Index = lazy(() => import("./pages/Index"));
 import Category from "./pages/Category";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
@@ -32,7 +34,7 @@ const AnimatedRoutes = () => {
   const location = useLocation();
 
   return (
-    <div key={location.pathname} className="animate-fade-up">
+    <div key={location.pathname} className="animate-fade-up relative z-10">
       <Routes location={location}>
         <Route path="/" element={<Index />} />
         <Route path="/category/:category" element={<Category />} />
@@ -67,6 +69,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+
         <ScrollToTop />
         <AnimatedRoutes />
       </BrowserRouter>

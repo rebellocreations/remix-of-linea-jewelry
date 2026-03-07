@@ -39,7 +39,64 @@ const collections = [
         handle: "sippers-jars",
         image: "/sippersandjars.png",
     },
+    {
+        name: "Custom Designs",
+        handle: "custom-designs",
+        image: "/custom-designs.png",
+        externalLink: "https://www.instagram.com/rebello.creations/",
+    },
 ];
+
+const CollectionSphere = ({ collection, index }: { collection: typeof collections[number], index: number }) => {
+    const content = (
+        <>
+            {/* Circular Thumbnail */}
+            <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border border-[#E5DCD5] group-hover:border-[#D4C5B9] transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(212,197,185,0.3)] bg-[#F5F5F0]">
+                <motion.img
+                    initial={{ scale: 1.1 }}
+                    whileInView={{ scale: 1 }}
+                    transition={{ duration: 1.2, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                    src={collection.image}
+                    alt={collection.name}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    onError={(e) => {
+                        e.currentTarget.src = "https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&h=400&fit=crop";
+                    }}
+                />
+                {/* Subtle inner glow */}
+                <div className="absolute inset-0 rounded-full ring-1 ring-inset ring-black/5 pointer-events-none group-hover:ring-black/0 transition-all duration-500" />
+            </div>
+
+            {/* Collection Name */}
+            <span className="mt-4 md:mt-6 text-base md:text-lg text-foreground font-light tracking-wide group-hover:text-amber-700 transition-colors duration-300 text-center px-2">
+                {collection.name}
+            </span>
+        </>
+    );
+
+    if ('externalLink' in collection && collection.externalLink) {
+        return (
+            <a
+                href={collection.externalLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex flex-col items-center w-full"
+            >
+                {content}
+            </a>
+        );
+    }
+
+    return (
+        <Link
+            to={`/collections?collection=${collection.handle}`}
+            className="group flex flex-col items-center w-full"
+        >
+            {content}
+        </Link>
+    );
+};
 
 const OurCollections = () => {
     const [isVisible, setIsVisible] = useState(false);
@@ -91,34 +148,7 @@ const OurCollections = () => {
                             }}
                             className="flex flex-col items-center"
                         >
-                            <Link
-                                to={`/collections?collection=${collection.handle}`}
-                                className="group flex flex-col items-center w-full"
-                            >
-                                {/* Circular Thumbnail */}
-                                <div className="relative w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border border-[#E5DCD5] group-hover:border-[#D4C5B9] transition-all duration-500 group-hover:shadow-[0_0_20px_rgba(212,197,185,0.3)] bg-[#F5F5F0]">
-                                    <motion.img
-                                        initial={{ scale: 1.1 }}
-                                        whileInView={{ scale: 1 }}
-                                        transition={{ duration: 1.2, ease: "easeOut" }}
-                                        viewport={{ once: true }}
-                                        src={collection.image}
-                                        alt={collection.name}
-                                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                                        onError={(e) => {
-                                            e.currentTarget.src = "https://images.unsplash.com/photo-1618220179428-22790b461013?w=400&h=400&fit=crop";
-                                        }}
-                                    />
-
-                                    {/* Subtle inner glow */}
-                                    <div className="absolute inset-0 rounded-full ring-1 ring-inset ring-black/5 pointer-events-none group-hover:ring-black/0 transition-all duration-500" />
-                                </div>
-
-                                {/* Collection Name */}
-                                <span className="mt-4 md:mt-6 text-base md:text-lg text-foreground font-light tracking-wide group-hover:text-amber-700 transition-colors duration-300 text-center px-2">
-                                    {collection.name}
-                                </span>
-                            </Link>
+                            <CollectionSphere collection={collection} index={index} />
                         </motion.div>
                     ))}
                 </div>

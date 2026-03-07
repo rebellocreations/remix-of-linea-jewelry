@@ -22,7 +22,8 @@
 @layer base {
   :root {
     /* Warm, premium palette - off-white backgrounds, charcoal, olive, amber */
-    --background: 40 20% 97%;
+    --background: 40 30% 88%;
+    /* Deeper beige to make it distinct */
     --foreground: 30 10% 12%;
 
     /* Charcoal black for strong elements */

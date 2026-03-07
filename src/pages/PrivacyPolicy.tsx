@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <Header />
 
       <main className="pt-6">

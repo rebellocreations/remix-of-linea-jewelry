@@ -7,7 +7,7 @@ import AboutSidebar from "../../components/about/AboutSidebar";
 
 const SizeGuide = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <Header />
       
       <div className="flex">

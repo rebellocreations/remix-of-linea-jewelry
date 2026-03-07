@@ -92,7 +92,7 @@ const OurStory = () => {
                             <img
                                 src="/wastesplit.jpeg"
                                 alt="Discarded bottles waiting for transformation"
-                                className="w-full h-full object-cover transition-transform duration-[2000ms] hover:scale-105"
+                                className="w-full h-full object-cover transition-transform [transition-duration:2000ms] hover:scale-105"
                             />
                         </motion.div>
                     </div>

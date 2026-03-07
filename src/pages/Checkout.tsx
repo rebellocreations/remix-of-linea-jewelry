@@ -129,7 +129,7 @@ const Checkout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <CheckoutHeader />
 
       <main className="pt-6 pb-12">

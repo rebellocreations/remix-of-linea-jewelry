@@ -10,7 +10,7 @@ import AboutSidebar from "../../components/about/AboutSidebar";
 
 const CustomerCare = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <Header />
 
       <div className="flex">

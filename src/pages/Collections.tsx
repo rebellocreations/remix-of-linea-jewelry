@@ -83,7 +83,7 @@ const Collections = () => {
     };
 
     return (
-        <div className="min-h-screen bg-background">
+        <div className="min-h-screen ">
             <EditorialHeader />
 
             <main className="pt-32 pb-24">

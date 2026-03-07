@@ -32,7 +32,7 @@ const StoreLocator = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen ">
       <Header />
 
       <div className="flex">
@@ -53,7 +53,7 @@ const StoreLocator = () => {
           <ContentSection title="Our Locations">
             <div className="grid gap-8">
               {stores.map((store, index) => (
-                <div key={index} className="bg-background rounded-lg p-8 border border-border">
+                <div key={index} className=" rounded-lg p-8 border border-border">
                   <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-4">
                       <h3 className="text-xl font-light text-foreground">{store.name}</h3>

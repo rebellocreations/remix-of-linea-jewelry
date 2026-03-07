@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, User, Menu, X } from "lucide-react";
+import { User, Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import CartDrawer from "@/components/cart/CartDrawer";
 
@@ -154,12 +154,7 @@ const EditorialHeader = () => {
 
         {/* Right - Icons */}
         <div className="flex items-center space-x-4">
-          <button
-            className="p-2 text-foreground/80 hover:text-foreground transition-colors duration-300"
-            aria-label="Search"
-          >
-            <Search size={20} strokeWidth={1.5} />
-          </button>
+
           <button
             className="p-2 text-foreground/80 hover:text-foreground transition-colors duration-300"
             aria-label="Account"

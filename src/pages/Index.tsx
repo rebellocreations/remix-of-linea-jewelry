@@ -18,7 +18,7 @@ import ScrollPause from "@/components/ambient/ScrollPause";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       {/* Subtle grain texture across entire page */}
       <GrainOverlay opacity={0.025} />
 
