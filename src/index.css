@@ -146,7 +146,8 @@
   }
 
   html {
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth removed — fights with framer-motion scroll animations
+       and causes jank. Individual smooth scrolls use JS scrollIntoView instead. */
   }
 
   body {
@@ -447,4 +448,27 @@
   .parallax-slow {
     will-change: transform;
   }
+}
+
+/* Performance: reduce animations on mobile and for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Smoother touch scrolling on mobile */
+.no-scrollbar {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

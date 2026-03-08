@@ -74,8 +74,8 @@ const BrandStory = () => {
         <div className="max-w-md mx-auto lg:mx-0 text-center lg:text-left">
           <span
             className={`inline-block text-[10px] md:text-xs tracking-[0.2em] uppercase text-olive mb-6 md:mb-10 transition-all duration-700 ease-premium ${isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4"
               }`}
           >
             Our Story
@@ -87,8 +87,8 @@ const BrandStory = () => {
               <div key={index} className="overflow-hidden">
                 <p
                   className={`font-serif text-xl sm:text-2xl lg:text-3xl leading-relaxed text-foreground transition-all duration-800 ease-premium ${isVisible
-                      ? "translate-y-0 opacity-100 blur-0"
-                      : "translate-y-full opacity-0 blur-sm"
+                    ? "translate-y-0 opacity-100 blur-0"
+                    : "translate-y-full opacity-0 blur-sm"
                     }`}
                   style={{ transitionDelay: `${(index + 1) * 150}ms` }}
                 >
@@ -102,8 +102,8 @@ const BrandStory = () => {
           <a
             href="/about/our-story"
             className={`inline-block mt-10 md:mt-14 text-xs md:text-sm tracking-wide text-muted-foreground hover:text-foreground transition-all duration-700 ease-premium editorial-link ${isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4"
+              ? "opacity-100 translate-y-0"
+              : "opacity-0 translate-y-4"
               }`}
             style={{ transitionDelay: "800ms" }}
           >

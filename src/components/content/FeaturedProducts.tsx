@@ -195,7 +195,7 @@ const FeaturedProducts = () => {
           <div className="sm:hidden overflow-hidden py-4">
             <motion.div
               drag="x"
-              dragConstraints={{ left: -(products.length - 1) * 80 * window.innerWidth / 100, right: 0 }}
+              dragConstraints={{ left: -(products.length - 1) * 280, right: 0 }}
               dragElastic={0.1}
               dragTransition={{ bounceStiffness: 300, bounceDamping: 30 }}
               onDragStart={() => setIsSwiping(true)}
@@ -216,7 +216,7 @@ const FeaturedProducts = () => {
                 duration: 0.4,
                 ease: [0.22, 1, 0.36, 1]
               }}
-              className="flex cursor-grab active:cursor-grabbing touch-pan-y"
+              className="flex cursor-grab active:cursor-grabbing touch-pan-y transform-gpu"
               style={{ touchAction: "pan-y" }}
             >
               {products.map((product) => {

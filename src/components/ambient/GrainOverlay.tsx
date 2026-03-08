@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface GrainOverlayProps {
   opacity?: number;
@@ -7,8 +7,21 @@ interface GrainOverlayProps {
 
 const GrainOverlay = ({ opacity = 0.03, className = "" }: GrainOverlayProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Check if mobile on mount
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return; // Skip canvas rendering on mobile
+
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -16,8 +29,12 @@ const GrainOverlay = ({ opacity = 0.03, className = "" }: GrainOverlayProps) => 
     if (!ctx) return;
 
     const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      // Use a smaller resolution and scale up for performance
+      const scale = 0.5;
+      canvas.width = window.innerWidth * scale;
+      canvas.height = window.innerHeight * scale;
+      canvas.style.width = `${window.innerWidth}px`;
+      canvas.style.height = `${window.innerHeight}px`;
       generateNoise();
     };
 
@@ -40,7 +57,10 @@ const GrainOverlay = ({ opacity = 0.03, className = "" }: GrainOverlayProps) => 
     window.addEventListener("resize", resize);
 
     return () => window.removeEventListener("resize", resize);
-  }, []);
+  }, [isMobile]);
+
+  // Don't render anything on mobile
+  if (isMobile) return null;
 
   return (
     <canvas

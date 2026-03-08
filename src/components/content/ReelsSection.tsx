@@ -74,7 +74,7 @@ const ReelsSection = () => {
                             className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                             frameBorder="0"
                             allow="autoplay; fullscreen; picture-in-picture"
-                            loading="eager"
+                            loading="lazy"
                             style={{ pointerEvents: "none" }} // Ensure no interaction/play button overlay
                             title={`Rebello Reel ${index + 1}`}
                         />

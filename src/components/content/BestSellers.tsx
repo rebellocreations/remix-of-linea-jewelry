@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { fetchProducts, ShopifyProduct } from "@/lib/shopify";
 import { motion, useScroll, useTransform } from "framer-motion";
@@ -9,7 +9,9 @@ const BestSellers = () => {
     const [loading, setLoading] = useState(true);
     const scrollRef = useRef<HTMLDivElement>(null);
     const sectionRef = useRef<HTMLElement>(null);
+    const isPausedRef = useRef(false);
     const [isPaused, setIsPaused] = useState(false);
+    const rafIdRef = useRef<number>(0);
 
     // Siatra Shrinking Card Effect at section exit
     const { scrollYProgress } = useScroll({
@@ -17,14 +19,13 @@ const BestSellers = () => {
         offset: ["end end", "end start"]
     });
 
-    // Scale down and round corners as we scroll past this section
     const scale = useTransform(scrollYProgress, [0, 1], [1, 0.95]);
     const borderRadius = useTransform(scrollYProgress, [0, 1], ["0rem", "3rem"]);
 
     useEffect(() => {
         const load = async () => {
             try {
-                const data = await fetchProducts(10); // Fetch a few more for continuous feel
+                const data = await fetchProducts(10);
                 setProducts(data);
             } catch (e) {
                 console.error("Failed to load best sellers:", e);
@@ -35,27 +36,75 @@ const BestSellers = () => {
         load();
     }, []);
 
-    // Auto-scroll logic - Butter smooth
+    // Sync ref with state so the animation loop reads current value without re-running effect
     useEffect(() => {
-        if (loading || isPaused || products.length === 0) return;
+        isPausedRef.current = isPaused;
+    }, [isPaused]);
+
+    // Auto-scroll with requestAnimationFrame — smooth and doesn't fight user input
+    useEffect(() => {
+        if (loading || products.length === 0) return;
 
         const scrollContainer = scrollRef.current;
         if (!scrollContainer) return;
 
-        const scrollStep = 0.5; // Smaller step for smoothness
-        const scrollInterval = 16; // 60fps-ish (1000/60 = 16.6)
+        const scrollSpeed = 0.5; // px per frame
+        let lastTime = 0;
+        let isResetting = false;
 
-        const intervalId = setInterval(() => {
-            if (scrollContainer.scrollLeft + scrollContainer.clientWidth >= scrollContainer.scrollWidth - 2) {
-                // Smoothly reset or loop
-                scrollContainer.scrollTo({ left: 0, behavior: 'smooth' });
-            } else {
-                scrollContainer.scrollLeft += scrollStep;
+        const animate = (timestamp: number) => {
+            if (!lastTime) lastTime = timestamp;
+            const delta = timestamp - lastTime;
+            lastTime = timestamp;
+
+            if (!isPausedRef.current && !isResetting) {
+                const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+
+                if (scrollContainer.scrollLeft >= maxScroll - 2) {
+                    // Smoothly reset to start using manual animation
+                    isResetting = true;
+                    const startPos = scrollContainer.scrollLeft;
+                    const resetDuration = 800; // ms
+                    const resetStart = timestamp;
+
+                    const resetAnimate = (t: number) => {
+                        const elapsed = t - resetStart;
+                        const progress = Math.min(elapsed / resetDuration, 1);
+                        // Ease out cubic
+                        const eased = 1 - Math.pow(1 - progress, 3);
+                        scrollContainer.scrollLeft = startPos * (1 - eased);
+
+                        if (progress < 1) {
+                            rafIdRef.current = requestAnimationFrame(resetAnimate);
+                        } else {
+                            isResetting = false;
+                            lastTime = 0;
+                            rafIdRef.current = requestAnimationFrame(animate);
+                        }
+                    };
+                    rafIdRef.current = requestAnimationFrame(resetAnimate);
+                    return;
+                }
+
+                // Normal forward scroll — scale by delta for frame-rate independence
+                scrollContainer.scrollLeft += scrollSpeed * (delta / 16);
             }
-        }, scrollInterval);
 
-        return () => clearInterval(intervalId);
-    }, [loading, isPaused, products]);
+            rafIdRef.current = requestAnimationFrame(animate);
+        };
+
+        rafIdRef.current = requestAnimationFrame(animate);
+
+        return () => {
+            if (rafIdRef.current) {
+                cancelAnimationFrame(rafIdRef.current);
+            }
+        };
+    }, [loading, products]);
+
+    // Pause on touch (mobile) and mouse (desktop)
+    const handlePause = useCallback(() => setIsPaused(true), []);
+    const handleResume = useCallback(() => setIsPaused(false), []);
 
     return (
         <div className="bg-[#1A1A1A]">
@@ -63,8 +112,8 @@ const BestSellers = () => {
                 ref={sectionRef}
                 style={{ scale, borderRadius }}
                 className="bg-[#FAF9F6] py-24 md:py-32 overflow-hidden transform-gpu origin-top"
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
+                onMouseEnter={handlePause}
+                onMouseLeave={handleResume}
             >
                 <div className="max-w-screen-2xl mx-auto px-6 lg:px-12">
                     {/* Header */}
@@ -101,7 +150,9 @@ const BestSellers = () => {
                         <div
                             ref={scrollRef}
                             className="flex gap-8 md:gap-12 overflow-x-auto no-scrollbar pb-12 -mx-6 px-6 cursor-grab active:cursor-grabbing"
-                            style={{ scrollBehavior: 'auto' }}
+                            style={{ scrollBehavior: 'auto', willChange: 'scroll-position' }}
+                            onTouchStart={handlePause}
+                            onTouchEnd={handleResume}
                         >
                             {loading ? (
                                 [...Array(4)].map((_, i) => (
