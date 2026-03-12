@@ -133,6 +133,10 @@ export default {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-8px)" },
         },
+        "marquee": {
+          from: { transform: "translateX(0)" },
+          to: { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.3s ease-out",
@@ -145,6 +149,7 @@ export default {
         "line-reveal": "line-reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards",
         "glow-pulse": "glow-pulse 4s ease-in-out infinite",
         "float": "float 6s ease-in-out infinite",
+        "marquee": "marquee var(--duration) linear infinite",
       },
       transitionDuration: {
         "400": "400ms",

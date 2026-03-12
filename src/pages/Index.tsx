@@ -15,6 +15,7 @@ import GrainOverlay from "@/components/ambient/GrainOverlay";
 import FloatingQuote from "@/components/ambient/FloatingQuote";
 import ScrollStoryline from "@/components/ambient/ScrollStoryline";
 import ScrollPause from "@/components/ambient/ScrollPause";
+import ReviewsMarquee from "@/components/content/ReviewsMarquee";
 
 const Index = () => {
   return (
@@ -57,6 +58,7 @@ const Index = () => {
         <SignatureCandles />
 
         <Testimonials />
+        <ReviewsMarquee />
 
 
 
