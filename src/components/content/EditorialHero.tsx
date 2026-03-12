@@ -73,7 +73,7 @@ const EditorialHero = () => {
             {/* Headline - Character Level Reveal */}
             <div className="mb-4 md:mb-6 text-center lg:text-left">
               <TextReveal
-                text="Giving Glass a"
+                text="Giving Glass a "
                 className="font-serif text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-white leading-tight md:leading-[1.1] block"
                 as="h1"
                 delay={0.3}
