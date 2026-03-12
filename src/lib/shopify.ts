@@ -381,5 +381,9 @@ export async function createStorefrontCheckout(items: Array<{ variantId: string;
   const normalized = normalizeCheckoutUrl(cart.checkoutUrl);
   const url = new URL(normalized);
   url.searchParams.set('channel', 'online_store');
-  return url.toString();
+  
+  // Redirect customers back to the main storefront after checkout / "Continue shopping"
+  const checkoutUrl = url.toString();
+  const returnUrl = 'https://www.rebellocreations.com';
+  return `${checkoutUrl}${checkoutUrl.includes('?') ? '&' : '?'}return_to=${encodeURIComponent(returnUrl)}`;
 }
