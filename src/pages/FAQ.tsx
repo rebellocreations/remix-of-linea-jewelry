@@ -38,15 +38,15 @@ const faqData: { category: string; items: FAQItem[] }[] = [
         items: [
             {
                 question: "How long does shipping take?",
-                answer: "We typically process and dispatch orders within 3–5 business days. Delivery usually takes 5–7 business days depending on your location within India. For international orders, please allow 10–15 business days."
+                answer: "Since each piece is handcrafted from reclaimed glass, please allow 3–5 business days for processing. Shipping times typically range from 5–7 business days depending on your location."
             },
             {
                 question: "Do you offer free shipping?",
-                answer: "Yes! We offer free shipping on all orders above ₹1,999. For orders below that, a flat shipping fee of ₹99 is applied."
+                answer: "Yes! We offer free shipping on all orders above ₹1,999."
             },
             {
                 question: "Can I track my order?",
-                answer: "Absolutely. Once your order is dispatched, you'll receive an email with a tracking link so you can follow your package every step of the way."
+                answer: "Yes! Once your order is dispatched, you will receive an email with a tracking number and a link to monitor its journey to your home."
             },
         ]
     },
@@ -55,15 +55,15 @@ const faqData: { category: string; items: FAQItem[] }[] = [
         items: [
             {
                 question: "What materials are used in your products?",
-                answer: "All our products are handcrafted from upcycled glass bottles — think Bombay Sapphire, Old Monk, and other iconic bottles. Each piece is hand-cut, polished, and finished by skilled artisans."
+                answer: "Our primary material is discarded glass bottles that we rescue and upcycle. We also use eco-friendly accents like natural cork, hemp twine, or non-toxic paints to ensure every item stays true to our sustainable roots."
             },
             {
                 question: "Are the products safe to use?",
-                answer: "Yes. All edges are carefully smoothed and polished during the crafting process. Our glasses, bowls, and platters are food-safe and perfectly suitable for everyday use."
+                answer: "Absolutely. All our glassware undergoes a meticulous multi-step sanding and polishing process to ensure the edges are perfectly smooth and safe. Any finishes used are lead-free and non-toxic."
             },
             {
                 question: "Will each piece look exactly like the photos?",
-                answer: "Since every product is handcrafted from a unique bottle, slight variations in colour, texture, and shape are natural. This is what makes each piece one-of-a-kind!"
+                answer: "Because we work with reclaimed materials, no two bottles are identical. Minor variations in tint, thickness, or slight imperfections are a testament to the bottle's \"former life\" and make your piece truly one-of-a-kind."
             },
         ]
     },
@@ -72,15 +72,15 @@ const faqData: { category: string; items: FAQItem[] }[] = [
         items: [
             {
                 question: "What is your return policy?",
-                answer: "We accept returns within 3 days of delivery for unused, undamaged items in their original packaging. Please reach out to us via email or Instagram to initiate a return."
+                answer: "Because each piece is unique and handcrafted, we do not offer refunds or returns. However, we offer replacements if the product arrived damaged or broken during transit, or if you received the wrong item. Replacement requests must be initiated within 3 business days of delivery."
             },
             {
                 question: "What if my product arrives damaged?",
-                answer: "We take great care in packaging, but if your item arrives damaged, please contact us within 48 hours with photos. We'll arrange a replacement or full refund — no questions asked."
+                answer: "We're sorry to hear that! To process a replacement, we require a continuous, uncut unboxing video showing the unopened package and shipping label. Please email us at rebellocreations@gmail.com or WhatsApp us at 7424942487 with your Order Number, the unboxing video, and photos of the damage within 3 business days of delivery."
             },
             {
                 question: "Can I exchange a product?",
-                answer: "Yes, exchanges are possible within 3 days of delivery, subject to availability. Please contact our team to arrange an exchange."
+                answer: "Due to the handcrafted, made-to-order nature of our products, standard exchanges are not available. However, if your item arrived damaged or you received the wrong product, we will happily replace it — just make sure to have your unboxing video ready and contact us within 3 business days of delivery."
             },
         ]
     },
@@ -89,11 +89,11 @@ const faqData: { category: string; items: FAQItem[] }[] = [
         items: [
             {
                 question: "Do you accept custom orders?",
-                answer: "Yes! We love creating custom pieces. Whether it's a specific bottle, size, or design — reach out to us via the Contact page or DM us on Instagram to discuss your ideas."
+                answer: "We love getting creative! Whether you have a specific bottle in mind or want a personalized gift for someone special, we're happy to discuss custom commissions. Reach out to us via email or send us a DM on Instagram to start your custom project."
             },
             {
                 question: "Do you offer bulk or corporate gifting?",
-                answer: "Absolutely. Rebello Creations products make unique, eco-friendly corporate gifts. We offer special pricing for bulk orders. Get in touch with us for a custom quote."
+                answer: "Yes. Rebello products make excellent sustainable corporate gifts. We offer tiered pricing for bulk orders — perfect for weddings, events, or eco-conscious office gifting."
             },
         ]
     },
@@ -102,11 +102,11 @@ const faqData: { category: string; items: FAQItem[] }[] = [
         items: [
             {
                 question: "How do I care for my Rebello products?",
-                answer: "Our products are easy to maintain. Simply hand-wash with mild soap and water. Avoid using abrasive cleaners or placing items in the dishwasher. For lamps and candles, wipe gently with a soft cloth."
+                answer: "To preserve the clarity and any hand-painted details, we recommend hand washing with mild soap and a soft cloth. Avoid abrasive sponges."
             },
             {
                 question: "Can I use the glasses for hot beverages?",
-                answer: "We recommend using our glasses for cold or room-temperature beverages only, as sudden temperature changes may affect the glass."
+                answer: "Most upcycled glass is not tempered for extreme heat. To be safe, we recommend using our glasses for cold or room-temperature beverages only to prevent thermal shock and cracking."
             },
         ]
     },
