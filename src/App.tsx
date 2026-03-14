@@ -12,7 +12,6 @@ import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import NotFound from "./pages/NotFound";
 import OurStory from "./pages/about/OurStory";
-import Sustainability from "./pages/about/Sustainability";
 import SizeGuide from "./pages/about/SizeGuide";
 import CustomerCare from "./pages/about/CustomerCare";
 import StoreLocator from "./pages/about/StoreLocator";
@@ -26,6 +25,7 @@ import Contact from "./pages/Contact";
 import CareInstructions from "./pages/about/CareInstructions";
 import Newsletter from "./pages/Newsletter";
 import ReturnPolicy from "./pages/ReturnPolicy";
+import FAQ from "./pages/FAQ";
 import TermsAndConditions from "./pages/TermsOfService";
 
 const queryClient = new QueryClient();
@@ -41,7 +41,6 @@ const AnimatedRoutes = () => {
         <Route path="/product/:productId" element={<ProductDetail />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/about/our-story" element={<OurStory />} />
-        <Route path="/about/sustainability" element={<Sustainability />} />
         <Route path="/about/size-guide" element={<SizeGuide />} />
         <Route path="/about/customer-care" element={<CustomerCare />} />
         <Route path="/about/store-locator" element={<StoreLocator />} />
@@ -55,6 +54,7 @@ const AnimatedRoutes = () => {
         <Route path="/about/care" element={<CareInstructions />} />
         <Route path="/newsletter" element={<Newsletter />} />
         <Route path="/return-policy" element={<ReturnPolicy />} />
+        <Route path="/faq" element={<FAQ />} />
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />

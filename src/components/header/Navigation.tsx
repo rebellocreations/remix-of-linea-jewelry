@@ -76,7 +76,6 @@ const Navigation = () => {
       href: "/about/our-story",
       submenuItems: [
         "Our Story",
-        "Sustainability",
         "Size Guide",
         "Customer Care",
         "Store Locator"
@@ -141,7 +140,7 @@ const Navigation = () => {
             <img
               src="/logo.PNG"
               alt="Rebello Creations"
-              className="h-10 w-auto"
+              className="h-20 md:h-16 w-auto"
             />
           </Link>
         </div>

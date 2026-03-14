@@ -25,10 +25,8 @@ const EditorialFooter = () => {
 
   const footerLinks = {
     navigation: [
-      { name: "Index", href: "/" },
       { name: "All Lamps", href: "/collections" },
       { name: "Our Story", href: "/about/our-story" },
-      { name: "Sustainability", href: "/about/sustainability" },
     ],
     legal: [
       { name: "Privacy Policy", href: "/privacy-policy" },
@@ -37,7 +35,7 @@ const EditorialFooter = () => {
     ],
     help: [
       { name: "Contact", href: "/contact" },
-      { name: "FAQ", href: "/contact" },
+      { name: "FAQ", href: "/faq" },
       { name: "Care Instructions", href: "/about/care" },
     ],
   };
