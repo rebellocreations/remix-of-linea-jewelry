@@ -16,10 +16,17 @@ import FloatingQuote from "@/components/ambient/FloatingQuote";
 import ScrollStoryline from "@/components/ambient/ScrollStoryline";
 import ScrollPause from "@/components/ambient/ScrollPause";
 import ReviewsMarquee from "@/components/content/ReviewsMarquee";
+import SEO from "@/components/SEO";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
+      <SEO
+        title="Rebello Creations — Handcrafted Upcycled Glass Decor & Lighting | India"
+        description="Rebello Creations transforms discarded glass bottles into luxury handcrafted lamps, drinkware, candles & home decor. Sustainable, eco-friendly, made in India. Shop now!"
+        canonical="https://www.rebellocreations.com/"
+        keywords="upcycled glass decor, handcrafted home decor India, sustainable home decor, recycled bottle lamps, eco-friendly gifts, Rebello Creations"
+      />
       {/* Subtle grain texture across entire page */}
       <GrainOverlay opacity={0.025} />
 

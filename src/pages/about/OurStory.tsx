@@ -2,6 +2,7 @@ import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 import { motion } from "framer-motion";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
+import SEO from "@/components/SEO";
 
 const FossilReveal = {
     hidden: { opacity: 0, y: 30 },
@@ -29,6 +30,12 @@ const FossilStagger = {
 const OurStory = () => {
     return (
         <div className="min-h-screen bg-[#F9F8F6] font-sans selection:bg-stone-200">
+            <SEO
+                title="Our Story — About Rebello Creations | Founded by Muskan Tyagi"
+                description="Discover how Rebello Creations transforms discarded glass bottles into luxury home decor. Founded by Muskan Tyagi, we rebel against throwaway culture."
+                canonical="https://www.rebellocreations.com/about/our-story"
+                keywords="Rebello Creations story, Muskan Tyagi, upcycled glass art, sustainable brand India, about Rebello"
+            />
             <GrainOverlay opacity={0.03} />
             <EditorialHeader />
 

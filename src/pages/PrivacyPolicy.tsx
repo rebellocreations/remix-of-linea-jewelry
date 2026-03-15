@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
+import SEO from "@/components/SEO";
 
 const PrivacyPolicy = () => {
   useEffect(() => {
@@ -9,6 +10,11 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen ">
+      <SEO
+        title="Privacy Policy | Rebello Creations"
+        description="Read the Rebello Creations privacy policy. Learn how we collect, use, and protect your personal data when you shop for upcycled glass decor."
+        canonical="https://www.rebellocreations.com/privacy-policy"
+      />
       <Header />
 
       <main className="pt-6">

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
+import SEO from "@/components/SEO";
 
 const TermsOfService = () => {
   useEffect(() => {
@@ -9,6 +10,11 @@ const TermsOfService = () => {
 
   return (
     <div className="min-h-screen ">
+      <SEO
+        title="Terms of Service | Rebello Creations"
+        description="Review the terms and conditions for using the Rebello Creations website, purchasing upcycled glass products, and our service policies."
+        canonical="https://www.rebellocreations.com/terms-of-service"
+      />
       <Header />
 
       <main className="pt-6">

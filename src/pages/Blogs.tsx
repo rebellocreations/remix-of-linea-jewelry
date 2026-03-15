@@ -5,14 +5,13 @@ import { Calendar, User, ArrowRight } from "lucide-react";
 import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 import { fetchPublishedBlogs, Blog } from "@/lib/blog";
+import SEO from "@/components/SEO";
 
 const Blogs = () => {
     const [blogs, setBlogs] = useState<Blog[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        document.title = "Blog | Rebello Creation";
-
         const loadBlogs = async () => {
             const data = await fetchPublishedBlogs();
             setBlogs(data);
@@ -32,6 +31,12 @@ const Blogs = () => {
 
     return (
         <div className="min-h-screen bg-[#FAF8F5]">
+            <SEO
+                title="Blog — Stories & Insights | Rebello Creations"
+                description="Read about sustainable living, upcycled glass craftsmanship, and the journey of transforming waste into wonder. Rebello Creations blog."
+                canonical="https://www.rebellocreations.com/blogs"
+                keywords="upcycled glass blog, sustainable living, Rebello Creations stories, eco-friendly decor insights"
+            />
             <EditorialHeader />
 
             {/* Hero Section */}

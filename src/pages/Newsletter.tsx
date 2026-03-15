@@ -2,6 +2,7 @@ import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 import { motion } from "framer-motion";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
+import SEO from "@/components/SEO";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -25,6 +26,11 @@ const Newsletter = () => {
 
     return (
         <div className="min-h-screen bg-[#F9F8F6] font-sans selection:bg-stone-200">
+            <SEO
+                title="Newsletter — Join the Rebello Movement | Rebello Creations"
+                description="Subscribe to Rebello Creations newsletter for new product drops, sustainability stories, and exclusive offers on upcycled glass decor."
+                canonical="https://www.rebellocreations.com/newsletter"
+            />
             <GrainOverlay opacity={0.03} />
             <EditorialHeader />
 

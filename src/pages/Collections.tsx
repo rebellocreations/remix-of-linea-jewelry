@@ -6,6 +6,7 @@ import EditorialFooter from "@/components/footer/EditorialFooter";
 import { fetchProducts, fetchCollections, fetchProductsByCollection, ShopifyProduct, ShopifyCollection } from "@/lib/shopify";
 import { Link } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
+import SEO from "@/components/SEO";
 
 const FossilReveal = {
     hidden: { opacity: 0, y: 20 },
@@ -84,6 +85,12 @@ const Collections = () => {
 
     return (
         <div className="min-h-screen ">
+            <SEO
+                title="Shop Collections — Upcycled Glass Decor | Rebello Creations"
+                description="Browse our handcrafted collections of upcycled glass lamps, drinkware, platters, candles, planters & more. Sustainable luxury made in India."
+                canonical="https://www.rebellocreations.com/collections"
+                keywords="upcycled glass collections, handcrafted glasses, bottle lamps, sustainable decor shop India"
+            />
             <EditorialHeader />
 
             <main className="pt-32 pb-24">

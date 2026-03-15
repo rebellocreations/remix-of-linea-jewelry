@@ -2,10 +2,16 @@ import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 import { motion } from "framer-motion";
 import GrainOverlay from "@/components/ambient/GrainOverlay";
+import SEO from "@/components/SEO";
 
 const ReturnPolicy = () => {
     return (
         <div className="min-h-screen bg-[#FDFCFA] font-sans selection:bg-stone-200">
+            <SEO
+                title="Return & Replacement Policy | Rebello Creations"
+                description="Learn about Rebello Creations replacement policy for damaged or wrong items. Mandatory unboxing video required. 3-day reporting window."
+                canonical="https://www.rebellocreations.com/return-policy"
+            />
             <GrainOverlay opacity={0.03} />
             <EditorialHeader />
 
