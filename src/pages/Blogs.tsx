@@ -14,9 +14,7 @@ const Blogs = () => {
         document.title = "Blog | Rebello Creation";
 
         const loadBlogs = async () => {
-            console.log("Blogs.tsx: Initializing blog load...");
             const data = await fetchPublishedBlogs();
-            console.log("Blogs.tsx: Received data from fetchPublishedBlogs:", data);
             setBlogs(data);
             setLoading(false);
         };

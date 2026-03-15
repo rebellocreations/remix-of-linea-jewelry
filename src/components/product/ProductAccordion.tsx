@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import { AlertTriangle, Leaf, ShieldCheck, Video, Clock, Mail } from "lucide-react";
 import { returnPolicyConfig } from "@/config/returnPolicy";
+import DOMPurify from "dompurify";
 
 interface ProductAccordionProps {
     description: string;
@@ -20,7 +21,7 @@ const ProductAccordion = ({ description }: ProductAccordionProps) => {
                 <AccordionItem value="about">
                     <AccordionTrigger className="font-serif text-lg text-stone-800">About This Item</AccordionTrigger>
                     <AccordionContent className="text-stone-600 leading-relaxed font-light">
-                        <div dangerouslySetInnerHTML={{ __html: description || "<p>Handcrafted with care by Rebello Creation.</p>" }} />
+                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(description || "<p>Handcrafted with care by Rebello Creation.</p>") }} />
                     </AccordionContent>
                 </AccordionItem>
 

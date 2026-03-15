@@ -5,6 +5,7 @@ import { Calendar, User, ArrowLeft } from "lucide-react";
 import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 import { fetchBlogBySlug, Blog } from "@/lib/blog";
+import DOMPurify from "dompurify";
 
 const BlogDetail = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -15,9 +16,7 @@ const BlogDetail = () => {
         const loadBlog = async () => {
             if (!slug) return;
 
-            console.log(`BlogDetail.tsx: Initializing blog load for slug: ${slug}...`);
             const data = await fetchBlogBySlug(slug);
-            console.log("BlogDetail.tsx: Received data from fetchBlogBySlug:", data);
             setBlog(data);
             setLoading(false);
 
@@ -158,7 +157,7 @@ const BlogDetail = () => {
                        prose-strong:text-[#2C3028]
                        prose-img:rounded-xl
                        prose-blockquote:border-l-[#6B7B5C] prose-blockquote:italic prose-blockquote:text-[#5C5C5C]"
-                        dangerouslySetInnerHTML={{ __html: blog.content_html }}
+                        dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(blog.content_html) }}
                     />
                 </div>
             </article>

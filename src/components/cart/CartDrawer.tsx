@@ -31,7 +31,7 @@ export const CartDrawer = () => {
       const checkoutUrl = await createCheckout();
       if (checkoutUrl) {
         // Must open in new tab for Shopify checkout to work properly
-        window.open(checkoutUrl, '_blank');
+        window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
         setIsOpen(false);
       }
     } catch (error) {

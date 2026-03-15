@@ -98,7 +98,6 @@ const Checkout = () => {
 
   const handleDiscountSubmit = () => {
     // Handle discount code submission
-    console.log("Discount code submitted:", discountCode);
     setShowDiscountInput(false);
   };
 

@@ -19,10 +19,15 @@ const Reviews = ({ productId }: { productId: string }) => {
     const [name, setName] = useState("");
 
     useEffect(() => {
-        // Load reviews from local storage
-        const stored = localStorage.getItem(`reviews_${productId}`);
-        if (stored) {
-            setReviews(JSON.parse(stored));
+        // Load reviews from local storage safely
+        try {
+            const stored = localStorage.getItem(`reviews_${productId}`);
+            if (stored) {
+                const parsed = JSON.parse(stored);
+                if (Array.isArray(parsed)) setReviews(parsed);
+            }
+        } catch {
+            // Ignore corrupted localStorage data
         }
     }, [productId]);
 

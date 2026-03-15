@@ -17,7 +17,6 @@ export interface Blog {
  * Fetch all published blogs, ordered by newest first
  */
 export async function fetchPublishedBlogs(): Promise<Blog[]> {
-    console.log("Supabase: Fetching published blogs from 'blog_posts'...");
     const { data, error } = await supabase
         .from("blog_posts")
         .select("*")
@@ -25,11 +24,10 @@ export async function fetchPublishedBlogs(): Promise<Blog[]> {
         .order("published_at", { ascending: false });
 
     if (error) {
-        console.error("Supabase Error (fetchPublishedBlogs):", error);
+        if (import.meta.env.DEV) console.error("Supabase Error (fetchPublishedBlogs):", error);
         return [];
     }
 
-    console.log(`Supabase Success: Fetched ${data?.length || 0} blogs:`, data);
     return data || [];
 }
 
@@ -37,7 +35,6 @@ export async function fetchPublishedBlogs(): Promise<Blog[]> {
  * Fetch a single blog by its slug
  */
 export async function fetchBlogBySlug(slug: string): Promise<Blog | null> {
-    console.log(`Supabase: Fetching blog with slug (${slug}) from 'blog_posts'...`);
     const { data, error } = await supabase
         .from("blog_posts")
         .select("*")
@@ -46,10 +43,9 @@ export async function fetchBlogBySlug(slug: string): Promise<Blog | null> {
         .single();
 
     if (error) {
-        console.error(`Supabase Error (fetchBlogBySlug for ${slug}):`, error);
+        if (import.meta.env.DEV) console.error(`Supabase Error (fetchBlogBySlug for ${slug}):`, error);
         return null;
     }
 
-    console.log(`Supabase Success: Fetched blog details for ${slug}:`, data);
     return data;
 }

@@ -1,10 +1,12 @@
 import { toast } from "sonner";
 
-// Shopify Configuration
-const SHOPIFY_API_VERSION = '2025-07';
-const SHOPIFY_STORE_PERMANENT_DOMAIN = '1urfjp-ta.myshopify.com';
+// Shopify Configuration — loaded from environment variables
+const SHOPIFY_API_VERSION = import.meta.env.VITE_SHOPIFY_API_VERSION || '2025-07';
+const SHOPIFY_STORE_PERMANENT_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN;
+if (!SHOPIFY_STORE_PERMANENT_DOMAIN) throw new Error('Missing VITE_SHOPIFY_STORE_DOMAIN env variable');
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
-const SHOPIFY_STOREFRONT_TOKEN = 'e14e2bcf86d5442c73f932e886b8a346';
+const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
+if (!SHOPIFY_STOREFRONT_TOKEN) throw new Error('Missing VITE_SHOPIFY_STOREFRONT_TOKEN env variable');
 
 function normalizeCheckoutUrl(checkoutUrl: string): string {
   // Shopify should return an absolute URL, but guard against relative URLs

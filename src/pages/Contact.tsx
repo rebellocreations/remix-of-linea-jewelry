@@ -180,6 +180,8 @@ const Contact = () => {
                             </motion.div>
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-6">
+                                {/* Honeypot field — hidden from users, catches bots */}
+                                <input type="text" name="_gotcha" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
                                 <div className="space-y-2">
                                     <label htmlFor="name" className="text-sm font-medium text-[#4A4A4A] ml-1">
                                         Name

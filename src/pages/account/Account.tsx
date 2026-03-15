@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import EditorialHeader from "@/components/header/EditorialHeader";
 import EditorialFooter from "@/components/footer/EditorialFooter";
 
-const SHOPIFY_STORE_DOMAIN = "1urfjp-ta.myshopify.com";
+const SHOPIFY_STORE_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN || "";
 
 const AccountPage = () => {
   useEffect(() => {
