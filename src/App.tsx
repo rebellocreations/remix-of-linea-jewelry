@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import ScrollToTop from "./components/ScrollToTop";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 const Index = lazy(() => import("./pages/Index"));
 import Category from "./pages/Category";
@@ -74,6 +75,7 @@ const App = () => (
         <ScrollToTop />
         <AnimatedRoutes />
         <Analytics />
+        <SpeedInsights />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
