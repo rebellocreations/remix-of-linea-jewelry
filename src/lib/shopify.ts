@@ -16,35 +16,6 @@ function normalizeCheckoutUrl(checkoutUrl: string): string {
   return `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/${checkoutUrl}`;
 }
 
-function getNumericVariantId(variantId: string): string {
-  const directMatch = variantId.match(/ProductVariant\/(\d+)/);
-  if (directMatch) return directMatch[1];
-
-  try {
-    const decoded = atob(variantId);
-    const decodedMatch = decoded.match(/ProductVariant\/(\d+)/);
-    if (decodedMatch) return decodedMatch[1];
-  } catch {
-    // Variant IDs from the Storefront API are usually gid:// strings.
-  }
-
-  return variantId.split('/').pop() || variantId;
-}
-
-export function createCheckoutRedirectLines(items: Array<{ variantId: string; quantity: number }>): string | null {
-  const cartLines = items
-    .map(item => {
-      const quantity = Math.max(1, Math.round(Number(item.quantity)));
-      if (!item.variantId || quantity <= 0) return null;
-      return `${item.variantId}:${quantity}`;
-    })
-    .filter(Boolean);
-
-  if (cartLines.length === 0) return null;
-
-  return cartLines.join(',');
-}
-
 export interface ShopifyProduct {
   node: {
     id: string;

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   Sheet,
   SheetContent,
@@ -7,11 +7,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { ShoppingCart, Minus, Plus, Trash2, Lock } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
-import { createCheckoutRedirectLines } from "@/lib/shopify";
+import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,17 +19,27 @@ export const CartDrawer = () => {
   const removeItem = useCartStore((s) => s.removeItem);
   const incrementQuantity = useCartStore((s) => s.incrementQuantity);
   const decrementQuantity = useCartStore((s) => s.decrementQuantity);
+  const createCheckout = useCartStore((s) => s.createCheckout);
+  const isLoading = useCartStore((s) => s.isLoading);
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  const cartKey = useMemo(
-    () => items.map(i => `${i.variantId}:${i.quantity}`).join(','),
-    [items]
-  );
+  const handleCheckout = async () => {
+    try {
+      const checkoutUrl = await createCheckout();
+      if (!checkoutUrl) {
+        toast.error("Could not create checkout. Please try again.");
+        return;
+      }
 
-  const checkoutLines = useMemo(() => createCheckoutRedirectLines(items), [cartKey, items]);
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      toast.error("Checkout failed. Please try again.");
+    }
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -132,24 +141,24 @@ export const CartDrawer = () => {
                   </span>
                 </div>
 
-                {checkoutLines ? (
-                  // Native same-tab form submit. Safari cannot treat this as
-                  // a popup; Vercel returns a server-side redirect to Shopify.
-                  <form action="/api/checkout" method="GET" className="w-full">
-                    <input type="hidden" name="lines" value={checkoutLines} />
-                    <button
-                      type="submit"
-                      className={cn(buttonVariants({ size: "lg" }), "w-full")}
-                    >
+                <Button
+                  onClick={handleCheckout}
+                  className="w-full"
+                  size="lg"
+                  disabled={items.length === 0 || isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating Checkout...
+                    </>
+                  ) : (
+                    <>
                       <Lock className="w-4 h-4 mr-2" />
                       Checkout
-                    </button>
-                  </form>
-                ) : (
-                  <Button className="w-full" size="lg" disabled>
-                    Checkout unavailable
-                  </Button>
-                )}
+                    </>
+                  )}
+                </Button>
               </div>
             </>
           )}
