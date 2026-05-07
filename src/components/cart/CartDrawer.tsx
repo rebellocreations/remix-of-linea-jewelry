@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +14,10 @@ import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const pendingCheckoutUrl = useRef<string | null>(null);
+  // Cache the Shopify checkout URL so the tap handler can navigate
+  // synchronously, preserving the user-gesture context on iOS Safari
+  // and Chrome (async navigation after fetch() is treated as a popup).
+  const prefetchedUrl = useRef<string | null>(null);
 
   const items = useCartStore((s) => s.items);
   const isLoading = useCartStore((s) => s.isLoading);
@@ -27,35 +30,40 @@ export const CartDrawer = () => {
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  // Navigate once the sheet has fully closed so Radix has removed its
-  // scroll-lock (touch listeners + overflow:hidden) before we redirect.
-  // iOS Safari and some Chrome builds block window.location.href while
-  // the scroll-lock is still active.
-  useEffect(() => {
-    if (!isOpen && pendingCheckoutUrl.current) {
-      const url = pendingCheckoutUrl.current;
-      pendingCheckoutUrl.current = null;
-      // 350 ms covers Radix's default close animation + cleanup
-      const timer = setTimeout(() => {
-        window.location.href = url;
-      }, 350);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen]);
+  // Stable key that changes only when cart contents change.
+  const cartKey = useMemo(
+    () => items.map(i => `${i.variantId}:${i.quantity}`).join(','),
+    [items]
+  );
 
-  const handleCheckout = async () => {
-    try {
-      const checkoutUrl = await createCheckout();
-      if (!checkoutUrl) {
-        toast.error("Could not create checkout. Please try again.");
-        return;
-      }
-      // Store URL then close; the useEffect above fires after close and navigates.
-      pendingCheckoutUrl.current = checkoutUrl;
-      setIsOpen(false);
-    } catch (error) {
-      console.error('Checkout failed:', error);
-      toast.error("Checkout failed. Please try again.");
+  // Pre-fetch the Shopify cart URL whenever the drawer opens or the cart changes
+  // so it is ready before the user taps Checkout.
+  useEffect(() => {
+    if (!isOpen || items.length === 0) {
+      prefetchedUrl.current = null;
+      return;
+    }
+    prefetchedUrl.current = null;
+    let cancelled = false;
+    createCheckout()
+      .then(url => { if (!cancelled) prefetchedUrl.current = url; })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [isOpen, cartKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Synchronous handler — no async, no setTimeout.
+  // window.location.href called directly inside a tap handler is always
+  // allowed by iOS Safari and Chrome (user gesture is still active).
+  const handleCheckout = () => {
+    const url = prefetchedUrl.current;
+    if (url) {
+      window.location.href = url;
+    } else {
+      toast.error(
+        isLoading
+          ? "Checkout is still loading — please try again in a moment."
+          : "Could not prepare checkout. Please try again."
+      );
     }
   };
 
@@ -168,7 +176,7 @@ export const CartDrawer = () => {
                   {isLoading ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Creating Checkout...
+                      Preparing Checkout...
                     </>
                   ) : (
                     <>
