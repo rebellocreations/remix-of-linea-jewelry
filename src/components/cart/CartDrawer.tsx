@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Sheet,
   SheetContent,
@@ -10,14 +10,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
-import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // Cache the Shopify checkout URL so the tap handler can navigate
-  // synchronously, preserving the user-gesture context on iOS Safari
-  // and Chrome (async navigation after fetch() is treated as a popup).
-  const prefetchedUrl = useRef<string | null>(null);
+  // Pre-fetched Shopify checkout URL stored in state so the button
+  // re-renders as a real <a href> — browser link-following is never
+  // blocked by scroll-lock, touch listeners, or popup rules.
+  const [checkoutHref, setCheckoutHref] = useState<string | null>(null);
 
   const items = useCartStore((s) => s.items);
   const isLoading = useCartStore((s) => s.isLoading);
@@ -30,42 +29,27 @@ export const CartDrawer = () => {
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  // Stable key that changes only when cart contents change.
+  // Stable key so we only re-fetch when the cart actually changes.
   const cartKey = useMemo(
     () => items.map(i => `${i.variantId}:${i.quantity}`).join(','),
     [items]
   );
 
-  // Pre-fetch the Shopify cart URL whenever the drawer opens or the cart changes
-  // so it is ready before the user taps Checkout.
+  // Pre-fetch the Shopify cart whenever the drawer opens or cart changes.
+  // The button renders as <a href> once the URL is ready so navigation
+  // happens via genuine browser link-following, not window.location.href.
   useEffect(() => {
     if (!isOpen || items.length === 0) {
-      prefetchedUrl.current = null;
+      setCheckoutHref(null);
       return;
     }
-    prefetchedUrl.current = null;
+    setCheckoutHref(null);
     let cancelled = false;
     createCheckout()
-      .then(url => { if (!cancelled) prefetchedUrl.current = url; })
+      .then(url => { if (!cancelled && url) setCheckoutHref(url); })
       .catch(() => {});
     return () => { cancelled = true; };
   }, [isOpen, cartKey]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Synchronous handler — no async, no setTimeout.
-  // window.location.href called directly inside a tap handler is always
-  // allowed by iOS Safari and Chrome (user gesture is still active).
-  const handleCheckout = () => {
-    const url = prefetchedUrl.current;
-    if (url) {
-      window.location.href = url;
-    } else {
-      toast.error(
-        isLoading
-          ? "Checkout is still loading — please try again in a moment."
-          : "Could not prepare checkout. Please try again."
-      );
-    }
-  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -167,24 +151,21 @@ export const CartDrawer = () => {
                   </span>
                 </div>
 
-                <Button
-                  onClick={handleCheckout}
-                  className="w-full"
-                  size="lg"
-                  disabled={items.length === 0 || isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Preparing Checkout...
-                    </>
-                  ) : (
-                    <>
+                {checkoutHref && !isLoading ? (
+                  // Real anchor element — browser link-following works on all
+                  // browsers regardless of scroll-lock or async context.
+                  <Button asChild className="w-full" size="lg">
+                    <a href={checkoutHref}>
                       <Lock className="w-4 h-4 mr-2" />
                       Checkout
-                    </>
-                  )}
-                </Button>
+                    </a>
+                  </Button>
+                ) : (
+                  <Button className="w-full" size="lg" disabled>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Preparing Checkout...
+                  </Button>
+                )}
               </div>
             </>
           )}
