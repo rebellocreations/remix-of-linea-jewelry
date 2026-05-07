@@ -11,7 +11,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { ShoppingCart, Minus, Plus, Trash2, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/stores/cartStore";
-import { createCheckoutRedirectUrl } from "@/lib/shopify";
+import { createCheckoutRedirectLines } from "@/lib/shopify";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +30,7 @@ export const CartDrawer = () => {
     [items]
   );
 
-  const checkoutHref = useMemo(() => createCheckoutRedirectUrl(items), [cartKey, items]);
+  const checkoutLines = useMemo(() => createCheckoutRedirectLines(items), [cartKey, items]);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -132,16 +132,19 @@ export const CartDrawer = () => {
                   </span>
                 </div>
 
-                {checkoutHref ? (
-                  // Plain same-origin link. Vercel creates the Shopify cart
-                  // server-side and returns a real HTTP redirect to checkout.
-                  <a
-                    href={checkoutHref}
-                    className={cn(buttonVariants({ size: "lg" }), "w-full")}
-                  >
-                    <Lock className="w-4 h-4 mr-2" />
-                    Checkout
-                  </a>
+                {checkoutLines ? (
+                  // Native same-tab form submit. Safari cannot treat this as
+                  // a popup; Vercel returns a server-side redirect to Shopify.
+                  <form action="/api/checkout" method="GET" className="w-full">
+                    <input type="hidden" name="lines" value={checkoutLines} />
+                    <button
+                      type="submit"
+                      className={cn(buttonVariants({ size: "lg" }), "w-full")}
+                    >
+                      <Lock className="w-4 h-4 mr-2" />
+                      Checkout
+                    </button>
+                  </form>
                 ) : (
                   <Button className="w-full" size="lg" disabled>
                     Checkout unavailable

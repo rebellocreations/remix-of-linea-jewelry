@@ -31,7 +31,7 @@ function getNumericVariantId(variantId: string): string {
   return variantId.split('/').pop() || variantId;
 }
 
-export function createCheckoutRedirectUrl(items: Array<{ variantId: string; quantity: number }>): string | null {
+export function createCheckoutRedirectLines(items: Array<{ variantId: string; quantity: number }>): string | null {
   const cartLines = items
     .map(item => {
       const quantity = Math.max(1, Math.round(Number(item.quantity)));
@@ -42,7 +42,7 @@ export function createCheckoutRedirectUrl(items: Array<{ variantId: string; quan
 
   if (cartLines.length === 0) return null;
 
-  return `/api/checkout?lines=${encodeURIComponent(cartLines.join(','))}`;
+  return cartLines.join(',');
 }
 
 export interface ShopifyProduct {
