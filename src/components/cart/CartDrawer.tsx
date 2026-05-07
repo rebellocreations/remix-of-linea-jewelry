@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -8,40 +9,27 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, Lock } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
-import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const items = useCartStore((s) => s.items);
-  const isLoading = useCartStore((s) => s.isLoading);
   const removeItem = useCartStore((s) => s.removeItem);
   const incrementQuantity = useCartStore((s) => s.incrementQuantity);
   const decrementQuantity = useCartStore((s) => s.decrementQuantity);
-  const createCheckout = useCartStore((s) => s.createCheckout);
-  
+
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  const handleCheckout = async () => {
-    try {
-      const checkoutUrl = await createCheckout();
-      if (checkoutUrl) {
-        // Remove Radix's body scroll-lock before navigating — iOS Safari can
-        // suppress window.location.href when overflow:hidden is set on <body>.
-        document.body.removeAttribute('data-scroll-locked');
-        document.body.style.removeProperty('overflow');
-        document.body.style.removeProperty('pointer-events');
-        window.location.href = checkoutUrl;
-      } else {
-        toast.error("Could not create checkout. Please try again.");
-      }
-    } catch (error) {
-      console.error('Checkout failed:', error);
-      toast.error("Checkout failed. Please try again.");
-    }
+  const handleCheckout = () => {
+    // Close the sheet first so Radix removes its body scroll-lock, then
+    // navigate to /checkout which handles the async Shopify redirect.
+    // Synchronous navigation preserves the user-gesture context on iOS Safari.
+    setIsOpen(false);
+    navigate('/checkout');
   };
 
   return (
@@ -56,7 +44,7 @@ export const CartDrawer = () => {
           )}
         </button>
       </SheetTrigger>
-      
+
       <SheetContent className="w-full sm:max-w-lg flex flex-col h-full overflow-hidden">
         <SheetHeader className="flex-shrink-0">
           <SheetTitle>Shopping Cart</SheetTitle>
@@ -64,7 +52,7 @@ export const CartDrawer = () => {
             {totalItems === 0 ? "Your cart is empty" : `${totalItems} item${totalItems !== 1 ? 's' : ''} in your cart`}
           </SheetDescription>
         </SheetHeader>
-        
+
         <div className="flex flex-col flex-1 pt-6 min-h-0">
           {items.length === 0 ? (
             <div className="flex-1 flex items-center justify-center">
@@ -88,7 +76,7 @@ export const CartDrawer = () => {
                           />
                         )}
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium truncate">{item.product.node.title}</h4>
                         {item.variantTitle !== "Default Title" && (
@@ -100,7 +88,7 @@ export const CartDrawer = () => {
                           {item.price.currencyCode} {parseFloat(item.price.amount).toFixed(2)}
                         </p>
                       </div>
-                      
+
                       <div className="flex flex-col items-end gap-2 flex-shrink-0">
                         <Button
                           variant="ghost"
@@ -110,7 +98,7 @@ export const CartDrawer = () => {
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
-                        
+
                         <div className="flex items-center gap-1">
                           <Button
                             variant="outline"
@@ -135,7 +123,7 @@ export const CartDrawer = () => {
                   ))}
                 </div>
               </div>
-              
+
               <div className="flex-shrink-0 space-y-4 pt-4 border-t bg-background">
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-semibold">Total</span>
@@ -143,24 +131,15 @@ export const CartDrawer = () => {
                     {currencyCode} {totalPrice.toFixed(2)}
                   </span>
                 </div>
-                
-                <Button 
+
+                <Button
                   onClick={handleCheckout}
-                  className="w-full" 
+                  className="w-full"
                   size="lg"
-                  disabled={items.length === 0 || isLoading}
+                  disabled={items.length === 0}
                 >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Creating Checkout...
-                    </>
-                  ) : (
-                    <>
-                      <Lock className="w-4 h-4 mr-2" />
-                      Checkout
-                    </>
-                  )}
+                  <Lock className="w-4 h-4 mr-2" />
+                  Checkout
                 </Button>
               </div>
             </>
