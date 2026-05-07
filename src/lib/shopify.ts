@@ -7,23 +7,6 @@ if (!SHOPIFY_STORE_PERMANENT_DOMAIN) throw new Error('Missing VITE_SHOPIFY_STORE
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
 if (!SHOPIFY_STOREFRONT_TOKEN) throw new Error('Missing VITE_SHOPIFY_STOREFRONT_TOKEN env variable');
-const SHOPIFY_CART_DOMAIN = getPublicShopifyDomain(import.meta.env.VITE_SHOPIFY_CART_DOMAIN);
-
-function getPublicShopifyDomain(configuredDomain?: string): string {
-  if (!configuredDomain) return SHOPIFY_STORE_PERMANENT_DOMAIN;
-
-  try {
-    const url = new URL(
-      configuredDomain.startsWith('http')
-        ? configuredDomain
-        : `https://${configuredDomain}`
-    );
-    return url.hostname || SHOPIFY_STORE_PERMANENT_DOMAIN;
-  } catch {
-    return configuredDomain.replace(/^https?:\/\//, '').split('/')[0] || SHOPIFY_STORE_PERMANENT_DOMAIN;
-  }
-}
-
 function normalizeCheckoutUrl(checkoutUrl: string): string {
   // Shopify should return an absolute URL, but guard against relative URLs
   // (which would otherwise navigate to the Vercel domain and 404).
@@ -48,24 +31,18 @@ function getNumericVariantId(variantId: string): string {
   return variantId.split('/').pop() || variantId;
 }
 
-export function createCartPermalink(items: Array<{ variantId: string; quantity: number }>): string | null {
+export function createCheckoutRedirectUrl(items: Array<{ variantId: string; quantity: number }>): string | null {
   const cartLines = items
     .map(item => {
-      const variantId = getNumericVariantId(item.variantId);
       const quantity = Math.max(1, Math.round(Number(item.quantity)));
-      if (!/^\d+$/.test(variantId)) return null;
-      return `${variantId}:${quantity}`;
+      if (!item.variantId || quantity <= 0) return null;
+      return `${item.variantId}:${quantity}`;
     })
     .filter(Boolean);
 
   if (cartLines.length === 0) return null;
 
-  // Cart permalinks need a Shopify-hosted domain with the /cart route. This
-  // can be a public Shopify subdomain such as shop.rebellocreations.com.
-  const url = new URL(`https://${SHOPIFY_CART_DOMAIN}/cart/${cartLines.join(',')}`);
-  url.searchParams.set('channel', 'online_store');
-  url.searchParams.set('return_to', 'https://www.rebellocreations.com');
-  return url.toString();
+  return `/api/checkout?lines=${encodeURIComponent(cartLines.join(','))}`;
 }
 
 export interface ShopifyProduct {

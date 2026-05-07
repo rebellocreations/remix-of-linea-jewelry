@@ -11,7 +11,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { ShoppingCart, Minus, Plus, Trash2, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/stores/cartStore";
-import { createCartPermalink } from "@/lib/shopify";
+import { createCheckoutRedirectUrl } from "@/lib/shopify";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +30,7 @@ export const CartDrawer = () => {
     [items]
   );
 
-  const checkoutHref = useMemo(() => createCartPermalink(items), [cartKey, items]);
+  const checkoutHref = useMemo(() => createCheckoutRedirectUrl(items), [cartKey, items]);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -133,8 +133,8 @@ export const CartDrawer = () => {
                 </div>
 
                 {checkoutHref ? (
-                  // Plain Shopify cart permalink. This is a normal browser
-                  // link, so mobile Safari cannot block it as a popup.
+                  // Plain same-origin link. Vercel creates the Shopify cart
+                  // server-side and returns a real HTTP redirect to checkout.
                   <a
                     href={checkoutHref}
                     className={cn(buttonVariants({ size: "lg" }), "w-full")}
