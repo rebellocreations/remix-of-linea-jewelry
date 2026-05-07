@@ -29,10 +29,14 @@ export const CartDrawer = () => {
     try {
       const checkoutUrl = await createCheckout();
       if (checkoutUrl) {
-        // Navigate directly — same as Buy Now. Do NOT close the sheet first;
-        // Radix's body scroll-lock is still active during the close animation
-        // and suppresses window.location.href on mobile browsers.
+        // Remove Radix's body scroll-lock before navigating — iOS Safari can
+        // suppress window.location.href when overflow:hidden is set on <body>.
+        document.body.removeAttribute('data-scroll-locked');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('pointer-events');
         window.location.href = checkoutUrl;
+      } else {
+        toast.error("Could not create checkout. Please try again.");
       }
     } catch (error) {
       console.error('Checkout failed:', error);

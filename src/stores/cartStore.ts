@@ -134,9 +134,6 @@ export const useCartStore = create<CartStore>()(
           );
           get().setCheckoutUrl(checkoutUrl);
           return checkoutUrl;
-        } catch (error) {
-          console.error('Failed to create checkout:', error);
-          return null;
         } finally {
           get().setLoading(false);
         }
