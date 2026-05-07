@@ -7,6 +7,22 @@ if (!SHOPIFY_STORE_PERMANENT_DOMAIN) throw new Error('Missing VITE_SHOPIFY_STORE
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
 if (!SHOPIFY_STOREFRONT_TOKEN) throw new Error('Missing VITE_SHOPIFY_STOREFRONT_TOKEN env variable');
+const SHOPIFY_CART_DOMAIN = getPublicShopifyDomain(import.meta.env.VITE_SHOPIFY_CART_DOMAIN);
+
+function getPublicShopifyDomain(configuredDomain?: string): string {
+  if (!configuredDomain) return SHOPIFY_STORE_PERMANENT_DOMAIN;
+
+  try {
+    const url = new URL(
+      configuredDomain.startsWith('http')
+        ? configuredDomain
+        : `https://${configuredDomain}`
+    );
+    return url.hostname || SHOPIFY_STORE_PERMANENT_DOMAIN;
+  } catch {
+    return configuredDomain.replace(/^https?:\/\//, '').split('/')[0] || SHOPIFY_STORE_PERMANENT_DOMAIN;
+  }
+}
 
 function normalizeCheckoutUrl(checkoutUrl: string): string {
   // Shopify should return an absolute URL, but guard against relative URLs
@@ -44,9 +60,9 @@ export function createCartPermalink(items: Array<{ variantId: string; quantity: 
 
   if (cartLines.length === 0) return null;
 
-  // Cart permalinks must be opened on the Shopify store domain. Shopify then
-  // redirects to the configured checkout domain when checkout starts.
-  const url = new URL(`https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/cart/${cartLines.join(',')}`);
+  // Cart permalinks need a Shopify-hosted domain with the /cart route. This
+  // can be a public Shopify subdomain such as shop.rebellocreations.com.
+  const url = new URL(`https://${SHOPIFY_CART_DOMAIN}/cart/${cartLines.join(',')}`);
   url.searchParams.set('channel', 'online_store');
   url.searchParams.set('return_to', 'https://www.rebellocreations.com');
   return url.toString();
