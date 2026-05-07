@@ -7,19 +7,18 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2 } from "lucide-react";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2, AlertCircle } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useCartStore } from "@/stores/cartStore";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // Pre-fetched Shopify checkout URL stored in state so the button
-  // re-renders as a real <a href> — browser link-following is never
-  // blocked by scroll-lock, touch listeners, or popup rules.
   const [checkoutHref, setCheckoutHref] = useState<string | null>(null);
+  const [prefetchError, setPrefetchError] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
 
   const items = useCartStore((s) => s.items);
-  const isLoading = useCartStore((s) => s.isLoading);
   const removeItem = useCartStore((s) => s.removeItem);
   const incrementQuantity = useCartStore((s) => s.incrementQuantity);
   const decrementQuantity = useCartStore((s) => s.decrementQuantity);
@@ -29,27 +28,47 @@ export const CartDrawer = () => {
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  // Stable key so we only re-fetch when the cart actually changes.
   const cartKey = useMemo(
     () => items.map(i => `${i.variantId}:${i.quantity}`).join(','),
     [items]
   );
 
-  // Pre-fetch the Shopify cart whenever the drawer opens or cart changes.
-  // The button renders as <a href> once the URL is ready so navigation
-  // happens via genuine browser link-following, not window.location.href.
+  // Pre-fetch the Shopify checkout URL when the drawer opens or cart changes.
+  // On success, the Checkout button renders as a plain <a href> — native
+  // browser link-following works on all browsers without any navigation API.
   useEffect(() => {
     if (!isOpen || items.length === 0) {
       setCheckoutHref(null);
+      setPrefetchError(false);
       return;
     }
     setCheckoutHref(null);
+    setPrefetchError(false);
     let cancelled = false;
+
     createCheckout()
-      .then(url => { if (!cancelled && url) setCheckoutHref(url); })
-      .catch(() => {});
+      .then(url => {
+        if (cancelled) return;
+        if (url) {
+          setCheckoutHref(url);
+        } else {
+          console.error('[CartDrawer] createCheckout returned null');
+          setPrefetchError(true);
+        }
+      })
+      .catch(err => {
+        if (cancelled) return;
+        console.error('[CartDrawer] checkout pre-fetch failed:', err);
+        setPrefetchError(true);
+      });
+
     return () => { cancelled = true; };
-  }, [isOpen, cartKey]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isOpen, cartKey, retryKey]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleRetry = () => {
+    setPrefetchError(false);
+    setRetryKey(k => k + 1);
+  };
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -151,14 +170,28 @@ export const CartDrawer = () => {
                   </span>
                 </div>
 
-                {checkoutHref && !isLoading ? (
-                  // Real anchor element — browser link-following works on all
-                  // browsers regardless of scroll-lock or async context.
-                  <Button asChild className="w-full" size="lg">
-                    <a href={checkoutHref}>
-                      <Lock className="w-4 h-4 mr-2" />
-                      Checkout
-                    </a>
+                {checkoutHref ? (
+                  // Plain <a> tag — no Radix Slot, no Button wrapper.
+                  // Native browser link-following is guaranteed same-tab on
+                  // all browsers including iOS Safari, regardless of any
+                  // scroll-lock or dialog context.
+                  <a
+                    href={checkoutHref}
+                    target="_self"
+                    className={cn(buttonVariants({ size: "lg" }), "w-full")}
+                  >
+                    <Lock className="w-4 h-4 mr-2" />
+                    Checkout
+                  </a>
+                ) : prefetchError ? (
+                  <Button
+                    className="w-full"
+                    size="lg"
+                    variant="outline"
+                    onClick={handleRetry}
+                  >
+                    <AlertCircle className="w-4 h-4 mr-2" />
+                    Retry Checkout
                   </Button>
                 ) : (
                   <Button className="w-full" size="lg" disabled>
