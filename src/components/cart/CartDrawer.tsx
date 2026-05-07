@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Sheet,
   SheetContent,
@@ -14,6 +14,8 @@ import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const pendingCheckoutUrl = useRef<string | null>(null);
+
   const items = useCartStore((s) => s.items);
   const isLoading = useCartStore((s) => s.isLoading);
   const removeItem = useCartStore((s) => s.removeItem);
@@ -25,6 +27,22 @@ export const CartDrawer = () => {
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
+  // Navigate once the sheet has fully closed so Radix has removed its
+  // scroll-lock (touch listeners + overflow:hidden) before we redirect.
+  // iOS Safari and some Chrome builds block window.location.href while
+  // the scroll-lock is still active.
+  useEffect(() => {
+    if (!isOpen && pendingCheckoutUrl.current) {
+      const url = pendingCheckoutUrl.current;
+      pendingCheckoutUrl.current = null;
+      // 350 ms covers Radix's default close animation + cleanup
+      const timer = setTimeout(() => {
+        window.location.href = url;
+      }, 350);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   const handleCheckout = async () => {
     try {
       const checkoutUrl = await createCheckout();
@@ -32,12 +50,9 @@ export const CartDrawer = () => {
         toast.error("Could not create checkout. Please try again.");
         return;
       }
-      // Strip Radix scroll-lock from body before navigating so iOS Safari
-      // doesn't suppress the location change while overflow:hidden is active.
-      document.body.removeAttribute('data-scroll-locked');
-      document.body.style.removeProperty('overflow');
-      document.body.style.removeProperty('pointer-events');
-      window.location.href = checkoutUrl;
+      // Store URL then close; the useEffect above fires after close and navigates.
+      pendingCheckoutUrl.current = checkoutUrl;
+      setIsOpen(false);
     } catch (error) {
       console.error('Checkout failed:', error);
       toast.error("Checkout failed. Please try again.");
