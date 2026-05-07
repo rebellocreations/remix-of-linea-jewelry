@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import {
   Sheet,
   SheetContent,
@@ -8,21 +8,18 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2, AlertCircle } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, Lock } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCartStore } from "@/stores/cartStore";
+import { createCartPermalink } from "@/lib/shopify";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [checkoutHref, setCheckoutHref] = useState<string | null>(null);
-  const [prefetchError, setPrefetchError] = useState(false);
-  const [retryKey, setRetryKey] = useState(0);
 
   const items = useCartStore((s) => s.items);
   const removeItem = useCartStore((s) => s.removeItem);
   const incrementQuantity = useCartStore((s) => s.incrementQuantity);
   const decrementQuantity = useCartStore((s) => s.decrementQuantity);
-  const createCheckout = useCartStore((s) => s.createCheckout);
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
@@ -33,42 +30,7 @@ export const CartDrawer = () => {
     [items]
   );
 
-  // Pre-fetch the Shopify checkout URL when the drawer opens or cart changes.
-  // On success, the Checkout button renders as a plain <a href> — native
-  // browser link-following works on all browsers without any navigation API.
-  useEffect(() => {
-    if (!isOpen || items.length === 0) {
-      setCheckoutHref(null);
-      setPrefetchError(false);
-      return;
-    }
-    setCheckoutHref(null);
-    setPrefetchError(false);
-    let cancelled = false;
-
-    createCheckout()
-      .then(url => {
-        if (cancelled) return;
-        if (url) {
-          setCheckoutHref(url);
-        } else {
-          console.error('[CartDrawer] createCheckout returned null');
-          setPrefetchError(true);
-        }
-      })
-      .catch(err => {
-        if (cancelled) return;
-        console.error('[CartDrawer] checkout pre-fetch failed:', err);
-        setPrefetchError(true);
-      });
-
-    return () => { cancelled = true; };
-  }, [isOpen, cartKey, retryKey]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleRetry = () => {
-    setPrefetchError(false);
-    setRetryKey(k => k + 1);
-  };
+  const checkoutHref = useMemo(() => createCartPermalink(items), [cartKey, items]);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -171,32 +133,20 @@ export const CartDrawer = () => {
                 </div>
 
                 {checkoutHref ? (
-                  // Plain <a> tag — no Radix Slot, no Button wrapper.
-                  // Native browser link-following is guaranteed same-tab on
-                  // all browsers including iOS Safari, regardless of any
-                  // scroll-lock or dialog context.
+                  // Plain Shopify cart permalink. This is a normal browser
+                  // link, so mobile Safari cannot block it as a popup.
                   <a
                     href={checkoutHref}
                     target="_self"
+                    rel="noreferrer"
                     className={cn(buttonVariants({ size: "lg" }), "w-full")}
                   >
                     <Lock className="w-4 h-4 mr-2" />
                     Checkout
                   </a>
-                ) : prefetchError ? (
-                  <Button
-                    className="w-full"
-                    size="lg"
-                    variant="outline"
-                    onClick={handleRetry}
-                  >
-                    <AlertCircle className="w-4 h-4 mr-2" />
-                    Retry Checkout
-                  </Button>
                 ) : (
                   <Button className="w-full" size="lg" disabled>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Preparing Checkout...
+                    Checkout unavailable
                   </Button>
                 )}
               </div>

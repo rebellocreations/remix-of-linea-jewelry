@@ -7,6 +7,22 @@ if (!SHOPIFY_STORE_PERMANENT_DOMAIN) throw new Error('Missing VITE_SHOPIFY_STORE
 const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${SHOPIFY_API_VERSION}/graphql.json`;
 const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
 if (!SHOPIFY_STOREFRONT_TOKEN) throw new Error('Missing VITE_SHOPIFY_STOREFRONT_TOKEN env variable');
+const SHOPIFY_CHECKOUT_DOMAIN = getCheckoutDomain();
+
+function getCheckoutDomain(): string {
+  const configuredDomain = import.meta.env.VITE_SHOPIFY_CHECKOUT_DOMAIN || 'shop.rebellocreations.com';
+
+  try {
+    const url = new URL(
+      configuredDomain.startsWith('http')
+        ? configuredDomain
+        : `https://${configuredDomain}`
+    );
+    return url.hostname;
+  } catch {
+    return configuredDomain.replace(/^https?:\/\//, '').split('/')[0];
+  }
+}
 
 function normalizeCheckoutUrl(checkoutUrl: string): string {
   // Shopify should return an absolute URL, but guard against relative URLs
@@ -15,6 +31,39 @@ function normalizeCheckoutUrl(checkoutUrl: string): string {
   if (checkoutUrl.startsWith("http://") || checkoutUrl.startsWith("https://")) return checkoutUrl;
   if (checkoutUrl.startsWith("/")) return `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}${checkoutUrl}`;
   return `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/${checkoutUrl}`;
+}
+
+function getNumericVariantId(variantId: string): string {
+  const directMatch = variantId.match(/ProductVariant\/(\d+)/);
+  if (directMatch) return directMatch[1];
+
+  try {
+    const decoded = atob(variantId);
+    const decodedMatch = decoded.match(/ProductVariant\/(\d+)/);
+    if (decodedMatch) return decodedMatch[1];
+  } catch {
+    // Variant IDs from the Storefront API are usually gid:// strings.
+  }
+
+  return variantId.split('/').pop() || variantId;
+}
+
+export function createCartPermalink(items: Array<{ variantId: string; quantity: number }>): string | null {
+  const cartLines = items
+    .map(item => {
+      const variantId = getNumericVariantId(item.variantId);
+      const quantity = Math.max(1, Math.round(Number(item.quantity)));
+      if (!/^\d+$/.test(variantId)) return null;
+      return `${variantId}:${quantity}`;
+    })
+    .filter(Boolean);
+
+  if (cartLines.length === 0) return null;
+
+  const url = new URL(`https://${SHOPIFY_CHECKOUT_DOMAIN}/cart/${cartLines.join(',')}`);
+  url.searchParams.set('channel', 'online_store');
+  url.searchParams.set('return_to', 'https://www.rebellocreations.com');
+  return url.toString();
 }
 
 export interface ShopifyProduct {
