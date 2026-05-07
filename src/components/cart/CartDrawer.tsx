@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -8,36 +9,27 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Minus, Plus, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, ArrowRight, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
   const { 
     items, 
     isLoading, 
     updateQuantity, 
     removeItem, 
-    createCheckout 
   } = useCartStore();
   
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  const handleCheckout = async () => {
-    try {
-      const checkoutUrl = await createCheckout();
-      if (checkoutUrl) {
-        // Must open in new tab for Shopify checkout to work properly
-        window.open(checkoutUrl, '_blank', 'noopener,noreferrer');
-        setIsOpen(false);
-      }
-    } catch (error) {
-      console.error('Checkout failed:', error);
-      toast.error("Checkout failed. Please try again.");
-    }
+  const handleCheckout = () => {
+    setIsOpen(false);
+    navigate('/checkout');
   };
 
   return (
@@ -144,19 +136,10 @@ export const CartDrawer = () => {
                   onClick={handleCheckout}
                   className="w-full" 
                   size="lg"
-                  disabled={items.length === 0 || isLoading}
+                  disabled={items.length === 0}
                 >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Creating Checkout...
-                    </>
-                  ) : (
-                    <>
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      Checkout
-                    </>
-                  )}
+                  <ArrowRight className="w-4 h-4 mr-2" />
+                  Proceed to Checkout
                 </Button>
               </div>
             </>

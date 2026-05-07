@@ -45,6 +45,7 @@ const Checkout = () => {
   });
   const [isProcessing, setIsProcessing] = useState(false);
   const [paymentComplete, setPaymentComplete] = useState(false);
+  const [formErrors, setFormErrors] = useState<Record<string, string>>({});
 
   // Mock cart data - in a real app this would come from state management
   const [cartItems, setCartItems] = useState([
@@ -118,6 +119,19 @@ const Checkout = () => {
   };
 
   const handleCompleteOrder = async () => {
+    // Validate required fields
+    const errors: Record<string, string> = {};
+    if (!customerDetails.phone.trim()) {
+      errors.phone = 'Phone number is required';
+    }
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      // Scroll to the first error
+      const firstErrorField = document.getElementById('phone');
+      firstErrorField?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    setFormErrors({});
     setIsProcessing(true);
 
     // Simulate payment processing
@@ -278,16 +292,25 @@ const Checkout = () => {
 
                   <div>
                     <Label htmlFor="phone" className="text-sm font-light text-foreground">
-                      Phone Number
+                      Phone Number *
                     </Label>
                     <Input
                       id="phone"
                       type="tel"
                       value={customerDetails.phone}
-                      onChange={(e) => handleCustomerDetailsChange("phone", e.target.value)}
-                      className="mt-2 rounded-none"
+                      onChange={(e) => {
+                        handleCustomerDetailsChange("phone", e.target.value);
+                        if (e.target.value.trim()) {
+                          setFormErrors(prev => { const next = { ...prev }; delete next.phone; return next; });
+                        }
+                      }}
+                      className={`mt-2 rounded-none ${formErrors.phone ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
                       placeholder="Enter your phone number"
+                      required
                     />
+                    {formErrors.phone && (
+                      <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>
+                    )}
                   </div>
 
                   {/* Shipping Address */}
@@ -645,7 +668,7 @@ const Checkout = () => {
 
                     <Button
                       onClick={handleCompleteOrder}
-                      disabled={isProcessing || !paymentDetails.cardNumber || !paymentDetails.expiryDate || !paymentDetails.cvv || !paymentDetails.cardholderName}
+                      disabled={isProcessing || !paymentDetails.cardNumber || !paymentDetails.expiryDate || !paymentDetails.cvv || !paymentDetails.cardholderName || !customerDetails.phone.trim()}
                       className="w-full rounded-none h-12 text-base"
                     >
                       {isProcessing ? "Processing..." : `Complete Order • €${total.toLocaleString()}`}
