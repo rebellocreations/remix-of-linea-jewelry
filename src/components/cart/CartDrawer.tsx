@@ -29,8 +29,9 @@ export const CartDrawer = () => {
     try {
       const checkoutUrl = await createCheckout();
       if (checkoutUrl) {
-        setIsOpen(false);
-        // Redirect to Shopify checkout in the same tab (matches Buy Now behavior)
+        // Navigate directly — same as Buy Now. Do NOT close the sheet first;
+        // Radix's body scroll-lock is still active during the close animation
+        // and suppresses window.location.href on mobile browsers.
         window.location.href = checkoutUrl;
       }
     } catch (error) {
