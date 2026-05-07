@@ -8,9 +8,10 @@ const SHOPIFY_STOREFRONT_URL = `https://${SHOPIFY_STORE_PERMANENT_DOMAIN}/api/${
 const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
 if (!SHOPIFY_STOREFRONT_TOKEN) throw new Error('Missing VITE_SHOPIFY_STOREFRONT_TOKEN env variable');
 const SHOPIFY_CHECKOUT_DOMAIN = getCheckoutDomain();
+const DEFAULT_SHOPIFY_CHECKOUT_DOMAIN = 'shop.rebellocreations.com';
 
 function getCheckoutDomain(): string {
-  const configuredDomain = import.meta.env.VITE_SHOPIFY_CHECKOUT_DOMAIN || 'shop.rebellocreations.com';
+  const configuredDomain = import.meta.env.VITE_SHOPIFY_CHECKOUT_DOMAIN || DEFAULT_SHOPIFY_CHECKOUT_DOMAIN;
 
   try {
     const url = new URL(
@@ -18,10 +19,18 @@ function getCheckoutDomain(): string {
         ? configuredDomain
         : `https://${configuredDomain}`
     );
-    return url.hostname;
+    return getValidCheckoutHostname(url.hostname);
   } catch {
-    return configuredDomain.replace(/^https?:\/\//, '').split('/')[0];
+    return getValidCheckoutHostname(configuredDomain.replace(/^https?:\/\//, '').split('/')[0]);
   }
+}
+
+function getValidCheckoutHostname(hostname: string): string {
+  if (!hostname || hostname === 'api.example.com' || hostname.endsWith('.example.com')) {
+    return DEFAULT_SHOPIFY_CHECKOUT_DOMAIN;
+  }
+
+  return hostname;
 }
 
 function normalizeCheckoutUrl(checkoutUrl: string): string {

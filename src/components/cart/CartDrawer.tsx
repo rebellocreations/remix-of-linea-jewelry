@@ -137,8 +137,6 @@ export const CartDrawer = () => {
                   // link, so mobile Safari cannot block it as a popup.
                   <a
                     href={checkoutHref}
-                    target="_self"
-                    rel="noreferrer"
                     className={cn(buttonVariants({ size: "lg" }), "w-full")}
                   >
                     <Lock className="w-4 h-4 mr-2" />
