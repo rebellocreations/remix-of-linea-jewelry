@@ -358,7 +358,7 @@ export async function fetchProductsByCollection(handle: string, first: number = 
 // Create Checkout
 export async function createStorefrontCheckout(items: Array<{ variantId: string; quantity: number }>): Promise<string> {
   const lines = items.map(item => ({
-    quantity: item.quantity,
+    quantity: Math.max(1, Math.round(Number(item.quantity))),
     merchandiseId: item.variantId,
   }));
 

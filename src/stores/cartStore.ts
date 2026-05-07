@@ -22,14 +22,18 @@ interface CartStore {
   cartId: string | null;
   checkoutUrl: string | null;
   isLoading: boolean;
-  
+  _hasHydrated: boolean;
+
   addItem: (item: CartItem) => void;
   updateQuantity: (variantId: string, quantity: number) => void;
+  incrementQuantity: (variantId: string) => void;
+  decrementQuantity: (variantId: string) => void;
   removeItem: (variantId: string) => void;
   clearCart: () => void;
   setCartId: (cartId: string) => void;
   setCheckoutUrl: (url: string) => void;
   setLoading: (loading: boolean) => void;
+  setHasHydrated: (state: boolean) => void;
   createCheckout: () => Promise<string | null>;
 }
 
@@ -40,21 +44,25 @@ export const useCartStore = create<CartStore>()(
       cartId: null,
       checkoutUrl: null,
       isLoading: false,
+      _hasHydrated: false,
+
+      setHasHydrated: (state) => set({ _hasHydrated: state }),
 
       addItem: (item) => {
         const { items } = get();
         const existingItem = items.find(i => i.variantId === item.variantId);
-        
+        const qty = Math.max(1, Math.round(Number(item.quantity)));
+
         if (existingItem) {
           set({
             items: items.map(i =>
               i.variantId === item.variantId
-                ? { ...i, quantity: i.quantity + item.quantity }
+                ? { ...i, quantity: i.quantity + qty }
                 : i
             )
           });
         } else {
-          set({ items: [...items, item] });
+          set({ items: [...items, { ...item, quantity: qty }] });
         }
       },
 
@@ -63,10 +71,36 @@ export const useCartStore = create<CartStore>()(
           get().removeItem(variantId);
           return;
         }
-        
         set({
           items: get().items.map(item =>
             item.variantId === variantId ? { ...item, quantity } : item
+          )
+        });
+      },
+
+      // Read live state to avoid stale closure bugs on rapid clicks
+      incrementQuantity: (variantId) => {
+        const items = get().items;
+        const item = items.find(i => i.variantId === variantId);
+        if (!item) return;
+        set({
+          items: items.map(i =>
+            i.variantId === variantId ? { ...i, quantity: i.quantity + 1 } : i
+          )
+        });
+      },
+
+      decrementQuantity: (variantId) => {
+        const items = get().items;
+        const item = items.find(i => i.variantId === variantId);
+        if (!item) return;
+        if (item.quantity <= 1) {
+          get().removeItem(variantId);
+          return;
+        }
+        set({
+          items: items.map(i =>
+            i.variantId === variantId ? { ...i, quantity: i.quantity - 1 } : i
           )
         });
       },
@@ -86,27 +120,34 @@ export const useCartStore = create<CartStore>()(
       setLoading: (isLoading) => set({ isLoading }),
 
       createCheckout: async () => {
-        const { items, setLoading, setCheckoutUrl } = get();
+        // Always read fresh state — never use a stale closure snapshot
+        const items = get().items;
         if (items.length === 0) return null;
 
-        setLoading(true);
+        get().setLoading(true);
         try {
           const checkoutUrl = await createStorefrontCheckout(
-            items.map(item => ({ variantId: item.variantId, quantity: item.quantity }))
+            items.map(item => ({
+              variantId: item.variantId,
+              quantity: Math.max(1, Math.round(Number(item.quantity))),
+            }))
           );
-          setCheckoutUrl(checkoutUrl);
+          get().setCheckoutUrl(checkoutUrl);
           return checkoutUrl;
         } catch (error) {
           console.error('Failed to create checkout:', error);
           return null;
         } finally {
-          setLoading(false);
+          get().setLoading(false);
         }
       }
     }),
     {
       name: 'shopify-cart',
       storage: createJSONStorage(() => localStorage),
+      onRehydrateStorage: () => (state) => {
+        state?.setHasHydrated(true);
+      },
     }
   )
 );

@@ -1,6 +1,9 @@
-import { X, Minus, Plus } from "lucide-react";
+import { X, Minus, Plus, Loader2, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
+import { useState } from "react";
 
 interface CartItem {
   id: number;
@@ -20,12 +23,33 @@ interface ShoppingBagProps {
 }
 
 const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorites }: ShoppingBagProps) => {
+  const { createCheckout } = useCartStore();
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
   if (!isOpen) return null;
 
   const subtotal = cartItems.reduce((sum, item) => {
     const price = parseFloat(item.price.replace('€', '').replace(',', ''));
     return sum + (price * item.quantity);
   }, 0);
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const checkoutUrl = await createCheckout();
+      if (checkoutUrl) {
+        onClose();
+        window.location.href = checkoutUrl;
+      } else {
+        toast.error("Could not create checkout. Please try again.");
+      }
+    } catch (error) {
+      console.error("Checkout failed:", error);
+      toast.error("Checkout failed. Please try again.");
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 h-screen">
@@ -132,14 +156,19 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
                 </p>
                 
                 <Button 
-                  asChild 
                   className="w-full rounded-none" 
                   size="lg"
-                  onClick={onClose}
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
                 >
-                  <Link to="/checkout">
-                    Proceed to Checkout
-                  </Link>
+                  {isCheckingOut ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating Checkout…
+                    </>
+                  ) : (
+                    "Proceed to Checkout"
+                  )}
                 </Button>
                 
                 <Button 

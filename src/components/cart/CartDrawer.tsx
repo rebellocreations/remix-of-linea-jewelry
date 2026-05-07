@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -9,27 +8,35 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Minus, Plus, Trash2, ArrowRight, Loader2 } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
 import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-  const { 
-    items, 
-    isLoading, 
-    updateQuantity, 
-    removeItem, 
-  } = useCartStore();
+  const items = useCartStore((s) => s.items);
+  const isLoading = useCartStore((s) => s.isLoading);
+  const removeItem = useCartStore((s) => s.removeItem);
+  const incrementQuantity = useCartStore((s) => s.incrementQuantity);
+  const decrementQuantity = useCartStore((s) => s.decrementQuantity);
+  const createCheckout = useCartStore((s) => s.createCheckout);
   
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  const handleCheckout = () => {
-    setIsOpen(false);
-    navigate('/checkout');
+  const handleCheckout = async () => {
+    try {
+      const checkoutUrl = await createCheckout();
+      if (checkoutUrl) {
+        setIsOpen(false);
+        // Redirect to Shopify checkout in the same tab (matches Buy Now behavior)
+        window.location.href = checkoutUrl;
+      }
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      toast.error("Checkout failed. Please try again.");
+    }
   };
 
   return (
@@ -45,7 +52,7 @@ export const CartDrawer = () => {
         </button>
       </SheetTrigger>
       
-      <SheetContent className="w-full sm:max-w-lg flex flex-col h-full">
+      <SheetContent className="w-full sm:max-w-lg flex flex-col h-full overflow-hidden">
         <SheetHeader className="flex-shrink-0">
           <SheetTitle>Shopping Cart</SheetTitle>
           <SheetDescription>
@@ -104,7 +111,7 @@ export const CartDrawer = () => {
                             variant="outline"
                             size="icon"
                             className="h-6 w-6"
-                            onClick={() => updateQuantity(item.variantId, item.quantity - 1)}
+                            onClick={() => decrementQuantity(item.variantId)}
                           >
                             <Minus className="h-3 w-3" />
                           </Button>
@@ -113,7 +120,7 @@ export const CartDrawer = () => {
                             variant="outline"
                             size="icon"
                             className="h-6 w-6"
-                            onClick={() => updateQuantity(item.variantId, item.quantity + 1)}
+                            onClick={() => incrementQuantity(item.variantId)}
                           >
                             <Plus className="h-3 w-3" />
                           </Button>
@@ -136,10 +143,19 @@ export const CartDrawer = () => {
                   onClick={handleCheckout}
                   className="w-full" 
                   size="lg"
-                  disabled={items.length === 0}
+                  disabled={items.length === 0 || isLoading}
                 >
-                  <ArrowRight className="w-4 h-4 mr-2" />
-                  Proceed to Checkout
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating Checkout...
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-4 h-4 mr-2" />
+                      Checkout
+                    </>
+                  )}
                 </Button>
               </div>
             </>
