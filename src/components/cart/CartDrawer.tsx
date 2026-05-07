@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -9,27 +8,40 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Minus, Plus, Trash2, Lock } from "lucide-react";
+import { ShoppingCart, Minus, Plus, Trash2, Lock, Loader2 } from "lucide-react";
 import { useCartStore } from "@/stores/cartStore";
+import { toast } from "sonner";
 
 export const CartDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
   const items = useCartStore((s) => s.items);
+  const isLoading = useCartStore((s) => s.isLoading);
   const removeItem = useCartStore((s) => s.removeItem);
   const incrementQuantity = useCartStore((s) => s.incrementQuantity);
   const decrementQuantity = useCartStore((s) => s.decrementQuantity);
+  const createCheckout = useCartStore((s) => s.createCheckout);
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + (parseFloat(item.price.amount) * item.quantity), 0);
   const currencyCode = items[0]?.price.currencyCode || 'USD';
 
-  const handleCheckout = () => {
-    // Close the sheet first so Radix removes its body scroll-lock, then
-    // navigate to /checkout which handles the async Shopify redirect.
-    // Synchronous navigation preserves the user-gesture context on iOS Safari.
-    setIsOpen(false);
-    navigate('/checkout');
+  const handleCheckout = async () => {
+    try {
+      const checkoutUrl = await createCheckout();
+      if (!checkoutUrl) {
+        toast.error("Could not create checkout. Please try again.");
+        return;
+      }
+      // Strip Radix scroll-lock from body before navigating so iOS Safari
+      // doesn't suppress the location change while overflow:hidden is active.
+      document.body.removeAttribute('data-scroll-locked');
+      document.body.style.removeProperty('overflow');
+      document.body.style.removeProperty('pointer-events');
+      window.location.href = checkoutUrl;
+    } catch (error) {
+      console.error('Checkout failed:', error);
+      toast.error("Checkout failed. Please try again.");
+    }
   };
 
   return (
@@ -136,10 +148,19 @@ export const CartDrawer = () => {
                   onClick={handleCheckout}
                   className="w-full"
                   size="lg"
-                  disabled={items.length === 0}
+                  disabled={items.length === 0 || isLoading}
                 >
-                  <Lock className="w-4 h-4 mr-2" />
-                  Checkout
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating Checkout...
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-4 h-4 mr-2" />
+                      Checkout
+                    </>
+                  )}
                 </Button>
               </div>
             </>

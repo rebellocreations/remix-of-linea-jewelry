@@ -3,27 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useCartStore } from "@/stores/cartStore";
 import { Loader2 } from "lucide-react";
 
-/**
- * Checkout page – redirects users to Shopify's hosted checkout.
- *
- * When the user lands on /checkout we:
- *   1. Read the cart items from the zustand store.
- *   2. Call createCheckout() which creates a Shopify Storefront cart and
- *      returns the checkout URL.
- *   3. Redirect the browser to that URL.
- *
- * If there are no items we send the user back to the shop page.
- */
 const Checkout = () => {
   const navigate = useNavigate();
   const items = useCartStore((s) => s.items);
   const hasHydrated = useCartStore((s) => s._hasHydrated);
   const createCheckout = useCartStore((s) => s.createCheckout);
   const [error, setError] = useState<string | null>(null);
+  const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    // Wait for the Zustand persist store to rehydrate from localStorage before
-    // acting on cart state — hydration is async so the initial render has items=[].
     if (!hasHydrated) return;
 
     if (items.length === 0) {
@@ -35,11 +23,14 @@ const Checkout = () => {
 
     const redirect = async () => {
       try {
-        const checkoutUrl = await createCheckout();
+        const url = await createCheckout();
         if (cancelled) return;
 
-        if (checkoutUrl) {
-          window.location.href = checkoutUrl;
+        if (url) {
+          setCheckoutUrl(url);
+          // replace() avoids adding an entry to history and is not flagged
+          // as a cross-origin popup by Chrome's tab-under protection.
+          window.location.replace(url);
         } else {
           setError("Could not create checkout. Please try again.");
         }
@@ -55,7 +46,7 @@ const Checkout = () => {
     return () => {
       cancelled = true;
     };
-  }, [hasHydrated]); // re-run once hydration completes
+  }, [hasHydrated]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -69,6 +60,19 @@ const Checkout = () => {
             >
               Return to shop
             </button>
+          </>
+        ) : checkoutUrl ? (
+          <>
+            <Loader2 className="h-8 w-8 animate-spin text-foreground mx-auto" />
+            <p className="text-foreground text-lg font-light">
+              Redirecting to checkout…
+            </p>
+            <a
+              href={checkoutUrl}
+              className="text-sm underline text-muted-foreground hover:text-foreground transition-colors block"
+            >
+              Click here if you are not redirected
+            </a>
           </>
         ) : (
           <>
