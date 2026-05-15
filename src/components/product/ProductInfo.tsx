@@ -77,7 +77,7 @@ const ProductInfo = ({ product, variant, onAddToCart, onBuyNow, buyNowLoading = 
         )}
       </motion.div>
       <motion.p variants={fadeInUp} className="text-sm text-stone-500 mb-8">
-        Incl. of all taxes. Free shipping on orders above ₹999.
+        Incl. of all taxes. Free shipping on orders above ₹1999.
       </motion.p>
 
       {/* Selectors */}
