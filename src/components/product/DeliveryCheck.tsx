@@ -55,7 +55,7 @@ const DeliveryCheck = () => {
             {status === "success" && (
                 <div className="flex items-center gap-2 mt-2 text-xs text-emerald-600 font-medium">
                     <CheckCircle2 size={14} />
-                    {message} | Free Delivery
+                    {message}
                 </div>
             )}
 

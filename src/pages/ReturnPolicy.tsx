@@ -96,7 +96,7 @@ const ReturnPolicy = () => {
                         <div className="space-y-6">
                             <h2 className="font-serif text-2xl lg:text-3xl text-[#1a1a1a]">4. How to Initiate a Request</h2>
                             <p className="text-stone-600 font-light leading-relaxed">
-                                To start a replacement request, please email us at <a href="mailto:rebellocreations@gmail.com" className="font-bold hover:text-amber-700 transition-colors">rebellocreations@gmail.com</a> or WhatsApp us at <a href="https://wa.me/917424942487" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-amber-700 transition-colors">7424942487</a> with:
+                                To start a replacement request, please email us at <a href="mailto:Info@rebellocreations.com" className="font-bold hover:text-amber-700 transition-colors">Info@rebellocreations.com</a> or WhatsApp us at <a href="https://wa.me/917424942487" target="_blank" rel="noopener noreferrer" className="font-bold hover:text-amber-700 transition-colors">7424942487</a> with:
                             </p>
                             <ul className="space-y-3 text-stone-600 font-light leading-relaxed pl-4 list-disc marker:text-stone-300">
                                 <li>Your Order Number.</li>
@@ -131,9 +131,6 @@ const ReturnPolicy = () => {
                                     <h3 className="font-serif text-lg text-[#1a1a1a] mb-2">Shipping & Handling</h3>
                                     <p className="text-stone-600 font-light leading-relaxed">
                                         While we use premium eco-friendly packaging to secure your glass, Rebello Creation is not liable for delays caused by third-party courier services or unforeseen weather conditions.
-                                    </p>
-                                    <p className="text-stone-700 font-medium mt-2">
-                                        Free shipping above ₹1999 everywhere.
                                     </p>
                                 </div>
 

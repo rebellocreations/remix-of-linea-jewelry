@@ -41,10 +41,6 @@ const faqData: { category: string; items: FAQItem[] }[] = [
                 answer: "Since each piece is handcrafted from reclaimed glass, please allow 3–5 business days for processing. Shipping times typically range from 5–7 business days depending on your location."
             },
             {
-                question: "Do you offer free shipping?",
-                answer: "Yes! We offer free shipping on all orders above ₹1,999."
-            },
-            {
                 question: "Can I track my order?",
                 answer: "Yes! Once your order is dispatched, you will receive an email with a tracking number and a link to monitor its journey to your home."
             },
@@ -76,7 +72,7 @@ const faqData: { category: string; items: FAQItem[] }[] = [
             },
             {
                 question: "What if my product arrives damaged?",
-                answer: "We're sorry to hear that! To process a replacement, we require a continuous, uncut unboxing video showing the unopened package and shipping label. Please email us at rebellocreations@gmail.com or WhatsApp us at 7424942487 with your Order Number, the unboxing video, and photos of the damage within 3 business days of delivery."
+                answer: "We're sorry to hear that! To process a replacement, we require a continuous, uncut unboxing video showing the unopened package and shipping label. Please email us at Info@rebellocreations.com or WhatsApp us at 7424942487 with your Order Number, the unboxing video, and photos of the damage within 3 business days of delivery."
             },
             {
                 question: "Can I exchange a product?",

@@ -53,7 +53,7 @@ const CustomerCare = () => {
                   What are your shipping options and timeframes?
                 </AccordionTrigger>
                 <AccordionContent className="text-muted-foreground">
-                  We offer free standard shipping (3-5 business days) on orders over $500. Express shipping (1-2 business days) is available for $25. All orders are fully insured and require signature confirmation.
+                  We offer standard shipping (3-5 business days) and express shipping (1-2 business days). All orders are fully insured and require signature confirmation.
                 </AccordionContent>
               </AccordionItem>
 

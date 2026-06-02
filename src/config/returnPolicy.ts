@@ -36,13 +36,13 @@ export const returnPolicyConfig = {
 
     howToInitiate: {
         title: "4. How to Initiate a Request",
-        description: "To start a replacement request, please email us at rebellocreations@gmail.com or WhatsApp us at 7424942487 with:",
+        description: "To start a replacement request, please email us at Info@rebellocreations.com or WhatsApp us at 7424942487 with:",
         requirements: [
             "Your Order Number.",
             "The mandatory Unboxing Video.",
             "High-resolution photos of the damage (if applicable)."
         ],
-        email: "rebellocreations@gmail.com"
+        email: "Info@rebellocreations.com"
     },
 
     // Simplified fields for quick display

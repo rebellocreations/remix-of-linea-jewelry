@@ -113,7 +113,7 @@ const Contact = () => {
 
                         <motion.a
                             variants={FossilReveal}
-                            href="mailto:rebellocreations@gmail.com"
+                            href="mailto:Info@rebellocreations.com"
                             className="group flex items-center justify-between p-6 bg-white rounded-2xl border border-[#E8E4DE] shadow-sm hover:shadow-md transition-all duration-300"
                         >
                             <div className="flex items-center gap-4">
@@ -122,7 +122,7 @@ const Contact = () => {
                                 </div>
                                 <div>
                                     <p className="text-sm text-[#8B8B8B] mb-0.5">Email us</p>
-                                    <p className="font-medium text-[#2C3028]">rebellocreations@gmail.com</p>
+                                    <p className="font-medium text-[#2C3028]">Info@rebellocreations.com</p>
                                 </div>
                             </div>
                             <ArrowRight className="w-5 h-5 text-[#E8E4DE] group-hover:text-[#6B7B5C] transition-colors" />

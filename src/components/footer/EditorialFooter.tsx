@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { Truck, RotateCcw, ShieldCheck, Headphones } from "lucide-react";
+import { RotateCcw, ShieldCheck, Headphones } from "lucide-react";
 
 const EditorialFooter = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,10 +41,6 @@ const EditorialFooter = () => {
   };
 
   const features = [
-    {
-      icon: <Truck className="w-6 h-6" />,
-      text: "Free shipping from ₹1999",
-    },
     {
       icon: <RotateCcw className="w-6 h-6" />,
       text: "Easy returns within 3 days",

@@ -4,7 +4,6 @@ const StatusBar = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   
   const usps = [
-    "Free shipping over €50",
     "365 days warranty",
     "+100,000 happy customers"
   ];
