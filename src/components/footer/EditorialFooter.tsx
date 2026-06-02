@@ -66,11 +66,11 @@ const EditorialFooter = () => {
       {/* Top Features Section */}
       <div className="border-b border-white/5">
         <div className="px-6 lg:px-12 py-12 md:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          <div className="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-10">
             {features.map((feature, idx) => (
               <div
                 key={idx}
-                className="bg-white/5 p-8 flex flex-col items-center justify-center text-center gap-4 transition-colors hover:bg-white/10"
+                className="bg-white/5 px-6 py-10 md:py-12 flex flex-col items-center justify-center text-center gap-5 transition-colors hover:bg-white/10"
               >
                 <div className="text-white/80">{feature.icon}</div>
                 <span className="text-xs md:text-sm tracking-wider font-light text-white/60">
